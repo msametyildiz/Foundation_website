@@ -425,4 +425,4 @@ function showCleanLogsModal() {
 }
 </script>
 
-<?php include 'includes/admin_footer.php'; ?>
+<?php include '../includes/admin_footer.php'; ?>

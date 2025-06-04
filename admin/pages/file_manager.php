@@ -481,4 +481,4 @@ document.getElementById('uploadForm').addEventListener('submit', function(e) {
 });
 </script>
 
-<?php include 'includes/admin_footer.php'; ?>
+<?php include '../includes/admin_footer.php'; ?>

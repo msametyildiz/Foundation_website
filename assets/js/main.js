@@ -220,30 +220,30 @@ document.addEventListener('DOMContentLoaded', function() {
         return container;
     }
 
-    // Navbar scroll effect
-    let lastScrollTop = 0;
-    const navbar = document.querySelector('.navbar');
+    // Navbar scroll effect - DISABLED: Using modern navbar
+    // let lastScrollTop = 0;
+    // const navbar = document.querySelector('.navbar');
     
-    window.addEventListener('scroll', function() {
-        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    // window.addEventListener('scroll', function() {
+    //     let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         
-        if (scrollTop > lastScrollTop && scrollTop > 100) {
-            // Scrolling down
-            navbar.classList.add('navbar-hidden');
-        } else {
-            // Scrolling up
-            navbar.classList.remove('navbar-hidden');
-        }
+    //     if (scrollTop > lastScrollTop && scrollTop > 100) {
+    //         // Scrolling down
+    //         navbar.classList.add('navbar-hidden');
+    //     } else {
+    //         // Scrolling up
+    //         navbar.classList.remove('navbar-hidden');
+    //     }
         
-        // Add shadow when scrolled
-        if (scrollTop > 0) {
-            navbar.classList.add('navbar-scrolled');
-        } else {
-            navbar.classList.remove('navbar-scrolled');
-        }
+    //     // Add shadow when scrolled
+    //     if (scrollTop > 0) {
+    //         navbar.classList.add('navbar-scrolled');
+    //     } else {
+    //         navbar.classList.remove('navbar-scrolled');
+    //     }
         
-        lastScrollTop = scrollTop;
-    });
+    //     lastScrollTop = scrollTop;
+    // });
 
     // Animation on scroll
     const observerOptions = {
@@ -282,8 +282,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Stats Counter Animation
     initializeStatsCounter();
     
-    // Smooth Navbar on Scroll
-    initializeNavbarScroll();
+    // Smooth Navbar on Scroll - DISABLED: Using modern navbar
+    // initializeNavbarScroll();
     
     // Floating Cards Animation
     initializeFloatingCards();
@@ -371,33 +371,33 @@ function initializeStatsCounter() {
     statNumbers.forEach(stat => observer.observe(stat));
 }
 
-// Navbar scroll effects
-function initializeNavbarScroll() {
-    const navbar = document.querySelector('.navbar');
-    if (!navbar) return;
+// Navbar scroll effects - DISABLED: Using modern navbar
+// function initializeNavbarScroll() {
+//     const navbar = document.querySelector('.navbar');
+//     if (!navbar) return;
     
-    let lastScrollTop = 0;
+//     let lastScrollTop = 0;
     
-    window.addEventListener('scroll', () => {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+//     window.addEventListener('scroll', () => {
+//         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         
-        // Add/remove scrolled class
-        if (scrollTop > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
+//         // Add/remove scrolled class
+//         if (scrollTop > 50) {
+//             navbar.classList.add('scrolled');
+//         } else {
+//             navbar.classList.remove('scrolled');
+//         }
         
-        // Hide/show navbar on scroll
-        if (scrollTop > lastScrollTop && scrollTop > 100) {
-            navbar.style.transform = 'translateY(-100%)';
-        } else {
-            navbar.style.transform = 'translateY(0)';
-        }
+//         // Hide/show navbar on scroll
+//         if (scrollTop > lastScrollTop && scrollTop > 100) {
+//             navbar.style.transform = 'translateY(-100%)';
+//         } else {
+//             navbar.style.transform = 'translateY(0)';
+//         }
         
-        lastScrollTop = scrollTop;
-    });
-}
+//         lastScrollTop = scrollTop;
+//     });
+// }
 
 // Floating cards animation
 function initializeFloatingCards() {
