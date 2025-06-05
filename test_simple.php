@@ -18,7 +18,7 @@ require_once 'includes/functions.php';
         <p>Eğer bu metin görünüyorsa CSS sorunu var</p>
     </div>
     
-    <section class="hero-modern" style="background: blue !important; height: 400px;">
+    <section class="hero-modern" style="background: #4EA674 !important; height: 400px;">
         <div class="container">
             <h1 style="color: white; padding: 50px;">Hero Section Test</h1>
         </div>

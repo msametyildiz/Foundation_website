@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Scheme Test - Necat Derneği</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body {
+            font-family: var(--font-family-primary);
+            margin: 0;
+            padding: 20px;
+            background: var(--gray-50);
+        }
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .color-sample {
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            color: white;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+        .color-sample h3 {
+            margin: 0 0 10px 0;
+            font-weight: 600;
+        }
+        .color-sample p {
+            margin: 0;
+            font-size: var(--font-size-sm);
+            opacity: 0.9;
+        }
+        .primary { background: var(--primary-color); }
+        .primary-dark { background: var(--primary-dark); }
+        .secondary { background: var(--secondary-color); }
+        .accent { background: var(--accent-color); color: var(--gray-900); }
+        .light-cream { background: var(--light-cream); color: var(--gray-900); }
+        .dark { background: var(--gray-900); }
+        
+        .test-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        
+        .test-components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .test-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+        
+        .test-badge {
+            background: rgba(78, 166, 116, 0.1);
+            color: var(--primary-color);
+            padding: 5px 15px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: var(--primary-color); text-align: center; margin-bottom: 40px;">
+            Necat Derneği - Logo Renk Paleti Test Sayfası
+        </h1>
+        
+        <div class="test-badge">✅ Logo Entegrasyonu Tamamlandı</div>
+        
+        <h2 style="color: var(--gray-700);">Renk Paleti</h2>
+        <div class="color-palette">
+            <div class="color-sample primary">
+                <h3>Primary Green</h3>
+                <p>#4EA674</p>
+                <p>Logo Ana Yeşil</p>
+            </div>
+            <div class="color-sample primary-dark">
+                <h3>Primary Dark</h3>
+                <p>#3d8560</p>
+                <p>Koyu Yeşil Varyant</p>
+            </div>
+            <div class="color-sample secondary">
+                <h3>Secondary Yellow-Green</h3>
+                <p>#D3D92B</p>
+                <p>Logo Sarı-Yeşil</p>
+            </div>
+            <div class="color-sample accent">
+                <h3>Accent Yellow</h3>
+                <p>#F2E529</p>
+                <p>Logo Parlak Sarı</p>
+            </div>
+            <div class="color-sample light-cream">
+                <h3>Light Cream</h3>
+                <p>#F2EEB6</p>
+                <p>Logo Açık Krem</p>
+            </div>
+            <div class="color-sample dark">
+                <h3>Near Black</h3>
+                <p>#0D0D0D</p>
+                <p>Logo Siyaha Yakın</p>
+            </div>
+        </div>
+        
+        <h2 style="color: var(--gray-700);">Buton Testleri</h2>
+        <div class="test-buttons">
+            <button class="btn btn-primary">Primary Button</button>
+            <button class="btn btn-secondary">Secondary Button</button>
+            <button class="btn btn-accent">Accent Button</button>
+            <button class="btn btn-outline">Outline Button</button>
+        </div>
+        
+        <h2 style="color: var(--gray-700);">Bileşen Testleri</h2>
+        <div class="test-components">
+            <div class="test-card">
+                <div class="test-badge">Badge Test</div>
+                <h3 style="color: var(--primary-color);">Card Başlığı</h3>
+                <p style="color: var(--gray-600);">
+                    Bu kart bileşeni yeni renk şemasını test etmek için kullanılıyor.
+                    Logo renklerinin tutarlı bir şekilde uygulandığını görebilirsiniz.
+                </p>
+                <button class="btn btn-primary btn-sm">Detaylar</button>
+            </div>
+            
+            <div class="test-card">
+                <div class="test-badge">Gradient Test</div>
+                <h3 style="color: var(--secondary-color);">Gradient Backgrounds</h3>
+                <div style="height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: var(--radius-md); margin: 15px 0;"></div>
+                <p style="color: var(--gray-600);">Logo renklerini kullanarak oluşturulan gradient örneği.</p>
+            </div>
+            
+            <div class="test-card">
+                <div class="test-badge">Shadow Test</div>
+                <h3 style="color: var(--accent-color);">Box Shadow Effects</h3>
+                <div style="height: 60px; background: var(--light-cream); border-radius: var(--radius-md); margin: 15px 0; box-shadow: 0 8px 25px rgba(78, 166, 116, 0.3);"></div>
+                <p style="color: var(--gray-600);">Yeşil tabanlı gölge efektleri ile modern görünüm.</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 50px; padding: 30px; background: var(--primary-color); color: white; border-radius: var(--radius-lg);">
+            <h2>🎨 Logo Renk Entegrasyonu Başarılı!</h2>
+            <p>Tüm site genelinde logo renkleri (#4EA674, #D3D92B, #F2E529, #F2EEB6, #0D0D0D) tutarlı şekilde uygulandı.</p>
+            <p>Marka kimliği artık tüm sayfalarda profesyonel ve tutarlı bir görünüm sergiliyor.</p>
+        </div>
+    </div>
+</body>
+</html>

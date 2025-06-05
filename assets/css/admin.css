@@ -1,4 +1,4 @@
-/* Admin Panel Styles */
+/* Admin Panel Styles - Updated with new color scheme */
 .wrapper {
     display: flex;
     width: 100%;
@@ -8,7 +8,7 @@
 .sidebar {
     min-width: 250px;
     max-width: 250px;
-    background: #2c3e50;
+    background: #3d8560;
     color: white;
     transition: all 0.3s;
     min-height: 100vh;
@@ -20,8 +20,8 @@
 
 .sidebar-header {
     padding: 20px;
-    background: #34495e;
-    border-bottom: 1px solid #476481;
+    background: #4EA674;
+    border-bottom: 1px solid #69b387;
 }
 
 .sidebar-header h4 {
@@ -34,13 +34,13 @@
 }
 
 .sidebar ul li {
-    border-bottom: 1px solid #476481;
+    border-bottom: 1px solid #69b387;
 }
 
 .sidebar ul li a {
     padding: 15px 20px;
     display: block;
-    color: #bdc3c7;
+    color: #F2EEB6;
     text-decoration: none;
     transition: all 0.3s;
 }
@@ -48,7 +48,7 @@
 .sidebar ul li a:hover,
 .sidebar ul li.active a {
     color: white;
-    background: #3498db;
+    background: #D3D92B;
     text-decoration: none;
 }
 
@@ -147,7 +147,7 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4EA674 0%, #D3D92B 100%);
     border: none;
 }
 
@@ -175,8 +175,8 @@
 }
 
 .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    border-color: #4EA674;
+    box-shadow: 0 0 0 0.2rem rgba(78, 166, 116, 0.25);
 }
 
 /* Responsive */

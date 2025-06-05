@@ -3,12 +3,12 @@
     <style>
         /* Modern Footer Styling */
         :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --primary-light: #3b82f6;
-            --secondary-color: #10b981;
-            --secondary-dark: #059669;
-            --accent-color: #f59e0b;
+            --primary-color: #4EA674;
+            --primary-dark: #3d8560;
+            --primary-light: #6bb896;
+            --secondary-color: #D3D92B;
+            --secondary-dark: #bac325;
+            --accent-color: #F2E529;
             --white: #ffffff;
             --gray-50: #f9fafb;
             --gray-100: #f3f4f6;
@@ -48,9 +48,9 @@
             right: 0;
             bottom: 0;
             background-image: 
-                radial-gradient(circle at 20% 20%, rgba(37, 99, 235, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 40% 60%, rgba(245, 158, 11, 0.03) 0%, transparent 50%);
+                radial-gradient(circle at 20% 20%, rgba(78, 166, 116, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(211, 217, 43, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(242, 229, 41, 0.03) 0%, transparent 50%);
             z-index: 1;
         }
 
@@ -93,7 +93,7 @@
             justify-content: center;
             color: white;
             font-size: 1.75rem;
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 8px 25px rgba(78, 166, 116, 0.3);
         }
 
         .footer-brand-text h3 {
@@ -128,7 +128,7 @@
         .social-link {
             width: 48px;
             height: 48px;
-            background: rgba(37, 99, 235, 0.1);
+            background: rgba(78, 166, 116, 0.1);
             backdrop-filter: blur(10px);
             border-radius: var(--radius-lg);
             display: flex;
@@ -137,7 +137,7 @@
             color: var(--primary-color);
             text-decoration: none;
             transition: var(--transition-base);
-            border: 1px solid rgba(37, 99, 235, 0.2);
+            border: 1px solid rgba(78, 166, 116, 0.2);
             position: relative;
             overflow: hidden;
         }
@@ -160,7 +160,7 @@
 
         .social-link:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 8px 25px rgba(78, 166, 116, 0.3);
             color: var(--white);
         }
 
@@ -249,11 +249,11 @@
 
         /* Contact Section */
         .footer-contact {
-            background: rgba(37, 99, 235, 0.03);
+            background: rgba(78, 166, 116, 0.03);
             backdrop-filter: blur(10px);
             border-radius: var(--radius-xl);
             padding: 1.5rem;
-            border: 1px solid rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(78, 166, 116, 0.1);
         }
 
         .contact-item {
@@ -267,7 +267,7 @@
         }
 
         .contact-item:hover {
-            background: rgba(37, 99, 235, 0.03);
+            background: rgba(78, 166, 116, 0.03);
         }
 
         .contact-icon {
@@ -318,7 +318,7 @@
             justify-content: center;
             cursor: pointer;
             transition: var(--transition-base);
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 15px rgba(78, 166, 116, 0.3);
             z-index: 1000;
             opacity: 0;
             visibility: hidden;
@@ -333,7 +333,7 @@
 
         .scroll-to-top:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 8px 25px rgba(78, 166, 116, 0.4);
         }
 
         /* Responsive Design */
@@ -633,7 +633,7 @@
                 position: fixed;
                 top: 2rem;
                 right: 2rem;
-                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                background: ${type === 'success' ? '#D3D92B' : '#ef4444'};
                 color: white;
                 padding: 1rem 2rem;
                 border-radius: 0.75rem;

@@ -10,7 +10,7 @@
     <!-- Performance and SEO optimizations -->
     <meta name="robots" content="index, follow">
     <meta name="author" content="Necat Derneği">
-    <meta name="theme-color" content="#2563eb">
+    <meta name="theme-color" content="#4EA674">
     
     <!-- Preload critical images -->
     <?php if(isset($_GET['page']) && $_GET['page'] == 'home' || !isset($_GET['page'])): ?>
@@ -35,20 +35,20 @@
     <!-- Modern Navbar Styling -->
     <style>
         :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --primary-light: #3b82f6;
-            --secondary-color: #10b981;
-            --accent-color: #f59e0b;
+            --primary-color: #4EA674;
+            --primary-dark: #3d8560;
+            --primary-light: #6bb896;
+            --secondary-color: #D3D92B;
+            --accent-color: #F2E529;
             --white: #ffffff;
             --gray-50: #f9fafb;
             --gray-100: #f3f4f6;
             --gray-200: #e5e7eb;
             --gray-300: #d1d5db;
-            --gray-600: #4b5563;
-            --gray-700: #374151;
-            --gray-800: #1f2937;
-            --gray-900: #111827;
+            --gray-600: #525252;
+            --gray-700: #404040;
+            --gray-800: #262626;
+            --gray-900: #0D0D0D;
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
@@ -129,7 +129,7 @@
             color: white;
             font-size: 1.5rem;
             font-weight: 700;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 15px rgba(78, 166, 116, 0.3);
         }
 
         .brand-text {
@@ -272,7 +272,7 @@
         }
 
         .dropdown-item-modern:hover {
-            background: rgba(37, 99, 235, 0.1);
+            background: rgba(78, 166, 116, 0.1);
             color: var(--primary-color);
             transform: translateX(4px);
         }
@@ -290,7 +290,7 @@
             font-weight: 600;
             font-size: 0.9rem;
             transition: var(--transition-base);
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 15px rgba(78, 166, 116, 0.3);
             position: relative;
             overflow: hidden;
         }
@@ -313,7 +313,7 @@
 
         .btn-cta-modern:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 8px 25px rgba(78, 166, 116, 0.4);
             color: white;
         }
 
@@ -346,7 +346,7 @@
         }
 
         .mobile-toggle:hover {
-            background: rgba(37, 99, 235, 0.1);
+            background: rgba(78, 166, 116, 0.1);
         }
 
         .mobile-toggle span {

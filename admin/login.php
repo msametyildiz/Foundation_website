@@ -68,10 +68,10 @@ if ($_POST) {
         }
         .logo i {
             font-size: 3rem;
-            color: #667eea;
+            color: #4EA674;
         }
         .btn-login {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4EA674 0%, #D3D92B 100%);
             border: none;
             border-radius: 25px;
             padding: 0.75rem 2rem;

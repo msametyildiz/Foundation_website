@@ -22,8 +22,8 @@ header('Content-Type: text/html; charset=utf-8');
         .success { color: #4CAF50; }
         .error { color: #f44336; }
         .warning { color: #ff9800; }
-        .info { color: #2196F3; }
-        .section { margin: 20px 0; padding: 15px; border-left: 4px solid #2196F3; background: #f8f9fa; }
+        .info { color: #4EA674; }
+        .section { margin: 20px 0; padding: 15px; border-left: 4px solid #4EA674; background: #f8f9fa; }
         pre { background: #f1f1f1; padding: 10px; border-radius: 4px; overflow-x: auto; }
         .status { padding: 5px 10px; border-radius: 4px; margin: 5px 0; }
         .status.success { background: #d4edda; border: 1px solid #c3e6cb; }
