@@ -1661,6 +1661,279 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ========================================
+   CONTENT CATALOG INTEGRATION STYLES
+   =========================================== */
+
+/* Mission Preview Section */
+.mission-preview {
+    position: relative;
+    overflow: hidden;
+}
+
+.mission-content .section-title {
+    color: var(--gray-900);
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.mission-image-container {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.mission-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.floating-stats {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+.stat-card {
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+.cta-box {
+    background: var(--gradient-primary) !important;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.cta-box:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Principle Cards (About Page) */
+.principle-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 1px solid var(--gray-200);
+}
+
+.principle-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+.principle-icon {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.principle-title {
+    color: var(--gray-900);
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.principle-description {
+    color: var(--gray-600);
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+/* Activity Cards (Projects Page) */
+.activity-card {
+    transition: all 0.3s ease;
+    border: 1px solid var(--gray-200);
+}
+
+.activity-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+.activity-icon {
+    text-align: center;
+}
+
+.activity-title {
+    color: var(--gray-900);
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.activity-description {
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.activity-category .badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+}
+
+/* Gradient Background */
+.bg-gradient {
+    background: var(--gradient-hero);
+    position: relative;
+}
+
+.bg-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(78, 166, 116, 0.3), rgba(211, 217, 43, 0.3));
+    z-index: 1;
+}
+
+.bg-gradient > .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* Motivation Cards (Volunteer Page) */
+.motivation-card {
+    transition: all 0.3s ease;
+    border: 1px solid var(--gray-200);
+}
+
+.motivation-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+}
+
+.motivation-icon {
+    min-width: 60px;
+    text-align: center;
+}
+
+.motivation-content {
+    flex: 1;
+}
+
+.question-number {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.question-text {
+    color: var(--gray-800);
+    font-weight: 500;
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+/* Spiritual FAQ Cards */
+.spiritual-faq-card {
+    transition: all 0.3s ease;
+    border: 1px solid var(--gray-200);
+}
+
+.spiritual-faq-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+}
+
+.faq-icon {
+    min-width: 60px;
+    text-align: center;
+}
+
+.faq-content {
+    flex: 1;
+}
+
+.answer-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Section Titles */
+.section-title {
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 1rem;
+}
+
+.section-subtitle {
+    color: var(--gray-600);
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* CTA Boxes */
+.cta-box {
+    border-radius: 15px;
+    border: 2px solid var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.cta-box:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .mission-content .section-title {
+        font-size: 2rem;
+    }
+    
+    .principle-card,
+    .activity-card,
+    .motivation-card,
+    .spiritual-faq-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .mission-image {
+        height: 300px;
+    }
+    
+    .floating-stats {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        margin-top: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .question-text {
+        font-size: 0.9rem;
+    }
+    
+    .answer-text {
+        font-size: 0.85rem;
+    }
+    
+    .cta-box {
+        margin-top: 1rem;
+    }
+}
+
+/* ========================================
    RESPONSIVE DESIGN
    ======================================== */
 

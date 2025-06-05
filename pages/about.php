@@ -1,3 +1,19 @@
+<?php
+// İçerik kataloğunu yükle
+require_once 'includes/content_catalog.php';
+
+// Hakkımızda sayfası içeriğini al
+$about_content = getContentForPage('about');
+?>
+
+<?php
+// İçerik kataloğunu yükle
+require_once 'includes/content_catalog.php';
+
+// Hakkımızda sayfası içeriğini al
+$about_content = getContentForPage('about');
+?>
+
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="container">
@@ -27,16 +43,9 @@
                             <i class="fas fa-bullseye fa-3x text-primary"></i>
                         </div>
                         <h3 class="card-title text-primary">Misyonumuz</h3>
-                        <p class="card-text">
-                            Toplumsal dayanışma ruhu ile hareket ederek, ihtiyaç sahibi bireylere 
-                            ve ailelerine ulaşmak, eğitim, sağlık ve sosyal destek alanlarında 
-                            sürdürülebilir çözümler üretmek.
-                        </p>
-                        <p class="card-text">
-                            Her bireyin değerli olduğu, fırsat eşitliğinin sağlandığı ve 
-                            kimsenin yalnız bırakılmadığı bir toplum inşa etmek için 
-                            çalışmaktayız.
-                        </p>
+                        <div class="card-text">
+                            <?= nl2br($about_content['mission']) ?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -49,18 +58,38 @@
                         </div>
                         <h3 class="card-title text-success">Vizyonumuz</h3>
                         <p class="card-text">
-                            Türkiye'de sosyal yardımlaşma alanında öncü bir dernek olarak, 
-                            şeffaflık, güvenilirlik ve etkinlik ilkeleriyle tanınan, 
-                            toplumsal değişime katkı sağlayan bir kurum olmak.
+                            <?= $about_content['additional']['vision'] ?>
                         </p>
-                        <p class="card-text">
-                            Ulusal ve uluslararası alanda saygın bir konumda yer alarak, 
-                            sosyal sorumluluk projelerinde örnek teşkil eden bir 
-                            organizasyon olmayı hedefliyoruz.
-                        </p>
+                        <div class="mt-3">
+                            <span class="badge bg-success"><?= $about_content['additional']['motto'] ?></span>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- Kuruluş İlkelerimiz -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>Kuruluş İlkelerimiz</h2>
+            <p class="lead">Derneğimizin temelini oluşturan değerler</p>
+        </div>
+        
+        <div class="row">
+            <?php foreach ($about_content['principles'] as $key => $principle): ?>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="principle-card">
+                    <div class="principle-icon">
+                        <i class="<?= $principle['icon'] ?> fa-2x text-primary"></i>
+                    </div>
+                    <h5 class="principle-title"><?= $principle['title'] ?></h5>
+                    <p class="principle-description"><?= $principle['description'] ?></p>
+                </div>
+            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>

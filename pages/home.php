@@ -1,4 +1,10 @@
 <?php
+// İçerik kataloğunu yükle
+require_once 'includes/content_catalog.php';
+
+// Ana sayfa içeriğini al
+$homepage_content = getContentForPage('home');
+
 // Ana sayfa için slider verilerini çek
 try {
     $stmt = $pdo->prepare("SELECT * FROM slider WHERE is_active = 1 ORDER BY sort_order ASC");
@@ -31,14 +37,13 @@ $families_helped = 500;
         <div class="row min-vh-100 align-items-center">
             <div class="col-lg-6">
                 <div class="hero-content">
-                    <span class="hero-badge">🌟 Birlikte Güçlüyüz</span>
+                    <span class="hero-badge">🌟 <?= $homepage_content['hero_slogan'] ?></span>
                     <h1 class="hero-title">
                         Gönüllü Ol,
                         <span class="text-gradient">Hayat Değiştir</span>
                     </h1>
                     <p class="hero-subtitle">
-                        Birlikte daha güçlüyüz. Gönüllü ekibimize katılın ve 
-                        muhtaç ailelere umut olun. Her katkı bir hayatı değiştirir.
+                        <?= $homepage_content['hero_description'] ?>
                     </p>
                     <div class="hero-actions">
                         <a href="index.php?page=donate" class="btn btn-hero-primary">
@@ -99,6 +104,38 @@ $families_helped = 500;
     <div class="hero-scroll-indicator">
         <span>Keşfetmeye devam et</span>
         <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<!-- Mission Preview Section -->
+<section class="mission-preview py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="mission-content">
+                    <h2 class="section-title mb-4">Misyonumuz</h2>
+                    <p class="lead text-muted mb-4">
+                        <?= $homepage_content['mission_preview'] ?>
+                    </p>
+                    <div class="cta-box p-4 bg-primary text-white rounded shadow">
+                        <h4 class="mb-3"><i class="fas fa-hand-holding-heart"></i> Birlikte Güçlü</h4>
+                        <p class="mb-0"><?= $homepage_content['call_to_action'] ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="mission-image-container">
+                    <img src="uploads/images/mission/mission-main.jpg" alt="Misyonumuz" class="mission-image">
+                    <div class="floating-stats">
+                        <div class="stat-card bg-white shadow rounded p-3">
+                            <i class="fas fa-heart text-danger fa-2x mb-2"></i>
+                            <h5 class="mb-0"><?= number_format($total_donations) ?> ₺</h5>
+                            <small class="text-muted">Toplam Bağış</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 

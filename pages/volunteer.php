@@ -1,4 +1,10 @@
 <?php
+// İçerik kataloğunu yükle
+require_once 'includes/content_catalog.php';
+
+// Gönüllü sayfası içeriğini al (motivasyon soruları)
+$volunteer_questions = getContentForPage('volunteer');
+
 require_once '../config/database.php';
 
 // Gönüllü başvuru formu işleme
@@ -129,6 +135,53 @@ $volunteer_areas = [
                     </div>
                     <h3 class="stats-number" data-target="<?= $volunteer_stats['pending_applications'] ?? 0 ?>">0</h3>
                     <p class="stats-label mb-0">Bekleyen Başvuru</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Motivasyon Soruları -->
+<section class="py-5 bg-gradient">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-10 mx-auto text-center">
+                <h2 class="section-title text-white mb-4">Size Soru Sormak İstiyoruz</h2>
+                <p class="section-subtitle text-white opacity-75">Kalbinizin sesini dinleyin ve bu sorulara samimi cevaplar verin</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <?php foreach ($volunteer_questions as $index => $question): ?>
+            <div class="col-lg-6">
+                <div class="motivation-card bg-white rounded shadow p-4 h-100">
+                    <div class="d-flex align-items-start">
+                        <div class="motivation-icon me-3">
+                            <i class="<?= $question['icon'] ?> fa-2x text-primary"></i>
+                        </div>
+                        <div class="motivation-content">
+                            <span class="question-number badge bg-primary mb-2"><?= $index + 1 ?></span>
+                            <p class="question-text mb-0"><?= $question['question'] ?></p>
+                            <small class="text-muted mt-2 d-block">
+                                <i class="fas fa-tag me-1"></i>
+                                <?= ucfirst(str_replace('_', ' ', $question['category'])) ?>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <div class="row mt-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="cta-box bg-white rounded shadow p-4">
+                    <h4 class="text-primary mb-3">Bu sorulara "EVET" diyorsanız...</h4>
+                    <p class="mb-4">Sizin de aramızda yeriniz var! Gönüllü başvuru formumuzu doldurun ve bu güzel yolculuğa katılın.</p>
+                    <a href="#volunteer-form" class="btn btn-primary btn-lg">
+                        <i class="fas fa-hand-holding-heart me-2"></i>
+                        Gönüllü Başvurusu Yap
+                    </a>
                 </div>
             </div>
         </div>

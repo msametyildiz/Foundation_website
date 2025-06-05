@@ -1,4 +1,10 @@
 <?php
+// İçerik kataloğunu yükle
+require_once 'includes/content_catalog.php';
+
+// Projeler sayfası içeriğini al (activities)
+$activities = getContentForPage('projects');
+
 require_once '../config/database.php';
 
 // Aktif projeleri getir
@@ -82,6 +88,37 @@ $stats = $stmt->fetch(PDO::FETCH_ASSOC);
                     <p class="stats-label mb-0">Toplanan Bağış (₺)</p>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- Faaliyet Alanlarımız -->
+<section class="py-5 bg-gradient">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="section-title text-white">Faaliyet Alanlarımız</h2>
+                <p class="section-subtitle text-white opacity-75">Toplumun her kesimine ulaşan geniş hizmet yelpazemiz</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <?php foreach ($activities as $activity): ?>
+            <div class="col-lg-4 col-md-6">
+                <div class="activity-card bg-white rounded shadow h-100 p-4">
+                    <div class="activity-icon mb-3">
+                        <i class="<?= $activity['icon'] ?> fa-3x text-<?= $activity['color'] ?>"></i>
+                    </div>
+                    <h4 class="activity-title mb-3"><?= $activity['title'] ?></h4>
+                    <p class="activity-description text-muted mb-3"><?= $activity['description'] ?></p>
+                    <div class="activity-category">
+                        <span class="badge bg-<?= $activity['color'] ?> bg-opacity-10 text-<?= $activity['color'] ?>">
+                            <?= ucfirst(str_replace('_', ' ', $activity['category'])) ?>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>

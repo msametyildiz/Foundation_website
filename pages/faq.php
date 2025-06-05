@@ -1,8 +1,27 @@
 <?php
+// İçerik kataloğunu yükle
+require_once 'includes/content_catalog.php';
+
+// SSS sayfası içeriğini al
+$faq_questions = getContentForPage('faq');
+
 require_once '../config/database.php';
 
-// SSS kategorileri ve soruları
-$faq_categories = [
+// Katalogdan gelen soruları kategorilere göre gruplayalım
+$faq_categories = [];
+foreach ($faq_questions as $faq) {
+    if (!isset($faq_categories[$faq['category']])) {
+        $faq_categories[$faq['category']] = [
+            'title' => ucfirst(str_replace('_', ' ', $faq['category'])),
+            'icon' => $faq['icon'],
+            'questions' => []
+        ];
+    }
+    $faq_categories[$faq['category']]['questions'][] = $faq;
+}
+
+// Geleneksel SSS kategorileri (mevcut içerik korunuyor)
+$traditional_faq = [
     'general' => [
         'title' => 'Genel Sorular',
         'icon' => 'fas fa-info-circle',
@@ -151,6 +170,60 @@ $faq_categories = [
                         <button class="btn btn-primary" type="button">
                             <i class="fas fa-search"></i>
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Manevi Sorular - Özel Bölüm -->
+<section class="py-5 bg-gradient">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-10 mx-auto text-center">
+                <h2 class="section-title text-white mb-4">Size Sorduğumuz Sorular</h2>
+                <p class="section-subtitle text-white opacity-75">Kalbinizin sesini dinleyin ve bu sorulara samimi cevaplar verin</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <?php foreach ($faq_questions as $index => $faq): ?>
+            <div class="col-lg-6">
+                <div class="spiritual-faq-card bg-white rounded shadow p-4 h-100">
+                    <div class="d-flex align-items-start">
+                        <div class="faq-icon me-3">
+                            <i class="<?= $faq['icon'] ?> fa-2x text-primary"></i>
+                        </div>
+                        <div class="faq-content">
+                            <span class="question-number badge bg-primary mb-2"><?= $index + 1 ?></span>
+                            <h5 class="question-text mb-3"><?= $faq['question'] ?></h5>
+                            <p class="answer-text text-muted mb-0"><?= $faq['answer'] ?></p>
+                            <small class="text-muted mt-2 d-block">
+                                <i class="fas fa-tag me-1"></i>
+                                <?= ucfirst(str_replace('_', ' ', $faq['category'])) ?>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        
+        <div class="row mt-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="cta-box bg-white rounded shadow p-4">
+                    <h4 class="text-primary mb-3">Bu sorulara "EVET" diyorsanız...</h4>
+                    <p class="mb-4">Bizimle birlikte bu kutlu yolculukta yer alın. Gönüllü olun veya bağış yaparak hayırlı işlerin bir parçası olun.</p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a href="index.php?page=volunteer" class="btn btn-primary">
+                            <i class="fas fa-hand-holding-heart me-2"></i>
+                            Gönüllü Ol
+                        </a>
+                        <a href="index.php?page=donate" class="btn btn-outline-primary">
+                            <i class="fas fa-heart me-2"></i>
+                            Bağış Yap
+                        </a>
                     </div>
                 </div>
             </div>
