@@ -83,7 +83,15 @@ $families_helped = 500;
                         <span>Yardım Edilen Aile</span>
                         <strong><?= $families_helped ?>+</strong>
                     </div>
-                    <img src="uploads/images/hero/hero-image.jpg" alt="Necat Derneği" class="hero-main-image">
+                    <div class="hero-image-container">
+                        <img src="uploads/images/hero/hero-image.jpg" 
+                             alt="Necat Derneği - Birlikte güçlü bir toplum için çalışan gönüllüler ve yardım faaliyetleri" 
+                             class="hero-main-image"
+                             loading="eager"
+                             decoding="async"
+                             width="1536"
+                             height="1024">
+                    </div>
                 </div>
             </div>
         </div>

@@ -12,6 +12,17 @@
     <meta name="author" content="Necat Derneği">
     <meta name="theme-color" content="#2563eb">
     
+    <!-- Preload critical images -->
+    <?php if(isset($_GET['page']) && $_GET['page'] == 'home' || !isset($_GET['page'])): ?>
+    <link rel="preload" as="image" href="uploads/images/hero/hero-image.jpg" importance="high">
+    <?php endif; ?>
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->

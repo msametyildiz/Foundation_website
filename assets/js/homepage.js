@@ -118,8 +118,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Loading animation for images
-    const images = document.querySelectorAll('img');
+    // Enhanced loading animation for hero image
+    const heroImage = document.querySelector('.hero-main-image');
+    if (heroImage) {
+        // Check if image is already loaded
+        if (heroImage.complete && heroImage.naturalHeight !== 0) {
+            // Image is already loaded
+            heroImage.style.opacity = '1';
+            heroImage.style.transform = 'scale(1)';
+            heroImage.classList.add('hero-loaded');
+        } else {
+            // Add loading state
+            heroImage.style.opacity = '0';
+            heroImage.style.transform = 'scale(0.95)';
+            heroImage.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            
+            // Enhanced load handler
+            heroImage.addEventListener('load', function() {
+                this.style.opacity = '1';
+                this.style.transform = 'scale(1)';
+                
+                // Add subtle entrance animation
+                setTimeout(() => {
+                    this.classList.add('hero-loaded');
+                }, 100);
+            });
+            
+            // Error handling
+            heroImage.addEventListener('error', function() {
+                this.style.opacity = '0.7';
+                this.style.filter = 'grayscale(100%)';
+                console.warn('Hero image failed to load');
+            });
+        }
+    }
+
+    // Loading animation for other images
+    const images = document.querySelectorAll('img:not(.hero-main-image)');
     images.forEach(img => {
         img.addEventListener('load', function() {
             this.style.opacity = '1';
@@ -183,6 +218,39 @@ document.addEventListener('DOMContentLoaded', function() {
             card.style.animation = 'fadeInRight 0.8s ease forwards';
         });
     });
+});
+
+// Enhanced floating cards animation
+function initializeFloatingCardsAnimation() {
+    const floatingCards = document.querySelectorAll('.floating-card');
+    
+    floatingCards.forEach((card, index) => {
+        // Staggered entrance animation
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px) scale(0.95)';
+        card.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0) scale(1)';
+        }, 800 + (index * 200));
+        
+        // Enhanced hover interactions
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.03)';
+            this.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.15)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.1)';
+        });
+    });
+}
+
+// Initialize on DOM load
+document.addEventListener('DOMContentLoaded', function() {
+    initializeFloatingCardsAnimation();
 });
 
 // Utility functions
