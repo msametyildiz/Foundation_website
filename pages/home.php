@@ -1,9 +1,6 @@
 <?php
-// İçerik kataloğunu yükle
+// Content catalog'u dahil et
 require_once 'includes/content_catalog.php';
-
-// Ana sayfa içeriğini al
-$homepage_content = getContentForPage('home');
 
 // Ana sayfa için slider verilerini çek
 try {
@@ -37,13 +34,14 @@ $families_helped = 500;
         <div class="row min-vh-100 align-items-center">
             <div class="col-lg-6">
                 <div class="hero-content">
-                    <span class="hero-badge">🌟 <?= $homepage_content['hero_slogan'] ?></span>
+                    <span class="hero-badge">🌟 Birlikte Güçlüyüz</span>
                     <h1 class="hero-title">
                         Gönüllü Ol,
                         <span class="text-gradient">Hayat Değiştir</span>
                     </h1>
                     <p class="hero-subtitle">
-                        <?= $homepage_content['hero_description'] ?>
+                        Birlikte daha güçlüyüz. Gönüllü ekibimize katılın ve 
+                        muhtaç ailelere umut olun. Her katkı bir hayatı değiştirir.
                     </p>
                     <div class="hero-actions">
                         <a href="index.php?page=donate" class="btn btn-hero-primary">
@@ -107,39 +105,7 @@ $families_helped = 500;
     </div>
 </section>
 
-<!-- Mission Preview Section -->
-<section class="mission-preview py-5 bg-light">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 mb-4 mb-lg-0">
-                <div class="mission-content">
-                    <h2 class="section-title mb-4">Misyonumuz</h2>
-                    <p class="lead text-muted mb-4">
-                        <?= $homepage_content['mission_preview'] ?>
-                    </p>
-                    <div class="cta-box p-4 bg-primary text-white rounded shadow">
-                        <h4 class="mb-3"><i class="fas fa-hand-holding-heart"></i> Birlikte Güçlü</h4>
-                        <p class="mb-0"><?= $homepage_content['call_to_action'] ?></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="mission-image-container">
-                    <img src="uploads/images/mission/mission-main.jpg" alt="Misyonumuz" class="mission-image">
-                    <div class="floating-stats">
-                        <div class="stat-card bg-white shadow rounded p-3">
-                            <i class="fas fa-heart text-danger fa-2x mb-2"></i>
-                            <h5 class="mb-0"><?= number_format($total_donations) ?> ₺</h5>
-                            <small class="text-muted">Toplam Bağış</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Features Section -->
+<!-- Features Section 
 <section class="features-section py-5">
     <div class="container">
         <div class="row">
@@ -172,7 +138,7 @@ $families_helped = 500;
             </div>
         </div>
     </div>
-</section>
+</section>-->
 
 <!-- About Preview Section -->
 <section class="about-preview py-5">
@@ -241,119 +207,38 @@ $families_helped = 500;
             </div>
         </div>
         <div class="row">
-            <?php if (!empty($featured_projects)): ?>
-                <?php foreach ($featured_projects as $index => $project): ?>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="project-card">
-                        <div class="project-image">
-                            <img src="uploads/images/projects/project-<?= $index + 1 ?>.jpg" alt="<?= clean_output($project['title']) ?>">
-                            <div class="project-overlay">
-                                <span class="project-category">Yardım Projesi</span>
-                            </div>
+            <?php 
+            // Featured projects from content catalog - 3 main activities
+            $featured_activities = array_slice($activities, 0, 3); // First 3 activities
+            ?>
+            <?php foreach ($featured_activities as $index => $activity): ?>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="uploads/images/projects/project-<?= $index + 1 ?>.jpg" alt="<?= clean_output($activity['title']) ?>">
+                        <div class="project-overlay">
+                            <span class="project-category">
+                                <i class="<?= $activity['icon'] ?> me-2"></i>
+                                <?= ucfirst(str_replace('_', ' ', $activity['category'])) ?>
+                            </span>
                         </div>
-                        <div class="project-content">
-                            <h3><?= clean_output($project['title']) ?></h3>
-                            <p><?= substr(clean_output($project['description']), 0, 120) ?>...</p>
-                            <div class="project-progress">
-                                <div class="progress-info">
-                                    <span>İlerleme</span>
-                                    <span>75%</span>
-                                </div>
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 75%"></div>
-                                </div>
-                            </div>
-                            <a href="index.php?page=projects" class="btn btn-sm btn-primary">
+                    </div>
+                    <div class="project-content">
+                        <h3><?= clean_output($activity['title']) ?></h3>
+                        <p><?= clean_output($activity['description']) ?></p>
+                        <div class="project-footer">
+                            <a href="index.php?page=projects" class="btn btn-primary btn-sm">
+                                <i class="fas fa-arrow-right me-2"></i>
                                 Detayları Gör
                             </a>
                         </div>
                     </div>
                 </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <!-- Örnek projeler -->
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="project-card">
-                        <div class="project-image">
-                            <img src="uploads/images/projects/project-1.jpg" alt="Eğitim Projesi">
-                            <div class="project-overlay">
-                                <span class="project-category">Eğitim</span>
-                            </div>
-                        </div>
-                        <div class="project-content">
-                            <h3>Çocuklar İçin Eğitim Desteği</h3>
-                            <p>Maddi durumu iyi olmayan ailerin çocuklarına eğitim desteği sağlıyoruz.</p>
-                            <div class="project-progress">
-                                <div class="progress-info">
-                                    <span>İlerleme</span>
-                                    <span>85%</span>
-                                </div>
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 85%"></div>
-                                </div>
-                            </div>
-                            <a href="index.php?page=projects" class="btn btn-sm btn-primary">
-                                Detayları Gör
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="project-card">
-                        <div class="project-image">
-                            <img src="uploads/images/projects/project-2.jpg" alt="Gıda Projesi">
-                            <div class="project-overlay">
-                                <span class="project-category">Beslenme</span>
-                            </div>
-                        </div>
-                        <div class="project-content">
-                            <h3>Ramazan Gıda Kolisi</h3>
-                            <p>Ramazan ayında ihtiyaç sahibi ailelere gıda kolisi dağıtımı yapıyoruz.</p>
-                            <div class="project-progress">
-                                <div class="progress-info">
-                                    <span>İlerleme</span>
-                                    <span>60%</span>
-                                </div>
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 60%"></div>
-                                </div>
-                            </div>
-                            <a href="index.php?page=projects" class="btn btn-sm btn-primary">
-                                Detayları Gör
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="project-card">
-                        <div class="project-image">
-                            <img src="uploads/images/projects/project-3.jpg" alt="Sağlık Projesi">
-                            <div class="project-overlay">
-                                <span class="project-category">Sağlık</span>
-                            </div>
-                        </div>
-                        <div class="project-content">
-                            <h3>Sağlık Tarama Hizmeti</h3>
-                            <p>Düzenli sağlık taramaları ve ücretsiz muayene hizmetleri sunuyoruz.</p>
-                            <div class="project-progress">
-                                <div class="progress-info">
-                                    <span>İlerleme</span>
-                                    <span>90%</span>
-                                </div>
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: 90%"></div>
-                                </div>
-                            </div>
-                            <a href="index.php?page=projects" class="btn btn-sm btn-primary">
-                                Detayları Gör
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
+            </div>
+            <?php endforeach; ?>
         </div>
         <div class="text-center mt-4">
-            <a href="index.php?page=projects" class="btn btn-primary btn-lg">
+            <a href="index.php?page=projects" class="btn btn-primary btn-lg projects-view-all-btn">
                 Tüm Projeleri Gör
                 <i class="fas fa-arrow-right ms-2"></i>
             </a>
@@ -374,19 +259,8 @@ $families_helped = 500;
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-lira-sign"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h3 class="stat-number" data-target="<?= $total_donations ?>">0</h3>
-                        <p class="stat-label">Toplanan Bağış</p>
-                        <span class="stat-unit">₺</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-4">
+            
+            <div class="col-lg-4 col-md-6 mb-4">
                 <div class="stat-card">
                     <div class="stat-icon">
                         <i class="fas fa-project-diagram"></i>
@@ -397,7 +271,7 @@ $families_helped = 500;
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4">
                 <div class="stat-card">
                     <div class="stat-icon">
                         <i class="fas fa-users"></i>
@@ -408,7 +282,7 @@ $families_helped = 500;
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4">
                 <div class="stat-card">
                     <div class="stat-icon">
                         <i class="fas fa-home"></i>
@@ -491,7 +365,7 @@ $families_helped = 500;
     </div>
 </section>
 
-<!-- CTA Section -->
+<!-- CTA Section 
 <section class="cta-section py-5">
     <div class="container">
         <div class="row align-items-center">
@@ -517,9 +391,9 @@ $families_helped = 500;
             </div>
         </div>
     </div>
-</section>
+</section>-->
 
-<!-- İstatistikler -->
+<!-- İstatistikler 
 <section class="stats-section">
     <div class="container">
         <div class="row text-center">
@@ -549,9 +423,9 @@ $families_helped = 500;
             </div>
         </div>
     </div>
-</section>
+</section>-->
 
-<!-- Hakkımızda Özet -->
+<!-- Hakkımızda Özet 
 <section class="py-5">
     <div class="container">
         <div class="row align-items-center">
@@ -574,9 +448,9 @@ $families_helped = 500;
             </div>
         </div>
     </div>
-</section>
+</section>-->
 
-<!-- Öne Çıkan Projeler -->
+<!-- Öne Çıkan Projeler 
 <?php if (!empty($featured_projects)): ?>
 <section class="py-5 bg-light">
     <div class="container">
@@ -631,9 +505,9 @@ $families_helped = 500;
         </div>
     </div>
 </section>
-<?php endif; ?>
+<?php endif; ?>-->
 
-<!-- Nasıl Yardım Edebilirsiniz -->
+<!-- Nasıl Yardım Edebilirsiniz
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-5">
@@ -701,9 +575,9 @@ $families_helped = 500;
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
-<!-- Haberler ve Duyurular -->
+<!-- Haberler ve Duyurular
 <section class="py-5 bg-light">
     <div class="container">
         <div class="text-center mb-5">
@@ -755,7 +629,7 @@ $families_helped = 500;
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 <!-- CTA Section -->
 <section class="py-5 bg-gradient-primary text-white">
