@@ -228,6 +228,124 @@ $about_additional = [
     'location' => 'İstanbul, Türkiye'
 ];
 
+// İSLAMİ DEĞERLER VE İLKELER
+$islamic_values = [
+    'yardimlaşma' => [
+        'title' => 'Yardımlaşma',
+        'description' => 'İslam\'ın temel taşlarından biri olan yardımlaşma, hem maddi hem de manevi boyutta gerçekleşir.',
+        'verse' => '"Birbirlerinize iyilik ve takva konusunda yardım ediniz, günah ve düşmanlık konusunda yardımlaşmayınız." (Maide, 2)',
+        'icon' => 'fas fa-hands-helping',
+        'color' => 'primary'
+    ],
+    'merhamet' => [
+        'title' => 'Merhamet',
+        'description' => 'Allah\'ın rahmetinin yansıması olan merhamet, tüm canlılara karşı şefkatli olmayı gerektirir.',
+        'verse' => '"Merhamet edenlere Rahman olan Allah merhamet eder." (Tirmizi)',
+        'icon' => 'fas fa-heart',
+        'color' => 'secondary'
+    ],
+    'adalet' => [
+        'title' => 'Adalet',
+        'description' => 'İslam\'da adalet, toplumsal barışın ve huzurun temel şartıdır.',
+        'verse' => '"Ey iman edenler! Adaleti ayakta tutan, Allah için şahitlik eden kimseler olun." (Nisa, 135)',
+        'icon' => 'fas fa-balance-scale',
+        'color' => 'accent'
+    ],
+    'emanet' => [
+        'title' => 'Emanet',
+        'description' => 'Emanet, Allah\'tan aldığımız her sorumluluğu layıkıyla yerine getirmektir.',
+        'verse' => '"Allah emanetleri ehline vermenizi ve insanlar arasında hükmettiğinizde adaletle hükmetmenizi emreder." (Nisa, 58)',
+        'icon' => 'fas fa-handshake',
+        'color' => 'primary'
+    ]
+];
+
+// KURULUŞ TARİHÇESİ VE ZAMAN ÇİZGİSİ
+$organization_timeline = [
+    [
+        'year' => '2018',
+        'title' => 'Kuruluş Fikrinin Doğuşu',
+        'description' => 'Toplumsal ihtiyaçları karşılamak amacıyla dernek kuruluş fikri oluştu.',
+        'icon' => 'fas fa-lightbulb'
+    ],
+    [
+        'year' => '2020',
+        'title' => 'Resmi Kuruluş',
+        'description' => 'Necat Derneği resmi olarak kuruldu ve faaliyetlerine başladı.',
+        'icon' => 'fas fa-certificate'
+    ],
+    [
+        'year' => '2021',
+        'title' => 'İlk Projeler',
+        'description' => 'Yetim ve kimsesiz ailelere yönelik ilk yardım programları başlatıldı.',
+        'icon' => 'fas fa-rocket'
+    ],
+    [
+        'year' => '2022',
+        'title' => 'Eğitim Desteği',
+        'description' => 'Öğrencilere burs ve kırtasiye yardımı programları hayata geçirildi.',
+        'icon' => 'fas fa-graduation-cap'
+    ],
+    [
+        'year' => '2023',
+        'title' => 'Sağlık Hizmetleri',
+        'description' => 'Kan bağışı kampanyaları ve sağlık tarama programları başlatıldı.',
+        'icon' => 'fas fa-heartbeat'
+    ],
+    [
+        'year' => '2024',
+        'title' => 'Dijital Dönüşüm',
+        'description' => 'Online platformlar ve dijital hizmetlerle erişimi artırdık.',
+        'icon' => 'fas fa-digital-tachograph'
+    ]
+];
+
+// YÖNETİM KURULU VE EKİP
+$management_team = [
+    [
+        'name' => 'Ahmet Yılmaz',
+        'position' => 'Dernek Başkanı',
+        'description' => '15 yıllık sivil toplum deneyimi',
+        'image' => 'assets/images/team/president.jpg'
+    ],
+    [
+        'name' => 'Fatma Kaya',
+        'position' => 'Genel Koordinatör',
+        'description' => 'Sosyal hizmetler uzmanı',
+        'image' => 'assets/images/team/coordinator.jpg'
+    ],
+    [
+        'name' => 'Mehmet Demir',
+        'position' => 'Mali İşler Sorumlusu',
+        'description' => 'Muhasebe ve finansman uzmanı',
+        'image' => 'assets/images/team/financial.jpg'
+    ]
+];
+
+// İSTATİSTİKLER VE BAŞARILAR
+$achievements_stats = [
+    [
+        'number' => '1,250',
+        'label' => 'Yardım Edilen Aile',
+        'icon' => 'fas fa-home'
+    ],
+    [
+        'number' => '850',
+        'label' => 'Desteklenen Öğrenci',
+        'icon' => 'fas fa-graduation-cap'
+    ],
+    [
+        'number' => '25,000',
+        'label' => 'Sağlanan İftar',
+        'icon' => 'fas fa-utensils'
+    ],
+    [
+        'number' => '500',
+        'label' => 'Kan Bağışçısı',
+        'icon' => 'fas fa-tint'
+    ]
+];
+
 /**
  * Sayfa içeriğini getirir
  * @param string $page Sayfa adı
@@ -235,7 +353,8 @@ $about_additional = [
  */
 function getContentForPage($page) {
     global $homepage_content, $founding_principles, $activities, $volunteer_questions, 
-           $faq_questions, $values_messages, $mission_text, $about_additional;
+           $faq_questions, $values_messages, $mission_text, $about_additional,
+           $islamic_values, $organization_timeline, $management_team, $achievements_stats;
     
     switch($page) {
         case 'home':
@@ -244,7 +363,11 @@ function getContentForPage($page) {
             return [
                 'principles' => $founding_principles, 
                 'mission' => $mission_text,
-                'additional' => $about_additional
+                'additional' => $about_additional,
+                'islamic_values' => $islamic_values,
+                'timeline' => $organization_timeline,
+                'team' => $management_team,
+                'stats' => $achievements_stats
             ];
         case 'projects':
             return $activities;
