@@ -39,45 +39,38 @@ try {
 } catch (PDOException $e) {
     $volunteer_stats = ['total_volunteers' => 0, 'active_volunteers' => 0, 'pending_applications' => 0];
 }
-?>
 
-// Gönüllü alanları
-$volunteer_areas = [
+// Motivasyon soruları
+$volunteer_questions = [
     [
-        'icon' => 'fas fa-hands-helping',
-        'title' => 'Acil Yardım',
-        'description' => 'Acil durumlarda hızla müdahale eden ekibimizin bir parçası olun.',
-        'skills' => ['İlk yardım', 'Kriz yönetimi', 'Hızlı karar verme']
+        'icon' => 'fas fa-heart',
+        'question' => 'Başkalarına yardım etmek sizi mutlu ediyor mu?',
+        'category' => 'empathy'
     ],
     [
-        'icon' => 'fas fa-graduation-cap',
-        'title' => 'Eğitim',
-        'description' => 'Çocuklar ve gençlere eğitim desteği sağlayarak geleceği şekillendirin.',
-        'skills' => ['Öğretmenlik', 'Ders verme', 'Sabır']
+        'icon' => 'fas fa-clock',
+        'question' => 'Boş zamanlarınızı anlamlı işler için ayırmaya istekli misiniz?',
+        'category' => 'time_management'
     ],
     [
-        'icon' => 'fas fa-laptop-code',
-        'title' => 'Teknoloji',
-        'description' => 'Dijital dönüşümümüzde bize destek olun ve teknik becerilerinizi paylaşın.',
-        'skills' => ['Web tasarım', 'Programlama', 'Sosyal medya']
+        'icon' => 'fas fa-users',
+        'question' => 'Takım çalışması yapmaktan hoşlanır mısınız?',
+        'category' => 'teamwork'
     ],
     [
-        'icon' => 'fas fa-camera',
-        'title' => 'Medya ve İletişim',
-        'description' => 'Hikayelerimizi anlatan içerikler üretin ve sesimizi duyurun.',
-        'skills' => ['Fotoğrafçılık', 'Video editing', 'Yazma']
+        'icon' => 'fas fa-lightbulb',
+        'question' => 'Toplumsal sorunlara çözüm üretmek ister misiniz?',
+        'category' => 'problem_solving'
     ],
     [
-        'icon' => 'fas fa-heartbeat',
-        'title' => 'Sağlık',
-        'description' => 'Sağlık profesyoneli olarak ihtiyaç sahiplerine ulaşın.',
-        'skills' => ['Tıp', 'Hemşirelik', 'Psikoloji']
+        'icon' => 'fas fa-handshake',
+        'question' => 'Farklı kültürlerden insanlarla çalışabilir misiniz?',
+        'category' => 'diversity'
     ],
     [
-        'icon' => 'fas fa-chart-line',
-        'title' => 'Proje Yönetimi',
-        'description' => 'Projelerimizin etkin yürütülmesinde organizasyon becerilerinizi kullanın.',
-        'skills' => ['Planlama', 'Koordinasyon', 'Liderlik']
+        'icon' => 'fas fa-star',
+        'question' => 'Kişisel gelişiminize katkıda bulunacak deneyimler arıyor musunuz?',
+        'category' => 'personal_growth'
     ]
 ];
 ?>

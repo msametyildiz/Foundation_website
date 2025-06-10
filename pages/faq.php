@@ -23,120 +23,86 @@ try {
     // Eğer veritabanında veri yoksa varsayılan kategoriler oluştur
     if (empty($faq_categories)) {
         $faq_categories = [
-            'Genel' => [
+            'general' => [
                 'title' => 'Genel Sorular',
                 'icon' => 'fas fa-info-circle',
-                'questions' => []
+                'questions' => [
+                    [
+                        'question' => 'Derneğiniz ne zaman kuruldu?',
+                        'answer' => 'Derneğimiz 2020 yılında kurulmuş olup, o tarihten beri kesintisiz olarak faaliyetlerimizi sürdürmekteyiz.'
+                    ],
+                    [
+                        'question' => 'Hangi alanlarda faaliyet gösteriyorsunuz?',
+                        'answer' => 'Eğitim, sağlık, sosyal yardım, acil durum müdahalesi ve toplumsal gelişim alanlarında faaliyet göstermekteyiz.'
+                    ]
+                ]
             ],
-            'Bağış' => [
+            'donation' => [
                 'title' => 'Bağış ve Yardım',
                 'icon' => 'fas fa-heart',
-                'questions' => []
+                'questions' => [
+                    [
+                        'question' => 'Nasıl bağış yapabilirim?',
+                        'answer' => 'Bağış yapmak için web sitemizin "Bağış Yap" bölümünü kullanabilir, IBAN numaralarımıza doğrudan transfer yapabilir veya dernek merkezimizi ziyaret edebilirsiniz.'
+                    ],
+                    [
+                        'question' => 'Bağışımın hangi amaçla kullanıldığını nasıl öğrenebilirim?',
+                        'answer' => 'Tüm bağışlar için detaylı raporlama sistemi kullanıyoruz. Bağışçılarımıza düzenli olarak faaliyet raporları gönderiliyor ve web sitemizde şeffaflık ilkesi gereği tüm harcamalar paylaşılıyor.'
+                    ]
+                ]
             ],
-            'Gönüllülük' => [
+            'volunteer' => [
                 'title' => 'Gönüllülük',
-                'icon' => 'fas fa-users',
-                'questions' => []
+                'icon' => 'fas fa-hands-helping',
+                'questions' => [
+                    [
+                        'question' => 'Gönüllü olmak için hangi şartları sağlamalıyım?',
+                        'answer' => '18 yaşını doldurmuş olmak, dernek değerlerimizi benimsemek ve düzenli katılım sağlayabilmek temel şartlarımızdır.'
+                    ],
+                    [
+                        'question' => 'Hangi alanlarda gönüllü olabilirim?',
+                        'answer' => 'Acil yardım, eğitim desteği, sağlık hizmetleri, teknoloji, medya-iletişim, proje yönetimi gibi birçok alanda gönüllü olabilirsiniz.'
+                    ]
+                ]
             ]
         ];
     }
 
 } catch (PDOException $e) {
     $faq_categories = [
-        'Genel' => [
+        'general' => [
             'title' => 'Genel Sorular',
             'icon' => 'fas fa-info-circle',
             'questions' => []
         ]
     ];
 }
-?>
-                'question' => 'Nasıl bağış yapabilirim?',
-                'answer' => 'Bağış yapmak için web sitemizin "Bağış Yap" bölümünü kullanabilir, IBAN numaralarımıza doğrudan transfer yapabilir veya dernek merkezimizi ziyaret edebilirsiniz. Ayrıca telefon ile de bağış kabul ediyoruz.'
-            ],
-            [
-                'question' => 'Bağışımın hangi amaçla kullanıldığını nasıl öğrenebilirim?',
-                'answer' => 'Tüm bağışlar için detaylı raporlama sistemi kullanıyoruz. Bağışçılarımıza düzenli olarak faaliyet raporları gönderiliyor ve web sitemizde şeffaflık ilkesi gereği tüm harcamalar paylaşılıyor. Ayrıca istediğiniz zaman dernek merkezimizi ziyaret ederek bilgi alabilirsiniz.'
-            ],
-            [
-                'question' => 'Ayni bağış kabul ediyor musunuz?',
-                'answer' => 'Evet, temiz ve kullanılabilir durumda olan giysi, gıda, eğitim malzemeleri, ev eşyaları ve diğer ihtiyaç malzemelerini kabul ediyoruz. Ayni bağış öncesi lütfen bizimle iletişime geçerek hangi malzemelere ihtiyaç olduğunu öğreniniz.'
-            ],
-            [
-                'question' => 'Vergi indirimi alabilir miyim?',
-                'answer' => 'Evet, derneğimiz vergi muafiyeti bulunan bir kuruluş olduğu için bağışlarınız için vergi indirimi alabilirsiniz. Bağış makbuzunuzu saklamanız ve beyanname döneminde kullanmanız gerekmektedir.'
-            ],
-            [
-                'question' => 'Kurban ve fidye bağışı kabul ediyor musunuz?',
-                'answer' => 'Evet, kurban ve fidye bağışlarınızı kabul ediyoruz. Bu konuda özel organizasyonlar düzenleyerek ihtiyaç sahiplerine ulaştırıyoruz. Ramazan ve Kurban Bayramı dönemlerinde özel kampanyalarımız bulunmaktadır.'
-            ]
-        ]
+
+// Manevi sorular için özel array
+$faq_questions = [
+    [
+        'icon' => 'fas fa-heart',
+        'question' => 'Başkalarına yardım etmek sizi mutlu ediyor mu?',
+        'answer' => 'İyilik yapmak, insanın ruhunu besleyen en güzel eylemlerden biridir.',
+        'category' => 'empathy'
     ],
-    'volunteer' => [
-        'title' => 'Gönüllülük',
-        'icon' => 'fas fa-hands-helping',
-        'questions' => [
-            [
-                'question' => 'Gönüllü olmak için hangi şartları sağlamalıyım?',
-                'answer' => '18 yaşını doldurmuş olmak, dernek değerlerimizi benimsemek ve düzenli katılım sağlayabilmek temel şartlarımızdır. Özel beceri gerektiren alanlarda ilgili deneyim ve sertifikalar aranabilir.'
-            ],
-            [
-                'question' => 'Gönüllü çalışmalar için herhangi bir ücret ödeniyor mu?',
-                'answer' => 'Gönüllü çalışmalarımız tamamen karşılıksız olarak yapılmaktadır. Ancak, uzun süreli saha çalışmalarında temel ihtiyaçlar (yemek, konaklama, ulaşım) dernek tarafından karşılanabilir.'
-            ],
-            [
-                'question' => 'Hangi alanlarda gönüllü olabilirim?',
-                'answer' => 'Acil yardım, eğitim desteği, sağlık hizmetleri, teknoloji, medya-iletişim, proje yönetimi, etkinlik organizasyonu ve idari işler gibi birçok alanda gönüllü olabilirsiniz. Yeteneklerinize uygun alanlarda değerlendirilirsiniz.'
-            ],
-            [
-                'question' => 'Gönüllü eğitimi veriliyor mu?',
-                'answer' => 'Evet, tüm gönüllülerimize temel eğitim programı uygulanır. Ayrıca özel alanlarda çalışacak gönüllüler için ilgili konularda ek eğitimler düzenlenir. İlk yardım, kriz yönetimi gibi temel eğitimler zorunludur.'
-            ]
-        ]
+    [
+        'icon' => 'fas fa-clock',
+        'question' => 'Boş zamanlarınızı anlamlı işler için ayırmaya istekli misiniz?',
+        'answer' => 'Zamanımız en değerli varlığımızdır ve onu paylaştığımızda çoğalır.',
+        'category' => 'time_management'
     ],
-    'projects' => [
-        'title' => 'Projeler',
-        'icon' => 'fas fa-project-diagram',
-        'questions' => [
-            [
-                'question' => 'Projelere nasıl destek olabilirim?',
-                'answer' => 'Projelerimize maddi bağış, ayni yardım, gönüllü katılım veya sosyal medyada paylaşım yaparak destek olabilirsiniz. Her proje için farklı destek türleri gerekebilir.'
-            ],
-            [
-                'question' => 'Proje önerisinde bulunabilir miyim?',
-                'answer' => 'Elbette! Toplumsal fayda sağlayacak proje önerilerinizi değerlendiriyoruz. Öneri formumuzu doldurarak veya doğrudan iletişime geçerek önerilerinizi paylaşabilirsiniz.'
-            ],
-            [
-                'question' => 'Projeler nasıl seçilir ve planlanır?',
-                'answer' => 'Projeler, toplumsal ihtiyaç analizi, kaynak durumu, etki değerlendirmesi ve sürdürülebilirlik kriterleri göz önünde bulundurularak seçilir. Uzman ekibimiz tarafından detaylı planlama yapılır.'
-            ],
-            [
-                'question' => 'Proje ilerlemesini nasıl takip edebilirim?',
-                'answer' => 'Web sitemizin projeler bölümünde güncel ilerleme raporları paylaşılır. Ayrıca sosyal medya hesaplarımızdan ve bülten e-postalarımızdan da bilgi alabilirsiniz.'
-            ]
-        ]
+    [
+        'icon' => 'fas fa-users',
+        'question' => 'Takım çalışması yapmaktan hoşlanır mısınız?',
+        'answer' => 'Birlikte başarılan işler, tek başına yapılandan çok daha anlamlıdır.',
+        'category' => 'teamwork'
     ],
-    'contact' => [
-        'title' => 'İletişim ve Ulaşım',
-        'icon' => 'fas fa-phone',
-        'questions' => [
-            [
-                'question' => 'Dernek merkezinizi ziyaret edebilir miyim?',
-                'answer' => 'Evet, çalışma saatleri içinde dernek merkezimizi ziyaret edebilirsiniz. Önceden randevu almanızı tavsiye ederiz. Çalışma saatlerimiz: Pazartesi-Cuma 09:00-17:00, Cumartesi 09:00-14:00.'
-            ],
-            [
-                'question' => 'Acil durumlarda nasıl ulaşabilirim?',
-                'answer' => 'Acil durumlar için 7/24 hizmet veren acil yardım hattımız bulunmaktadır. Bu numara sadece gerçek acil durumlar için kullanılmalıdır. Genel sorularınız için normal iletişim kanallarını tercih ediniz.'
-            ],
-            [
-                'question' => 'Sosyal medya hesaplarınız hangileri?',
-                'answer' => 'Instagram, Facebook, Twitter ve YouTube hesaplarımız bulunmaktadır. Tüm platformlarda @necatdernegi kullanıcı adıyla bizi takip edebilirsiniz.'
-            ],
-            [
-                'question' => 'E-posta ile gönderdiğim mesajlara ne kadar sürede yanıt alırım?',
-                'answer' => 'Normal koşullarda 24-48 saat içinde e-postalarınıza yanıt vermeye çalışıyoruz. Yoğun dönemlerde bu süre 72 saate kadar uzayabilir. Acil durumlar için telefon iletişimini tercih ediniz.'
-            ]
-        ]
+    [
+        'icon' => 'fas fa-lightbulb',
+        'question' => 'Toplumsal sorunlara çözüm üretmek ister misiniz?',
+        'answer' => 'Her sorun aslında bir fırsattır ve çözüm üretmek hepimizin sorumluluğudur.',
+        'category' => 'problem_solving'
     ]
 ];
 ?>

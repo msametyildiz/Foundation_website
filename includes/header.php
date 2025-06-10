@@ -66,7 +66,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            padding-top: 0;
+            padding-top: 80px;
         }
 
         /* Modern Navbar */
@@ -594,4 +594,4 @@
     </nav>
 
     <!-- Main Content -->
-    <main style="padding-top: 80px;">
+    <main>
