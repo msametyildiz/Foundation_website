@@ -1,9 +1,41 @@
 <?php
-// İçerik kataloğunu yükle
-require_once 'includes/content_catalog.php';
+// Veritabanından gerçek verileri çek
+try {
+    // Site ayarlarını çek
+    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM site_settings");
+    $stmt->execute();
+    $site_settings = [];
+    while ($row = $stmt->fetch()) {
+        $site_settings[$row['setting_key']] = $row['setting_value'];
+    }
 
-// Hakkımızda sayfası içeriğini al
-$about_content = getContentForPage('about');
+    // İstatistikleri çek
+    $stmt = $pdo->prepare("SELECT 
+        (SELECT COUNT(*) FROM projects WHERE status IN ('active', 'completed')) as total_projects,
+        (SELECT SUM(beneficiaries) FROM projects WHERE status IN ('active', 'completed') AND beneficiaries IS NOT NULL) as total_families,
+        (SELECT COUNT(*) FROM volunteer_applications WHERE status = 'approved') as total_volunteers,
+        (SELECT COUNT(*) FROM team_members WHERE is_active = 1) as total_team,
+        (SELECT SUM(collected_amount) FROM projects WHERE status IN ('active', 'completed')) as total_donations
+    ");
+    $stmt->execute();
+    $stats = $stmt->fetch();
+
+    // Yönetim kurulu üyelerini çek
+    $stmt = $pdo->prepare("SELECT * FROM team_members WHERE category = 'yonetim' AND is_active = 1 ORDER BY sort_order ASC");
+    $stmt->execute();
+    $team_members = $stmt->fetchAll();
+
+    // Başarılı projeleri çek
+    $stmt = $pdo->prepare("SELECT * FROM projects WHERE status = 'completed' ORDER BY created_at DESC LIMIT 3");
+    $stmt->execute();
+    $completed_projects = $stmt->fetchAll();
+
+} catch (PDOException $e) {
+    $stats = ['total_projects' => 0, 'total_families' => 0, 'total_volunteers' => 0, 'total_team' => 0, 'total_donations' => 0];
+    $team_members = [];
+    $completed_projects = [];
+    $site_settings = [];
+}
 ?>
 
 
@@ -18,22 +50,28 @@ $about_content = getContentForPage('about');
                     2018'den beri toplumsal değişim için çalışan, sosyal sorumluluk bilinciyle hareket eden bir derneğiz.
                 </p>
                 <div class="row g-3 mb-5">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="stat-simple">
-                            <h3 class="text-primary mb-1">6+</h3>
+                            <h3 class="text-primary mb-1"><?= date('Y') - 2018 ?>+</h3>
                             <small class="text-muted">Yıl Deneyim</small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="stat-simple">
-                            <h3 class="text-primary mb-1">500+</h3>
+                            <h3 class="text-primary mb-1"><?= number_format($stats['total_families'] ?? 0) ?>+</h3>
                             <small class="text-muted">Aile</small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="stat-simple">
-                            <h3 class="text-primary mb-1">25</h3>
+                            <h3 class="text-primary mb-1"><?= $stats['total_projects'] ?? 0 ?></h3>
                             <small class="text-muted">Proje</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-simple">
+                            <h3 class="text-primary mb-1"><?= $stats['total_volunteers'] ?? 0 ?>+</h3>
+                            <small class="text-muted">Gönüllü</small>
                         </div>
                     </div>
                 </div>
@@ -56,7 +94,7 @@ $about_content = getContentForPage('about');
                             <h3 class="h4 mb-0">Misyonumuz</h3>
                         </div>
                         <p class="text-muted">
-                            <?= nl2br($about_content['mission']) ?>
+                            <?= nl2br(htmlspecialchars($site_settings['mission'] ?? 'Misyon bilgisi yükleniyor...')) ?>
                         </p>
                     </div>
                 </div>
@@ -72,7 +110,7 @@ $about_content = getContentForPage('about');
                             <h3 class="h4 mb-0">Vizyonumuz</h3>
                         </div>
                         <p class="text-muted">
-                            <?= $about_content['additional']['vision'] ?>
+                            <?= nl2br(htmlspecialchars($site_settings['vision'] ?? 'Vizyon bilgisi yükleniyor...')) ?>
                         </p>
                     </div>
                 </div>
@@ -82,22 +120,40 @@ $about_content = getContentForPage('about');
 </section>
 
 <!-- Kuruluş İlkelerimiz -->
-<section class="py-5">
+<section class="py-5" style="background-color: #fafafa;">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2>Kuruluş İlkelerimiz</h2>
-            <p class="lead">Derneğimizin temelini oluşturan değerler</p>
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="h1 fw-light text-dark mb-3">Kuruluş İlkelerimiz</h2>
+                <p class="lead text-muted mb-0" style="font-weight: 400;">
+                    Derneğimizin temelini oluşturan değerler
+                </p>
+            </div>
         </div>
         
-        <div class="row">
+        <div class="row g-4">
             <?php foreach ($about_content['principles'] as $key => $principle): ?>
             <div class="col-lg-4 col-md-6 mb-4">
-                <div class="principle-card">
-                    <div class="principle-icon">
-                        <i class="<?= $principle['icon'] ?> fa-2x text-primary"></i>
+                <div class="card h-100 border-0 shadow-sm" style="transition: transform 0.3s ease;">
+                    <div class="card-body p-4 text-center">
+                        <!-- Icon -->
+                        <div class="mb-4">
+                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light" 
+                                 style="width: 80px; height: 80px;">
+                                <i class="<?= $principle['icon'] ?> fa-2x text-primary"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h5 class="fw-semibold text-dark mb-3" style="line-height: 1.4;">
+                            <?= $principle['title'] ?>
+                        </h5>
+                        
+                        <!-- Description -->
+                        <p class="text-muted mb-0" style="font-size: 0.95rem; line-height: 1.6;">
+                            <?= $principle['description'] ?>
+                        </p>
                     </div>
-                    <h5 class="principle-title"><?= $principle['title'] ?></h5>
-                    <p class="principle-description"><?= $principle['description'] ?></p>
                 </div>
             </div>
             <?php endforeach; ?>
@@ -108,49 +164,65 @@ $about_content = getContentForPage('about');
 <!-- Simple Values -->
 <section class="py-5">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="h3 fw-light">Değerlerimiz</h2>
-            <p class="text-muted">Çalışmalarımızı yönlendiren temel değerlerimiz</p>
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="h1 fw-light text-dark mb-3">Değerlerimiz</h2>
+                <p class="lead text-muted mb-0" style="font-weight: 400;">
+                    Çalışmalarımızı yönlendiren temel değerlerimiz
+                </p>
+            </div>
         </div>
         
         <div class="row g-4">
             <div class="col-lg-3 col-md-6">
-                <div class="text-center">
-                    <div class="icon-circle bg-light text-primary mx-auto mb-3">
-                        <i class="fas fa-hand-holding-heart"></i>
+                <div class="text-center p-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" 
+                         style="width: 70px; height: 70px;">
+                        <i class="fas fa-hand-holding-heart fa-lg text-primary"></i>
                     </div>
-                    <h5 class="h6">Şefkat</h5>
-                    <p class="small text-muted">Her bireye eşit mesafede, sevgi ve şefkatle yaklaşırız.</p>
+                    <h5 class="fw-semibold text-dark mb-3">Şefkat</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.95rem; line-height: 1.6;">
+                        Her bireye eşit mesafede, sevgi ve şefkatle yaklaşırız.
+                    </p>
                 </div>
             </div>
             
             <div class="col-lg-3 col-md-6">
-                <div class="text-center">
-                    <div class="icon-circle bg-light text-info mx-auto mb-3">
-                        <i class="fas fa-eye"></i>
+                <div class="text-center p-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" 
+                         style="width: 70px; height: 70px;">
+                        <i class="fas fa-eye fa-lg text-primary"></i>
                     </div>
-                    <h5 class="h6">Şeffaflık</h5>
-                    <p class="small text-muted">Tüm faaliyetlerimizi açık ve şeffaf şekilde yürütürüz.</p>
+                    <h5 class="fw-semibold text-dark mb-3">Şeffaflık</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.95rem; line-height: 1.6;">
+                        Tüm faaliyetlerimizi açık ve şeffaf şekilde yürütürüz.
+                    </p>
                 </div>
             </div>
             
             <div class="col-lg-3 col-md-6">
-                <div class="text-center">
-                    <div class="icon-circle bg-light text-success mx-auto mb-3">
-                        <i class="fas fa-shield-alt"></i>
+                <div class="text-center p-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" 
+                         style="width: 70px; height: 70px;">
+                        <i class="fas fa-shield-alt fa-lg text-primary"></i>
                     </div>
-                    <h5 class="h6">Güvenilirlik</h5>
-                    <p class="small text-muted">Verilen sözlerin tutulduğu, güvene dayalı ilişkiler kurarız.</p>
+                    <h5 class="fw-semibold text-dark mb-3">Güvenilirlik</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.95rem; line-height: 1.6;">
+                        Verilen sözlerin tutulduğu, güvene dayalı ilişkiler kurarız.
+                    </p>
                 </div>
             </div>
             
             <div class="col-lg-3 col-md-6">
-                <div class="text-center">
-                    <div class="icon-circle bg-light text-warning mx-auto mb-3">
-                        <i class="fas fa-users"></i>
+                <div class="text-center p-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" 
+                         style="width: 70px; height: 70px;">
+                        <i class="fas fa-users fa-lg text-primary"></i>
                     </div>
-                    <h5 class="h6">Dayanışma</h5>
-                    <p class="small text-muted">Birlikte daha güçlü olduğumuzun bilinciyle hareket ederiz.</p>
+                    <h5 class="fw-semibold text-dark mb-3">Dayanışma</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.95rem; line-height: 1.6;">
+                        Birlikte daha güçlü olduğumuzun bilinciyle hareket ederiz.
+                    </p>
                 </div>
             </div>
         </div>
@@ -205,67 +277,95 @@ $about_content = getContentForPage('about');
     </div>
 </section>
 
-<!-- Simple Activity Areas -->
-<section class="py-5 bg-light">
+<!-- Faaliyet Alanlarımız -->
+<section class="py-5" style="background-color: #fafafa;">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="h3 fw-light">Faaliyet Alanlarımız</h2>
+        <!-- Section Header -->
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="h1 fw-light text-dark mb-3">Faaliyet Alanlarımız</h2>
+                <p class="lead text-muted mb-0" style="font-weight: 400;">
+                    Toplumun farklı kesimlerine ulaşarak geniş bir yelpazede hizmet sunuyoruz
+                </p>
+            </div>
         </div>
         
+        <!-- Activity Cards Grid -->
         <div class="row g-4">
-            <div class="col-lg-2 col-md-4 col-6">
-                <div class="text-center">
-                    <div class="icon-circle bg-primary text-white mx-auto mb-2">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h6 class="small fw-bold">Eğitim</h6>
-                </div>
-            </div>
+            <?php 
+            // Faaliyet alanları verisi
+            $activities_data = [
+                [
+                    'title' => 'Yetim ve Kimsesiz Aile Yardımları',
+                    'description' => 'Yetim, yoksul ve kimsesiz ailelere temel ihtiyaçlarını karşılayarak destek oluyoruz.',
+                    'icon' => 'fas fa-home',
+                    'stats' => '500+ Aile'
+                ],
+                [
+                    'title' => 'Eğitim Desteği',
+                    'description' => 'Yetim ve yoksul öğrencilere burs ve kırtasiye yardımı yaparak eğitimlerini destekliyoruz.',
+                    'icon' => 'fas fa-graduation-cap',
+                    'stats' => '250+ Öğrenci'
+                ],
+                [
+                    'title' => 'Ramazan Organizasyonları',
+                    'description' => 'Ramazan ayında yoksul ailelere iftar yemeği organizasyonları düzenliyoruz.',
+                    'icon' => 'fas fa-moon',
+                    'stats' => '2000+ İftar'
+                ],
+                [
+                    'title' => 'Evlilik Yardımları',
+                    'description' => 'Maddi imkânsızlıktan evlenemeyen gençlere evlilik yardımları yapıyoruz.',
+                    'icon' => 'fas fa-rings-wedding',
+                    'stats' => '75+ Çift'
+                ],
+                [
+                    'title' => 'Sağlık Hizmetleri',
+                    'description' => 'Kurban kesimleri, dağıtımı ve hastalara kan temin etme gibi sağlık destekleri sağlıyoruz.',
+                    'icon' => 'fas fa-heartbeat',
+                    'stats' => '300+ Hasta'
+                ],
+                [
+                    'title' => 'Sosyal Aktiviteler',
+                    'description' => 'Yoksul aileler için çeşitli organizasyonlar düzenleyerek manevi eğitimler veriyoruz.',
+                    'icon' => 'fas fa-users',
+                    'stats' => '150+ Etkinlik'
+                ]
+            ];
             
-            <div class="col-lg-2 col-md-4 col-6">
-                <div class="text-center">
-                    <div class="icon-circle bg-danger text-white mx-auto mb-2">
-                        <i class="fas fa-heartbeat"></i>
+            foreach ($activities_data as $index => $activity): 
+            ?>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow-sm" style="transition: transform 0.3s ease;">
+                    <div class="card-body p-4 text-center">
+                        <!-- Icon -->
+                        <div class="mb-4">
+                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light" 
+                                 style="width: 80px; height: 80px;">
+                                <i class="<?= $activity['icon'] ?> fa-2x text-primary"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h5 class="fw-semibold text-dark mb-3" style="line-height: 1.4;">
+                            <?= $activity['title'] ?>
+                        </h5>
+                        
+                        <!-- Description -->
+                        <p class="text-muted mb-4" style="font-size: 0.95rem; line-height: 1.6;">
+                            <?= $activity['description'] ?>
+                        </p>
+                        
+                        <!-- Stats -->
+                        <div class="mt-auto">
+                            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
+                                <?= $activity['stats'] ?>
+                            </span>
+                        </div>
                     </div>
-                    <h6 class="small fw-bold">Sağlık</h6>
                 </div>
             </div>
-            
-            <div class="col-lg-2 col-md-4 col-6">
-                <div class="text-center">
-                    <div class="icon-circle bg-warning text-white mx-auto mb-2">
-                        <i class="fas fa-bread-slice"></i>
-                    </div>
-                    <h6 class="small fw-bold">Gıda Yardımı</h6>
-                </div>
-            </div>
-            
-            <div class="col-lg-2 col-md-4 col-6">
-                <div class="text-center">
-                    <div class="icon-circle bg-info text-white mx-auto mb-2">
-                        <i class="fas fa-hands-helping"></i>
-                    </div>
-                    <h6 class="small fw-bold">Afet Yardımı</h6>
-                </div>
-            </div>
-            
-            <div class="col-lg-2 col-md-4 col-6">
-                <div class="text-center">
-                    <div class="icon-circle bg-success text-white mx-auto mb-2">
-                        <i class="fas fa-home"></i>
-                    </div>
-                    <h6 class="small fw-bold">Sosyal Destek</h6>
-                </div>
-            </div>
-            
-            <div class="col-lg-2 col-md-4 col-6">
-                <div class="text-center">
-                    <div class="icon-circle bg-secondary text-white mx-auto mb-2">
-                        <i class="fas fa-female"></i>
-                    </div>
-                    <h6 class="small fw-bold">Kadın Destekleme</h6>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>

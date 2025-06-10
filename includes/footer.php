@@ -1,5 +1,31 @@
     </main>
 
+<?php
+// Footer için site ayarlarını çek
+try {
+    if (!isset($site_settings)) {
+        $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM site_settings");
+        $stmt->execute();
+        $site_settings = [];
+        while ($row = $stmt->fetch()) {
+            $site_settings[$row['setting_key']] = $row['setting_value'];
+        }
+    }
+} catch (PDOException $e) {
+    $site_settings = [
+        'site_title' => 'Necat Derneği',
+        'site_description' => 'Yardım eli uzatan, umut dağıtan bir toplum için birlikte çalışıyoruz.',
+        'contact_email' => 'info@necatdernegi.org',
+        'contact_phone' => '+90 312 444 56 78',
+        'contact_address' => 'Kızılay Mahallesi, Atatürk Bulvarı No: 125/7, Çankaya/ANKARA',
+        'facebook_url' => '#',
+        'twitter_url' => '#',
+        'instagram_url' => '#',
+        'linkedin_url' => '#',
+        'youtube_url' => '#'
+    ];
+}
+?>
     <style>
         /* Modern Footer Styling */
         :root {
@@ -417,23 +443,22 @@
                         </div>
                     </div>
                     <p class="footer-description">
-                        Yardım eli uzatan, umut dağıtan bir toplum için birlikte çalışıyoruz. 
-                        İhtiyaç sahiplerine ulaşan her elinde, gönüllerin birleştiği bir dünya inşa ediyoruz.
+                        <?= htmlspecialchars($site_settings['site_description'] ?? 'Yardım eli uzatan, umut dağıtan bir toplum için birlikte çalışıyoruz. İhtiyaç sahiplerine ulaşan her elinde, gönüllerin birleştiği bir dünya inşa ediyoruz.') ?>
                     </p>
                     <div class="footer-social">
-                        <a href="#" class="social-link" aria-label="Facebook">
+                        <a href="<?= htmlspecialchars($site_settings['facebook_url'] ?? '#') ?>" class="social-link" aria-label="Facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="Twitter">
+                        <a href="<?= htmlspecialchars($site_settings['twitter_url'] ?? '#') ?>" class="social-link" aria-label="Twitter">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="Instagram">
+                        <a href="<?= htmlspecialchars($site_settings['instagram_url'] ?? '#') ?>" class="social-link" aria-label="Instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="LinkedIn">
+                        <a href="<?= htmlspecialchars($site_settings['linkedin_url'] ?? '#') ?>" class="social-link" aria-label="LinkedIn">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="YouTube">
+                        <a href="<?= htmlspecialchars($site_settings['youtube_url'] ?? '#') ?>" class="social-link" aria-label="YouTube">
                             <i class="fab fa-youtube"></i>
                         </a>
                     </div>
@@ -474,8 +499,7 @@
                                 <i class="fas fa-map-marker-alt"></i>
                             </div>
                             <div class="contact-text">
-                                Örnek Mahalle, Örnek Sokak No:1<br>
-                                Kadıköy, İstanbul
+                                <?= nl2br(htmlspecialchars($site_settings['contact_address'] ?? 'Kızılay Mahallesi, Atatürk Bulvarı No: 125/7<br>Çankaya/ANKARA')) ?>
                             </div>
                         </div>
                         <div class="contact-item">
@@ -483,7 +507,7 @@
                                 <i class="fas fa-phone"></i>
                             </div>
                             <div class="contact-text">
-                                +90 212 123 45 67<br>
+                                <?= htmlspecialchars($site_settings['contact_phone'] ?? '+90 312 444 56 78') ?><br>
                                 <small>Pazartesi - Cuma: 09:00 - 18:00</small>
                             </div>
                         </div>
@@ -492,7 +516,7 @@
                                 <i class="fas fa-envelope"></i>
                             </div>
                             <div class="contact-text">
-                                info@necatdernegi.org<br>
+                                <?= htmlspecialchars($site_settings['contact_email'] ?? 'info@necatdernegi.org') ?><br>
                                 <small>24 saat içinde yanıtlanır</small>
                             </div>
                         </div>
@@ -520,6 +544,23 @@
     <script src="assets/js/navbar-modern.js"></script>
     <!-- Custom JS -->
     <script src="assets/js/main.js"></script>
+    
+    <?php
+    // Page-specific JavaScript files
+    $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
+    $page_js_files = [
+        'home' => 'homepage.js',
+        'about' => 'about-page.js',
+        // Add more page-specific JS files as needed
+    ];
+    
+    if (isset($page_js_files[$current_page])) {
+        $js_file = "assets/js/" . $page_js_files[$current_page];
+        if (file_exists($js_file)) {
+            echo "<script src=\"{$js_file}\"></script>\n    ";
+        }
+    }
+    ?>
 
     <script>
         // Modern Footer Functionality

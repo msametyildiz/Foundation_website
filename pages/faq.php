@@ -1,54 +1,56 @@
 <?php
-// İçerik kataloğunu yükle
-require_once 'includes/content_catalog.php';
+// Veritabanından FAQ verilerini çek
+try {
+    // FAQ sorularını kategorilere göre çek
+    $stmt = $pdo->prepare("SELECT * FROM faq WHERE is_active = 1 ORDER BY sort_order ASC, id ASC");
+    $stmt->execute();
+    $faq_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// SSS sayfası içeriğini al
-$faq_questions = getContentForPage('faq');
+    // Kategorilere göre grupla
+    $faq_categories = [];
+    foreach ($faq_data as $faq) {
+        $category = $faq['category'] ?? 'Genel';
+        if (!isset($faq_categories[$category])) {
+            $faq_categories[$category] = [
+                'title' => $category,
+                'icon' => $category === 'Bağış' ? 'fas fa-heart' : ($category === 'Gönüllülük' ? 'fas fa-users' : ($category === 'Projeler' ? 'fas fa-project-diagram' : 'fas fa-info-circle')),
+                'questions' => []
+            ];
+        }
+        $faq_categories[$category]['questions'][] = $faq;
+    }
 
-require_once '../config/database.php';
-
-// Katalogdan gelen soruları kategorilere göre gruplayalım
-$faq_categories = [];
-foreach ($faq_questions as $faq) {
-    if (!isset($faq_categories[$faq['category']])) {
-        $faq_categories[$faq['category']] = [
-            'title' => ucfirst(str_replace('_', ' ', $faq['category'])),
-            'icon' => $faq['icon'],
-            'questions' => []
+    // Eğer veritabanında veri yoksa varsayılan kategoriler oluştur
+    if (empty($faq_categories)) {
+        $faq_categories = [
+            'Genel' => [
+                'title' => 'Genel Sorular',
+                'icon' => 'fas fa-info-circle',
+                'questions' => []
+            ],
+            'Bağış' => [
+                'title' => 'Bağış ve Yardım',
+                'icon' => 'fas fa-heart',
+                'questions' => []
+            ],
+            'Gönüllülük' => [
+                'title' => 'Gönüllülük',
+                'icon' => 'fas fa-users',
+                'questions' => []
+            ]
         ];
     }
-    $faq_categories[$faq['category']]['questions'][] = $faq;
-}
 
-// Geleneksel SSS kategorileri (mevcut içerik korunuyor)
-$traditional_faq = [
-    'general' => [
-        'title' => 'Genel Sorular',
-        'icon' => 'fas fa-info-circle',
-        'questions' => [
-            [
-                'question' => 'Necat Derneği ne zaman ve neden kuruldu?',
-                'answer' => 'Necat Derneği, 2015 yılında ihtiyaç sahiplerine yardım etmek ve toplumsal dayanışmayı güçlendirmek amacıyla kurulmuştur. Derneğimiz, "Necat" kelimesinin anlamı olan "kurtuluş" ilkesiyle hareket ederek, zor durumda olan insanlara umut ve destek olmayı misyon edinmiştir.'
-            ],
-            [
-                'question' => 'Derneğinizin faaliyet alanları nelerdir?',
-                'answer' => 'Acil yardım, eğitim desteği, sağlık hizmetleri, gıda yardımı, barınma desteği, sosyal projeler ve toplumsal farkındalık çalışmaları başlıca faaliyet alanlarımızdır. Ayrıca afet anlarında hızlı müdahale ekiplerimizle sahada bulunuruz.'
-            ],
-            [
-                'question' => 'Derneğiniz hangi bölgelerde faaliyet gösteriyor?',
-                'answer' => 'Öncelikli olarak Türkiye genelinde faaliyet gösteriyoruz. Ayrıca, gerektiğinde uluslararası acil yardım çalışmalarına da katılım sağlıyoruz. Yerel ihtiyaçları karşılamanın yanı sıra küresel dayanışmanın da önemli olduğuna inanıyoruz.'
-            ],
-            [
-                'question' => 'Derneğinizin yasal statüsü nedir?',
-                'answer' => 'Necat Derneği, Türkiye Cumhuriyeti İçişleri Bakanlığı\'na bağlı olarak faaliyet gösteren, resmi izinleri bulunan bir sivil toplum kuruluşudur. Tüm mali işlemlerimiz şeffaf bir şekilde yürütülür ve düzenli olarak denetlenir.'
-            ]
+} catch (PDOException $e) {
+    $faq_categories = [
+        'Genel' => [
+            'title' => 'Genel Sorular',
+            'icon' => 'fas fa-info-circle',
+            'questions' => []
         ]
-    ],
-    'donation' => [
-        'title' => 'Bağış ve Yardım',
-        'icon' => 'fas fa-heart',
-        'questions' => [
-            [
+    ];
+}
+?>
                 'question' => 'Nasıl bağış yapabilirim?',
                 'answer' => 'Bağış yapmak için web sitemizin "Bağış Yap" bölümünü kullanabilir, IBAN numaralarımıza doğrudan transfer yapabilir veya dernek merkezimizi ziyaret edebilirsiniz. Ayrıca telefon ile de bağış kabul ediyoruz.'
             ],

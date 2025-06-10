@@ -20,11 +20,56 @@ try {
     $featured_projects = [];
 }
 
-// İstatistikler (örnek veriler)
-$total_donations = 150000;
-$total_projects = 25;
-$total_volunteers = 120;
-$families_helped = 500;
+// Son haberler
+try {
+    $stmt = $pdo->prepare("SELECT * FROM news WHERE status = 'published' ORDER BY created_at DESC LIMIT 3");
+    $stmt->execute();
+    $recent_news = $stmt->fetchAll();
+} catch (PDOException $e) {
+    $recent_news = [];
+}
+
+// Gerçek istatistikler
+try {
+    // Toplam bağış tutarı
+    $stmt = $pdo->prepare("SELECT SUM(collected_amount) as total FROM projects WHERE status IN ('active', 'completed')");
+    $stmt->execute();
+    $total_donations = $stmt->fetchColumn() ?: 0;
+    
+    // Toplam proje sayısı
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM projects WHERE status IN ('active', 'completed')");
+    $stmt->execute();
+    $total_projects = $stmt->fetchColumn() ?: 0;
+    
+    // Toplam gönüllü sayısı (volunteer_applications tablosundan)
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM volunteer_applications WHERE status = 'approved'");
+    $stmt->execute();
+    $total_volunteers = $stmt->fetchColumn() ?: 0;
+    
+    // Yardım edilen aile sayısı (projelerden toplam beneficiaries)
+    $stmt = $pdo->prepare("SELECT SUM(beneficiaries) as total FROM projects WHERE status IN ('active', 'completed') AND beneficiaries IS NOT NULL");
+    $stmt->execute();
+    $total_families = $stmt->fetchColumn() ?: 0;
+    
+    // Site ayarlarını çek
+    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM site_settings");
+    $stmt->execute();
+    $site_settings = [];
+    while ($row = $stmt->fetch()) {
+        $site_settings[$row['setting_key']] = $row['setting_value'];
+    }
+} catch (PDOException $e) {
+    $total_donations = 0;
+    $total_projects = 0;
+    $total_volunteers = 0;
+    $total_families = 0;
+} catch (PDOException $e) {
+    $total_donations = 0;
+    $total_projects = 0;
+    $total_volunteers = 0;
+    $total_families = 0;
+    $site_settings = [];
+}
 ?>
 
 <!-- Hero Section - Modern Gradient Design -->
@@ -55,7 +100,7 @@ $families_helped = 500;
                     </div>
                     <div class="hero-stats">
                         <div class="stat-item">
-                            <span class="stat-number"><?= number_format($families_helped) ?>+</span>
+                            <span class="stat-number"><?= number_format($total_families) ?>+</span>
                             <span class="stat-label">Aile</span>
                         </div>
                         <div class="stat-item">
@@ -84,7 +129,7 @@ $families_helped = 500;
                     <div class="floating-card card-3">
                         <i class="fas fa-home text-success"></i>
                         <span>Yardım Edilen Aile</span>
-                        <strong><?= $families_helped ?>+</strong>
+                        <strong><?= number_format($total_families) ?>+</strong>
                     </div>
                     <div class="hero-image-container">
                         <img src="uploads/images/hero/hero-image.jpg" 
@@ -207,35 +252,72 @@ $families_helped = 500;
             </div>
         </div>
         <div class="row">
-            <?php 
-            // Featured projects from content catalog - 3 main activities
-            $featured_activities = array_slice($activities, 0, 3); // First 3 activities
-            ?>
-            <?php foreach ($featured_activities as $index => $activity): ?>
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="uploads/images/projects/project-<?= $index + 1 ?>.jpg" alt="<?= clean_output($activity['title']) ?>">
-                        <div class="project-overlay">
-                            <span class="project-category">
-                                <i class="<?= $activity['icon'] ?> me-2"></i>
-                                <?= ucfirst(str_replace('_', ' ', $activity['category'])) ?>
-                            </span>
+            <?php if (!empty($featured_projects)): ?>
+                <?php foreach ($featured_projects as $project): ?>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="<?= !empty($project['image']) ? $project['image'] : 'uploads/images/projects/default-project.jpg' ?>" 
+                                 alt="<?= clean_output($project['title']) ?>">
+                            <div class="project-overlay">
+                                <span class="project-category">
+                                    <i class="fas fa-heart me-2"></i>
+                                    <?= clean_output($project['category']) ?>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="project-content">
-                        <h3><?= clean_output($activity['title']) ?></h3>
-                        <p><?= clean_output($activity['description']) ?></p>
-                        <div class="project-footer">
-                            <a href="index.php?page=projects" class="btn btn-primary btn-sm">
-                                <i class="fas fa-arrow-right me-2"></i>
-                                Detayları Gör
-                            </a>
+                        <div class="project-content">
+                            <h3><?= clean_output($project['title']) ?></h3>
+                            <p><?= clean_output($project['short_description']) ?></p>
+                            <div class="project-progress">
+                                <div class="progress-info">
+                                    <span>Toplanan: ₺<?= number_format($project['collected_amount']) ?></span>
+                                    <span>Hedef: ₺<?= number_format($project['target_amount']) ?></span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: <?= $project['target_amount'] > 0 ? min(100, ($project['collected_amount'] / $project['target_amount']) * 100) : 0 ?>%"></div>
+                                </div>
+                            </div>
+                            <div class="project-footer">
+                                <a href="index.php?page=projects" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-arrow-right me-2"></i>
+                                    Detayları Gör
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <!-- Katalogdan yedek içerik -->
+                <?php 
+                $featured_activities = array_slice($activities, 0, 3);
+                foreach ($featured_activities as $index => $activity): ?>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="uploads/images/projects/project-<?= $index + 1 ?>.jpg" alt="<?= clean_output($activity['title']) ?>">
+                            <div class="project-overlay">
+                                <span class="project-category">
+                                    <i class="<?= $activity['icon'] ?> me-2"></i>
+                                    <?= ucfirst(str_replace('_', ' ', $activity['category'])) ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <h3><?= clean_output($activity['title']) ?></h3>
+                            <p><?= clean_output($activity['description']) ?></p>
+                            <div class="project-footer">
+                                <a href="index.php?page=projects" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-arrow-right me-2"></i>
+                                    Detayları Gör
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
         <div class="text-center mt-4">
             <a href="index.php?page=projects" class="btn btn-primary btn-lg projects-view-all-btn">
@@ -288,7 +370,7 @@ $families_helped = 500;
                         <i class="fas fa-home"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 class="stat-number" data-target="<?= $families_helped ?>">0</h3>
+                        <h3 class="stat-number" data-target="<?= $total_families ?>">0</h3>
                         <p class="stat-label">Yardım Edilen Aile</p>
                     </div>
                 </div>
@@ -577,59 +659,62 @@ $families_helped = 500;
     </div>
 </section> -->
 
-<!-- Haberler ve Duyurular
-<section class="py-5 bg-light">
+<!-- Haberler ve Duyurular -->
+<?php if (!empty($recent_news)): ?>
+<section class="news-section py-5 bg-light">
     <div class="container">
-        <div class="text-center mb-5">
-            <h2>Son Haberler</h2>
-            <p class="lead">Faaliyetlerimizden son haberler</p>
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <span class="section-badge">Haberler</span>
+                <h2 class="section-title">Son Haberler ve Duyurular</h2>
+                <p class="section-subtitle">Faaliyetlerimiz ve projelerimizden güncel haberler</p>
+            </div>
         </div>
-        
         <div class="row">
+            <?php foreach ($recent_news as $news): ?>
             <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <img src="assets/images/news1.jpg" class="card-img-top" alt="Haber 1">
-                    <div class="card-body">
-                        <small class="text-muted">15 Kasım 2024</small>
-                        <h5 class="card-title">Kış Yardımı Kampanyası Başladı</h5>
-                        <p class="card-text">
-                            Soğuk kış günlerinde muhtaç ailelere ulaşmak için yeni kampanyamızı başlattık.
-                        </p>
-                        <a href="#" class="btn btn-outline-primary btn-sm">Devamını Oku</a>
+                <article class="news-card">
+                    <div class="news-image">
+                        <img src="<?= !empty($news['image']) ? $news['image'] : 'uploads/images/news/default-news.jpg' ?>" 
+                             alt="<?= clean_output($news['title']) ?>">
+                        <div class="news-overlay">
+                            <span class="news-category">
+                                <?= ucfirst($news['category']) ?>
+                            </span>
+                            <span class="news-date">
+                                <?= date('d.m.Y', strtotime($news['created_at'])) ?>
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <img src="assets/images/news2.jpg" class="card-img-top" alt="Haber 2">
-                    <div class="card-body">
-                        <small class="text-muted">10 Kasım 2024</small>
-                        <h5 class="card-title">50 Öğrenciye Burs Desteği</h5>
-                        <p class="card-text">
-                            Eğitim burs programımız kapsamında 50 başarılı öğrenciye destek sağladık.
+                    <div class="news-content">
+                        <h3 class="news-title">
+                            <a href="#" class="text-decoration-none">
+                                <?= clean_output($news['title']) ?>
+                            </a>
+                        </h3>
+                        <p class="news-excerpt">
+                            <?= clean_output($news['summary'] ?: substr(strip_tags($news['content']), 0, 150) . '...') ?>
                         </p>
-                        <a href="#" class="btn btn-outline-primary btn-sm">Devamını Oku</a>
+                        <div class="news-footer">
+                            <a href="#" class="btn btn-outline-primary btn-sm">
+                                Devamını Oku
+                                <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
                     </div>
-                </div>
+                </article>
             </div>
-            
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <img src="assets/images/news3.jpg" class="card-img-top" alt="Haber 3">
-                    <div class="card-body">
-                        <small class="text-muted">5 Kasım 2024</small>
-                        <h5 class="card-title">Sağlık Taraması Tamamlandı</h5>
-                        <p class="card-text">
-                            Kırsal bölgelerde gerçekleştirdiğimiz sağlık taraması projesi başarıyla tamamlandı.
-                        </p>
-                        <a href="#" class="btn btn-outline-primary btn-sm">Devamını Oku</a>
-                    </div>
-                </div>
-            </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="text-center mt-4">
+            <a href="index.php?page=press" class="btn btn-primary btn-lg">
+                Tüm Haberleri Gör
+                <i class="fas fa-newspaper ms-2"></i>
+            </a>
         </div>
     </div>
-</section> -->
+</section>
+<?php endif; ?>
 
 <!-- CTA Section -->
 <section class="py-5 bg-gradient-primary text-white">

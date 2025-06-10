@@ -2,7 +2,7 @@
 require_once '../config/database.php';
 
 // Basın açıklamaları ve haberler
-$stmt = $db->prepare("SELECT * FROM news WHERE status = 'published' AND type IN ('press', 'news') ORDER BY created_at DESC LIMIT 20");
+$stmt = $pdo->prepare("SELECT * FROM news WHERE status = 'published' AND type IN ('press', 'news') ORDER BY created_at DESC LIMIT 20");
 $stmt->execute();
 $press_news = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

@@ -1,54 +1,68 @@
 <?php
-require_once '../config/database.php';
+// Veritabanından iletişim bilgilerini çek
+try {
+    // Site ayarlarını çek
+    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM site_settings");
+    $stmt->execute();
+    $site_settings = [];
+    while ($row = $stmt->fetch()) {
+        $site_settings[$row['setting_key']] = $row['setting_value'];
+    }
 
-// İletişim formu işleme
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'contact') {
-    if (validateCSRFToken($_POST['csrf_token'])) {
-        $name = sanitizeInput($_POST['name']);
-        $email = sanitizeInput($_POST['email']);
-        $phone = sanitizeInput($_POST['phone']);
-        $subject = sanitizeInput($_POST['subject']);
-        $message = sanitizeInput($_POST['message']);
+    // İletişim formu işleme
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'contact') {
+        $name = trim($_POST['name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $phone = trim($_POST['phone'] ?? '');
+        $subject = trim($_POST['subject'] ?? '');
+        $message = trim($_POST['message'] ?? '');
         
-        if (validateEmail($email)) {
+        if (!empty($name) && !empty($email) && !empty($message) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
             try {
-                $stmt = $db->prepare("INSERT INTO contact_messages (name, email, phone, subject, message, created_at, status) VALUES (?, ?, ?, ?, ?, NOW(), 'unread')");
-                $stmt->execute([$name, $email, $phone, $subject, $message]);
+                $stmt = $pdo->prepare("INSERT INTO contact_messages (name, email, phone, subject, message, created_at, status, ip_address) VALUES (?, ?, ?, ?, ?, NOW(), 'new', ?)");
+                $stmt->execute([$name, $email, $phone, $subject, $message, $_SERVER['REMOTE_ADDR'] ?? '']);
                 
                 $success_message = "Mesajınız başarıyla gönderilmiştir. En kısa sürede size dönüş yapacağız.";
             } catch (PDOException $e) {
                 $error_message = "Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.";
             }
         } else {
-            $error_message = "Lütfen geçerli bir email adresi giriniz.";
+            $error_message = "Lütfen tüm zorunlu alanları doldurun ve geçerli bir email adresi giriniz.";
         }
-    } else {
-        $error_message = "Güvenlik doğrulaması başarısız. Lütfen tekrar deneyin.";
     }
+
+    // İletişim bilgilerini ayarlardan çek
+    $contact_info = [
+        'address' => $site_settings['contact_address'] ?? 'Adres bilgisi güncelleniyor...',
+        'phone' => $site_settings['contact_phone'] ?? '+90 312 444 56 78',
+        'emergency' => $site_settings['emergency_phone'] ?? '+90 555 123 4567',
+        'fax' => $site_settings['contact_fax'] ?? '',
+        'email' => $site_settings['contact_email'] ?? 'info@necatdernegi.org',
+        'working_hours' => [
+            'weekdays' => 'Pazartesi - Cuma: 09:00 - 18:00',
+            'saturday' => 'Cumartesi: 09:00 - 14:00',
+            'sunday' => 'Pazar: Kapalı'
+        ]
+    ];
+
+    // Sosyal medya hesaplarını ayarlardan çek
+    $social_media = [
+        ['platform' => 'Facebook', 'icon' => 'fab fa-facebook-f', 'url' => $site_settings['facebook_url'] ?? '#', 'color' => '#1877f2'],
+        ['platform' => 'Instagram', 'icon' => 'fab fa-instagram', 'url' => $site_settings['instagram_url'] ?? '#', 'color' => '#e4405f'],
+        ['platform' => 'Twitter', 'icon' => 'fab fa-twitter', 'url' => $site_settings['twitter_url'] ?? '#', 'color' => '#1da1f2'],
+        ['platform' => 'YouTube', 'icon' => 'fab fa-youtube', 'url' => $site_settings['youtube_url'] ?? '#', 'color' => '#ff0000'],
+        ['platform' => 'LinkedIn', 'icon' => 'fab fa-linkedin-in', 'url' => $site_settings['linkedin_url'] ?? '#', 'color' => '#0077b5']
+    ];
+
+} catch (PDOException $e) {
+    $contact_info = [
+        'address' => 'Kızılay Mahallesi, Atatürk Bulvarı No: 125/7, Çankaya/ANKARA',
+        'phone' => '+90 312 444 56 78',
+        'email' => 'info@necatdernegi.org'
+    ];
+    $social_media = [];
 }
-
-// İletişim bilgileri
-$contact_info = [
-    'address' => 'Merkez Mahallesi, Yardım Sokak No: 15/A, 34000 İstanbul',
-    'phone' => '+90 (212) 555-0123',
-    'emergency' => '+90 (555) 123-4567',
-    'fax' => '+90 (212) 555-0124',
-    'email' => 'info@necatdernegi.org',
-    'working_hours' => [
-        'weekdays' => 'Pazartesi - Cuma: 09:00 - 17:00',
-        'saturday' => 'Cumartesi: 09:00 - 14:00',
-        'sunday' => 'Pazar: Kapalı'
-    ]
-];
-
-// Sosyal medya hesapları
-$social_media = [
-    ['platform' => 'Facebook', 'icon' => 'fab fa-facebook-f', 'url' => 'https://facebook.com/necatdernegi', 'color' => '#1877f2'],
-    ['platform' => 'Instagram', 'icon' => 'fab fa-instagram', 'url' => 'https://instagram.com/necatdernegi', 'color' => '#e4405f'],
-    ['platform' => 'Twitter', 'icon' => 'fab fa-twitter', 'url' => 'https://twitter.com/necatdernegi', 'color' => '#1da1f2'],
-    ['platform' => 'YouTube', 'icon' => 'fab fa-youtube', 'url' => 'https://youtube.com/necatdernegi', 'color' => '#ff0000'],
-    ['platform' => 'LinkedIn', 'icon' => 'fab fa-linkedin-in', 'url' => 'https://linkedin.com/company/necatdernegi', 'color' => '#0077b5']
-];
+?>
 ?>
 
 <div class="page-header bg-primary text-white py-5">

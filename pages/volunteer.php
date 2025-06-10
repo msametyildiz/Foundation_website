@@ -1,50 +1,45 @@
 <?php
-// İçerik kataloğunu yükle
-require_once 'includes/content_catalog.php';
-
-// Gönüllü sayfası içeriğini al (motivasyon soruları)
-$volunteer_questions = getContentForPage('volunteer');
-
-require_once '../config/database.php';
-
-// Gönüllü başvuru formu işleme
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'volunteer_apply') {
-    if (validateCSRFToken($_POST['csrf_token'])) {
-        $name = sanitizeInput($_POST['name']);
-        $email = sanitizeInput($_POST['email']);
-        $phone = sanitizeInput($_POST['phone']);
-        $birth_date = sanitizeInput($_POST['birth_date']);
-        $occupation = sanitizeInput($_POST['occupation']);
-        $skills = sanitizeInput($_POST['skills']);
-        $availability = sanitizeInput($_POST['availability']);
-        $motivation = sanitizeInput($_POST['motivation']);
-        $experience = sanitizeInput($_POST['experience']);
+// Veritabanından gönüllü verileri
+try {
+    // Gönüllü başvuru formu işleme
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'volunteer_apply') {
+        $name = trim($_POST['name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $phone = trim($_POST['phone'] ?? '');
+        $age = (int)($_POST['age'] ?? 0);
+        $profession = trim($_POST['profession'] ?? '');
+        $experience = trim($_POST['experience'] ?? '');
+        $availability = trim($_POST['availability'] ?? '');
+        $interests = trim($_POST['interests'] ?? '');
+        $message = trim($_POST['message'] ?? '');
         
-        if (validateEmail($email) && validatePhone($phone)) {
+        if (!empty($name) && !empty($email) && !empty($phone)) {
             try {
-                $stmt = $db->prepare("INSERT INTO volunteers (name, email, phone, birth_date, occupation, skills, availability, motivation, experience, status, application_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())");
-                $stmt->execute([$name, $email, $phone, $birth_date, $occupation, $skills, $availability, $motivation, $experience]);
+                $stmt = $pdo->prepare("INSERT INTO volunteer_applications (name, email, phone, age, profession, experience, availability, interests, message, status, ip_address, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', ?, NOW())");
+                $stmt->execute([$name, $email, $phone, $age, $profession, $experience, $availability, $interests, $message, $_SERVER['REMOTE_ADDR'] ?? '']);
                 
                 $success_message = "Gönüllü başvurunuz başarıyla alınmıştır. En kısa sürede sizinle iletişime geçeceğiz.";
             } catch (PDOException $e) {
                 $error_message = "Başvuru gönderilirken bir hata oluştu. Lütfen tekrar deneyin.";
             }
         } else {
-            $error_message = "Lütfen geçerli email ve telefon numarası giriniz.";
+            $error_message = "Lütfen tüm zorunlu alanları doldurunuz.";
         }
-    } else {
-        $error_message = "Güvenlik doğrulaması başarısız. Lütfen tekrar deneyin.";
     }
-}
 
-// Gönüllü istatistikleri
-$stmt = $db->prepare("SELECT 
-    COUNT(*) as total_volunteers,
-    SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active_volunteers,
-    SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_applications
-    FROM volunteers");
-$stmt->execute();
-$volunteer_stats = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Gönüllü istatistikleri
+    $stmt = $pdo->prepare("SELECT 
+        COUNT(*) as total_volunteers,
+        SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as active_volunteers,
+        SUM(CASE WHEN status = 'new' THEN 1 ELSE 0 END) as pending_applications
+        FROM volunteer_applications");
+    $stmt->execute();
+    $volunteer_stats = $stmt->fetch(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    $volunteer_stats = ['total_volunteers' => 0, 'active_volunteers' => 0, 'pending_applications' => 0];
+}
+?>
 
 // Gönüllü alanları
 $volunteer_areas = [

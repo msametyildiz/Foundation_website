@@ -1,32 +1,37 @@
 <?php
-// İçerik kataloğunu yükle
-require_once 'includes/content_catalog.php';
+// Veritabanından projeler ve kategoriler
+try {
+    // Aktif projeleri getir
+    $stmt = $pdo->prepare("SELECT * FROM projects WHERE status = 'active' ORDER BY created_at DESC");
+    $stmt->execute();
+    $activeProjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Projeler sayfası içeriğini al (activities)
-$activities = getContentForPage('projects');
+    // Tamamlanan projeleri getir
+    $stmt = $pdo->prepare("SELECT * FROM projects WHERE status = 'completed' ORDER BY created_at DESC");
+    $stmt->execute();
+    $completedProjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-require_once '../config/database.php';
+    // Proje kategorilerini çek
+    $stmt = $pdo->prepare("SELECT DISTINCT category FROM projects WHERE category IS NOT NULL ORDER BY category");
+    $stmt->execute();
+    $categories = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-// Aktif projeleri getir
-$stmt = $db->prepare("SELECT * FROM projects WHERE status = 'active' ORDER BY created_at DESC");
-$stmt->execute();
-$activeProjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Tamamlanan projeleri getir
-$stmt = $db->prepare("SELECT * FROM projects WHERE status = 'completed' ORDER BY created_at DESC");
-$stmt->execute();
-$completedProjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Proje sayıları için istatistikler
-$stmt = $db->prepare("SELECT 
-    COUNT(*) as total_projects,
-    SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active_count,
-    SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_count,
-    SUM(target_amount) as total_target,
-    SUM(current_amount) as total_raised
-    FROM projects");
-$stmt->execute();
-$stats = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Proje sayıları için istatistikler
+    $stmt = $pdo->prepare("SELECT 
+        COUNT(*) as total_projects,
+        SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active_count,
+        SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_count,
+        SUM(target_amount) as total_target,
+        SUM(collected_amount) as total_raised
+        FROM projects");
+    $stmt->execute();
+    $stats = $stmt->fetch(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $activeProjects = [];
+    $completedProjects = [];
+    $categories = [];
+    $stats = ['total_projects' => 0, 'active_count' => 0, 'completed_count' => 0, 'total_target' => 0, 'total_raised' => 0];
+}
 ?>
 
 <div class="page-header bg-primary text-white py-5">
@@ -93,28 +98,46 @@ $stats = $stmt->fetch(PDO::FETCH_ASSOC);
 </section>
 
 <!-- Faaliyet Alanlarımız -->
-<section class="py-5 bg-gradient">
+<section class="py-5" style="background-color: #fafafa;">
     <div class="container">
         <div class="row mb-5">
             <div class="col-lg-8 mx-auto text-center">
-                <h2 class="section-title text-white">Faaliyet Alanlarımız</h2>
-                <p class="section-subtitle text-white opacity-75">Toplumun her kesimine ulaşan geniş hizmet yelpazemiz</p>
+                <h2 class="h1 fw-light text-dark mb-3">Faaliyet Alanlarımız</h2>
+                <p class="lead text-muted mb-0" style="font-weight: 400;">
+                    Toplumun her kesimine ulaşan geniş hizmet yelpazemiz
+                </p>
             </div>
         </div>
         
         <div class="row g-4">
             <?php foreach ($activities as $activity): ?>
             <div class="col-lg-4 col-md-6">
-                <div class="activity-card bg-white rounded shadow h-100 p-4">
-                    <div class="activity-icon mb-3">
-                        <i class="<?= $activity['icon'] ?> fa-3x text-<?= $activity['color'] ?>"></i>
-                    </div>
-                    <h4 class="activity-title mb-3"><?= $activity['title'] ?></h4>
-                    <p class="activity-description text-muted mb-3"><?= $activity['description'] ?></p>
-                    <div class="activity-category">
-                        <span class="badge bg-<?= $activity['color'] ?> bg-opacity-10 text-<?= $activity['color'] ?>">
-                            <?= ucfirst(str_replace('_', ' ', $activity['category'])) ?>
-                        </span>
+                <div class="card h-100 border-0 shadow-sm" style="transition: transform 0.3s ease;">
+                    <div class="card-body p-4 text-center">
+                        <!-- Icon -->
+                        <div class="mb-4">
+                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light" 
+                                 style="width: 80px; height: 80px;">
+                                <i class="<?= $activity['icon'] ?> fa-2x text-primary"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h5 class="fw-semibold text-dark mb-3" style="line-height: 1.4;">
+                            <?= $activity['title'] ?>
+                        </h5>
+                        
+                        <!-- Description -->
+                        <p class="text-muted mb-4" style="font-size: 0.95rem; line-height: 1.6;">
+                            <?= $activity['description'] ?>
+                        </p>
+                        
+                        <!-- Category -->
+                        <div class="mt-auto">
+                            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
+                                <?= ucfirst(str_replace('_', ' ', $activity['category'])) ?>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

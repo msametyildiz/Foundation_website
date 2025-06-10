@@ -397,6 +397,37 @@ function get_flash_message() {
     return null;
 }
 
+// Security functions
+function sanitizeInput($input) {
+    return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
+}
+
+function validateEmail($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+}
+
+function validatePhone($phone) {
+    // Basit telefon validasyonu
+    $phone = preg_replace('/[^0-9+]/', '', $phone);
+    return strlen($phone) >= 10;
+}
+
+function generateCSRFToken() {
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    $token = bin2hex(random_bytes(32));
+    $_SESSION['csrf_token'] = $token;
+    return $token;
+}
+
+function validateCSRFToken($token) {
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+}
+
 // Performance monitoring
 function start_timer($name) {
     $GLOBALS['timers'][$name] = microtime(true);

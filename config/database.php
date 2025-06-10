@@ -31,6 +31,9 @@ try {
             PDO::ATTR_EMULATE_PREPARES => false,
         ]
     );
+    
+    // Eski kod ile uyumluluk için $db değişkeni
+    $db = $pdo;
 } catch (PDOException $e) {
     die("Veritabanı bağlantı hatası: " . $e->getMessage());
 }
