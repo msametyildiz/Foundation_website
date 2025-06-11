@@ -527,7 +527,7 @@
                         <span>İletişim</span>
                     </a>
                 </li>
-                <li class="nav-item-modern dropdown-modern">
+                <!--<li class="nav-item-modern dropdown-modern">
                     <a href="#" class="nav-link-modern dropdown-toggle-modern">
                         <span>Kurumsal</span>
                     </a>
@@ -545,6 +545,7 @@
                             Yönetim Kurulu
                         </a>
                     </div>
+                </li>   -->
                 </li>
                 <li class="nav-item-modern">
                     <a href="index.php?page=donate" class="btn-cta-modern <?php echo is_active_page('donate'); ?>">

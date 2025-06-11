@@ -195,7 +195,7 @@ $additional = $about_content['additional'];
                         <img src="<?= $member['image'] ?>" alt="<?= $member['name'] ?>" onerror="this.src='assets/images/placeholder-team.jpg'">
                         <div class="team-overlay">
                             <div class="team-social">
-                                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
                                 <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
                             </div>
                         </div>

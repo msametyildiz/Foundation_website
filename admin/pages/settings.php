@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $social_facebook = sanitizeInput($_POST['social_facebook'] ?? '');
             $social_twitter = sanitizeInput($_POST['social_twitter'] ?? '');
             $social_instagram = sanitizeInput($_POST['social_instagram'] ?? '');
-            $social_youtube = sanitizeInput($_POST['social_youtube'] ?? '');
+            $social_linkedin = sanitizeInput($_POST['social_linkedin'] ?? '');
             
             // Update or insert settings
             $settings = [
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'social_facebook' => $social_facebook,
                 'social_twitter' => $social_twitter,
                 'social_instagram' => $social_instagram,
-                'social_youtube' => $social_youtube
+                'social_linkedin' => $social_linkedin
             ];
             
             foreach ($settings as $key => $value) {
@@ -138,7 +138,7 @@ $site_settings = [
     'social_facebook' => $settings_data['social_facebook'] ?? '',
     'social_twitter' => $settings_data['social_twitter'] ?? '',
     'social_instagram' => $settings_data['social_instagram'] ?? '',
-    'social_youtube' => $settings_data['social_youtube'] ?? ''
+    'social_linkedin' => $settings_data['social_linkedin'] ?? ''
 ];
 
 $email_settings = [
@@ -291,12 +291,12 @@ $security_settings = [
                                 </div>
                                 
                                 <div class="col-md-6">
-                                    <label class="form-label">YouTube</label>
+                                    <label class="form-label">LinkedIn</label>
                                     <div class="input-group">
-                                        <span class="input-group-text"><i class="fab fa-youtube"></i></span>
-                                        <input type="url" name="social_youtube" class="form-control" 
-                                               value="<?php echo htmlspecialchars($site_settings['social_youtube']); ?>" 
-                                               placeholder="https://youtube.com/...">
+                                        <span class="input-group-text"><i class="fab fa-linkedin-in"></i></span>
+                                        <input type="url" name="social_linkedin" class="form-control" 
+                                               value="<?php echo htmlspecialchars($site_settings['social_linkedin']); ?>" 
+                                               placeholder="https://linkedin.com/company/...">
                                     </div>
                                 </div>
                                 

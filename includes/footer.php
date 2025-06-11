@@ -1,4 +1,4 @@
-    </main>
+</main>
 
 <?php
 // Footer için site ayarlarını çek
@@ -457,9 +457,6 @@ try {
                         </a>
                         <a href="<?= htmlspecialchars($site_settings['linkedin_url'] ?? '#') ?>" class="social-link" aria-label="LinkedIn">
                             <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="<?= htmlspecialchars($site_settings['youtube_url'] ?? '#') ?>" class="social-link" aria-label="YouTube">
-                            <i class="fab fa-youtube"></i>
                         </a>
                     </div>
                 </div>

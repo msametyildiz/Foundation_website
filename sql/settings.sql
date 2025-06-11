@@ -19,7 +19,7 @@ INSERT INTO `settings` (`setting_key`, `setting_value`) VALUES
 ('social_facebook', ''),
 ('social_twitter', ''),
 ('social_instagram', ''),
-('social_youtube', ''),
+('social_linkedin', ''),
 ('smtp_host', ''),
 ('smtp_port', '587'),
 ('smtp_username', ''),

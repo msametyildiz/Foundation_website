@@ -2102,3 +2102,68 @@ a[href="index.php?page=press"].btn-primary:hover {
     background-color: #3d8760;
     border-color: #3d8760;
 }
+
+/* ========================================
+   FAQ PAGE COLOR CONSISTENCY
+   ======================================== */
+
+/* FAQ Page Icon Consistency */
+.faq-section i,
+.question-card i,
+.topic-icon i,
+.help-icon i,
+.search-box i,
+.section-title i {
+    color: #4ea674 !important;
+}
+
+/* FAQ Question Text Colors */
+.question-text,
+.topic-title,
+.help-title,
+.section-title,
+.card-title {
+    color: #4ea674 !important;
+}
+
+/* FAQ Navigation Icons */
+.nav-pills .nav-link i {
+    color: #4ea674 !important;
+}
+
+.nav-pills .nav-link.active i {
+    color: #ffffff !important;
+}
+
+/* FAQ Accordion Styling */
+.accordion-button .question-number {
+    background-color: #4ea674 !important;
+    color: #ffffff !important;
+}
+
+/* FAQ Search Icon */
+.search-box .btn i {
+    color: #ffffff !important;
+}
+
+/* Override any remaining text-primary colors in FAQ */
+.faq-section .text-primary,
+.question-card .text-primary,
+.simple-card .text-primary {
+    color: #4ea674 !important;
+}
+
+/* FAQ Badge Colors */
+.faq-section .badge.bg-primary {
+    background-color: #4ea674 !important;
+    color: #ffffff !important;
+}
+
+/* Popular Topics Button Icons */
+.popular-topic .btn i {
+    color: #4ea674 !important;
+}
+
+.popular-topic .btn:hover i {
+    color: #ffffff !important;
+}

@@ -415,8 +415,11 @@ $media_contacts = [
                     <a href="https://instagram.com/necatdernegi" target="_blank" class="btn btn-outline-primary btn-lg mx-2 mb-3">
                         <i class="fab fa-instagram me-2"></i> Instagram'da Takip Et
                     </a>
-                    <a href="https://youtube.com/necatdernegi" target="_blank" class="btn btn-outline-primary btn-lg mx-2 mb-3">
-                        <i class="fab fa-youtube me-2"></i> YouTube'da Abone Ol
+                    <a href="https://facebook.com/necatdernegi" target="_blank" class="btn btn-outline-primary btn-lg mx-2 mb-3">
+                        <i class="fab fa-facebook-f me-2"></i> Facebook'ta Takip Et
+                    </a>
+                    <a href="https://linkedin.com/company/necatdernegi" target="_blank" class="btn btn-outline-primary btn-lg mx-2 mb-3">
+                        <i class="fab fa-linkedin-in me-2"></i> LinkedIn'de Takip Et
                     </a>
                 </div>
             </div>
