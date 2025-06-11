@@ -61,49 +61,55 @@ $founding_principles = [
     ]
 ];
 
-// PROJELERİMİZ SAYFASI - FAALİYETLER
+// PROJELERİMİZ SAYFASI - FAALİYETLER (güncellenmiş gerçek veriler)
 $activities = [
     [
         'title' => 'Yetim ve Kimsesiz Aile Yardımları',
-        'description' => 'Yetim, yoksul ve kimsesiz ailelere yiyecek, yakacak ve giyecek yardımı',
+        'description' => 'Yetim, yoksul ve kimsesiz ailelere temel ihtiyaç desteği sağlıyoruz. Düzenli gıda kolileri, yakacak yardımı ve acil durum destekleri ile ailelerin yanındayız.',
         'category' => 'aile_yardimi',
         'icon' => 'fas fa-home',
-        'color' => 'primary'
+        'color' => 'primary',
+        'stats' => '500+ Aile'
     ],
     [
-        'title' => 'Eğitim Desteği',
-        'description' => 'Okul dönemlerinde kırtasiye yardımı ve yetim ve yoksul öğrencilere burs',
+        'title' => 'Eğitim ve Burs Desteği',
+        'description' => 'Maddi durumu yetersiz öğrencilere burs, kırtasiye ve okul masrafları desteği sağlıyoruz. Eğitim hayatlarının kesintisiz devam etmesi için yanlarındayız.',
         'category' => 'egitim',
         'icon' => 'fas fa-graduation-cap',
-        'color' => 'secondary'
+        'color' => 'secondary',
+        'stats' => '285+ Öğrenci'
     ],
     [
-        'title' => 'Ramazan Organizasyonları',
-        'description' => 'Ramazan ayında yoksul ailelere iftar yemeği organizasyonları',
-        'category' => 'ramazan',
-        'icon' => 'fas fa-moon',
-        'color' => 'accent'
-    ],
-    [
-        'title' => 'Evlilik Yardımları',
-        'description' => 'Maddi imkansızlıktan evlenemeyen yetim ve yoksullara evlilik yardımları',
-        'category' => 'evlilik',
-        'icon' => 'fas fa-rings-wedding',
-        'color' => 'primary'
-    ],
-    [
-        'title' => 'Sağlık Hizmetleri',
-        'description' => 'Adak, akika ve vacip kurban kesimleri ve dağıtımı, hastalara kan temin etmek',
+        'title' => 'Sağlık Hizmetleri ve Kan Bağışı',
+        'description' => 'Hasta nakil ambulans hizmeti, kan bağışı organizasyonları ve sağlık tarama programları ile toplum sağlığına katkıda bulunuyoruz.',
         'category' => 'saglik',
         'icon' => 'fas fa-heartbeat',
-        'color' => 'secondary'
+        'color' => 'danger',
+        'stats' => '400+ Hasta'
     ],
     [
-        'title' => 'Sosyal Aktiviteler',
-        'description' => 'Yoksul aileler için piknik, sinema ve diğer organizasyonlar, manevi eğitimler',
-        'category' => 'sosyal',
-        'icon' => 'fas fa-users',
-        'color' => 'accent'
+        'title' => 'Ramazan ve Bayram Organizasyonları',
+        'description' => 'Ramazan ayında iftar sofraları, kurban bayramında et dağıtımı ve diğer dini bayramlarda özel organizasyonlar düzenliyoruz.',
+        'category' => 'ramazan',
+        'icon' => 'fas fa-moon',
+        'color' => 'success',
+        'stats' => '2500+ İftar'
+    ],
+    [
+        'title' => 'Evlilik ve Sosyal Destek',
+        'description' => 'Maddi imkansızlıklar nedeniyle evlenemeyen gençlere evlilik desteği sağlıyor, sosyal aktiviteler düzenliyoruz.',
+        'category' => 'evlilik',
+        'icon' => 'fas fa-rings-wedding',
+        'color' => 'warning',
+        'stats' => '75+ Çift'
+    ],
+    [
+        'title' => 'Acil Durum ve Afet Yardımları',
+        'description' => 'Doğal afetler ve acil durumlarda hızlı müdahale ederek mağdurlara barınma, gıda ve temel ihtiyaç desteği sağlıyoruz.',
+        'category' => 'afet',
+        'icon' => 'fas fa-hands-helping',
+        'color' => 'info',
+        'stats' => '320+ Aile'
     ]
 ];
 

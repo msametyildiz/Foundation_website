@@ -1,147 +1,95 @@
 <?php
+// Content catalog'u dahil et
+require_once 'includes/content_catalog.php';
+
 // Veritabanından projeler ve kategoriler
 try {
-    // Aktif projeleri getir
-    $stmt = $pdo->prepare("SELECT * FROM projects WHERE status = 'active' ORDER BY created_at DESC");
+    // Aktif projeler
+    $stmt = $pdo->prepare("SELECT * FROM projects WHERE status = 'active' ORDER BY sort_order ASC, created_at DESC");
     $stmt->execute();
-    $activeProjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $activeProjects = $stmt->fetchAll();
 
-    // Tamamlanan projeleri getir
-    $stmt = $pdo->prepare("SELECT * FROM projects WHERE status = 'completed' ORDER BY created_at DESC");
+    // Tamamlanan projeler
+    $stmt = $pdo->prepare("SELECT * FROM projects WHERE status = 'completed' ORDER BY end_date DESC LIMIT 6");
     $stmt->execute();
-    $completedProjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $completedProjects = $stmt->fetchAll();
 
-    // Proje kategorilerini çek
-    $stmt = $pdo->prepare("SELECT DISTINCT category FROM projects WHERE category IS NOT NULL ORDER BY category");
-    $stmt->execute();
-    $categories = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-    // Proje sayıları için istatistikler
+    // Toplam istatistikler
     $stmt = $pdo->prepare("SELECT 
         COUNT(*) as total_projects,
         SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active_count,
         SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_count,
+        SUM(collected_amount) as total_collected,
         SUM(target_amount) as total_target,
-        SUM(collected_amount) as total_raised
-        FROM projects");
+        SUM(beneficiaries) as total_beneficiaries
+        FROM projects WHERE status IN ('active', 'completed')");
     $stmt->execute();
-    $stats = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stats = $stmt->fetch();
+
 } catch (PDOException $e) {
     $activeProjects = [];
     $completedProjects = [];
-    $categories = [];
-    $stats = ['total_projects' => 0, 'active_count' => 0, 'completed_count' => 0, 'total_target' => 0, 'total_raised' => 0];
+    $stats = ['total_projects' => 0, 'active_count' => 0, 'completed_count' => 0, 'total_collected' => 0, 'total_target' => 0, 'total_beneficiaries' => 0];
 }
+
+// Kategori çevirileri
+$categoryLabels = [
+    'education' => 'Eğitim',
+    'health' => 'Sağlık',
+    'social' => 'Sosyal Yardım',
+    'disaster' => 'Afet Yardımı',
+    'orphan' => 'Yetim Destek'
+];
+
+// Kategori renkleri
+$categoryColors = [
+    'education' => 'primary',
+    'health' => 'success',
+    'social' => 'warning',
+    'disaster' => 'danger',
+    'orphan' => 'info'
+];
 ?>
 
-<div class="page-header bg-primary text-white py-5">
+<!-- Hero Section - Simple (matching About page) -->
+<section class="hero-section">
     <div class="container">
-        <div class="row align-items-center">
+        <div class="row justify-content-center text-center">
             <div class="col-lg-8">
                 <h1 class="display-4 mb-3">Projelerimiz</h1>
-                <p class="lead mb-0">İnsani yardım alanında gerçekleştirdiğimiz ve devam eden projelerimizi keşfedin.</p>
-            </div>
-            <div class="col-lg-4">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb bg-transparent justify-content-lg-end">
-                        <li class="breadcrumb-item"><a href="/" class="text-white">Ana Sayfa</a></li>
-                        <li class="breadcrumb-item active text-white" aria-current="page">Projeler</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Proje İstatistikleri -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-3 col-md-6">
-                <div class="stats-card text-center p-4 bg-white rounded shadow-sm">
-                    <div class="stats-icon mb-3">
-                        <i class="fas fa-project-diagram fa-3x text-primary"></i>
-                    </div>
-                    <h3 class="stats-number" data-target="<?= $stats['total_projects'] ?? 0 ?>">0</h3>
-                    <p class="stats-label mb-0">Toplam Proje</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="stats-card text-center p-4 bg-white rounded shadow-sm">
-                    <div class="stats-icon mb-3">
-                        <i class="fas fa-play-circle fa-3x text-success"></i>
-                    </div>
-                    <h3 class="stats-number" data-target="<?= $stats['active_count'] ?? 0 ?>">0</h3>
-                    <p class="stats-label mb-0">Aktif Proje</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="stats-card text-center p-4 bg-white rounded shadow-sm">
-                    <div class="stats-icon mb-3">
-                        <i class="fas fa-check-circle fa-3x text-info"></i>
-                    </div>
-                    <h3 class="stats-number" data-target="<?= $stats['completed_count'] ?? 0 ?>">0</h3>
-                    <p class="stats-label mb-0">Tamamlanan Proje</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="stats-card text-center p-4 bg-white rounded shadow-sm">
-                    <div class="stats-icon mb-3">
-                        <i class="fas fa-hand-holding-heart fa-3x text-warning"></i>
-                    </div>
-                    <h3 class="stats-number" data-target="<?= number_format($stats['total_raised'] ?? 0, 0, ',', '.') ?>">0</h3>
-                    <p class="stats-label mb-0">Toplanan Bağış (₺)</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Faaliyet Alanlarımız -->
-<section class="py-5" style="background-color: #fafafa;">
-    <div class="container">
-        <div class="row mb-5">
-            <div class="col-lg-8 mx-auto text-center">
-                <h2 class="h1 fw-light text-dark mb-3">Faaliyet Alanlarımız</h2>
-                <p class="lead text-muted mb-0" style="font-weight: 400;">
-                    Toplumun her kesimine ulaşan geniş hizmet yelpazemiz
+                <p class="lead mb-4">
+                    Toplumun farklı kesimlerine ulaşarak hayırlı işler yapıyor, 
+                    birlikte daha güzel bir dünya inşa ediyoruz.
                 </p>
-            </div>
-        </div>
-        
-        <div class="row g-4">
-            <?php foreach ($activities as $activity): ?>
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 border-0 shadow-sm" style="transition: transform 0.3s ease;">
-                    <div class="card-body p-4 text-center">
-                        <!-- Icon -->
-                        <div class="mb-4">
-                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light" 
-                                 style="width: 80px; height: 80px;">
-                                <i class="<?= $activity['icon'] ?> fa-2x text-primary"></i>
-                            </div>
+                
+                <!-- İstatistikler -->
+                <div class="row text-center mt-4">
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="stat-simple">
+                            <h3 class="stat-number-consistent"><?= number_format($stats['active_count']) ?></h3>
+                            <small class="stat-label-muted">Aktif Proje</small>
                         </div>
-                        
-                        <!-- Title -->
-                        <h5 class="fw-semibold text-dark mb-3" style="line-height: 1.4;">
-                            <?= $activity['title'] ?>
-                        </h5>
-                        
-                        <!-- Description -->
-                        <p class="text-muted mb-4" style="font-size: 0.95rem; line-height: 1.6;">
-                            <?= $activity['description'] ?>
-                        </p>
-                        
-                        <!-- Category -->
-                        <div class="mt-auto">
-                            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
-                                <?= ucfirst(str_replace('_', ' ', $activity['category'])) ?>
-                            </span>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="stat-simple">
+                            <h3 class="stat-number-consistent"><?= number_format($stats['completed_count']) ?></h3>
+                            <small class="stat-label-muted">Tamamlanan</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="stat-simple">
+                            <h3 class="stat-number-consistent"><?= number_format($stats['total_beneficiaries']) ?></h3>
+                            <small class="stat-label-muted">Kişiye Ulaştık</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="stat-simple">
+                            <h3 class="stat-number-consistent">₺<?= number_format($stats['total_collected']) ?></h3>
+                            <small class="stat-label-muted">Toplanan Bağış</small>
                         </div>
                     </div>
                 </div>
             </div>
-            <?php endforeach; ?>
         </div>
     </div>
 </section>
@@ -149,67 +97,39 @@ try {
 <!-- Aktif Projeler -->
 <section class="py-5">
     <div class="container">
-        <div class="row mb-5">
-            <div class="col-lg-8 mx-auto text-center">
-                <h2 class="section-title">Aktif Projeler</h2>
-                <p class="section-subtitle">Şu anda devam eden ve desteğinize ihtiyaç duyan projelerimiz</p>
-            </div>
+        <div class="text-center mb-5">
+            <span class="badge bg-primary px-3 py-2 mb-3">Devam Eden Projeler</span>
+            <h2>Şu An Aktif Olan Projelerimiz</h2>
+            <p class="text-muted">Desteğinize ihtiyaç duyan projelerimiz</p>
         </div>
 
         <?php if (!empty($activeProjects)): ?>
             <div class="row g-4">
-                <?php foreach ($activeProjects as $project): 
-                    $progress = $project['target_amount'] > 0 ? 
-                        ($project['current_amount'] / $project['target_amount']) * 100 : 0;
-                    $progress = min($progress, 100);
-                ?>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="project-card h-100">
-                            <div class="project-image">
-                                <img src="<?= !empty($project['image']) ? '../uploads/projects/' . $project['image'] : '../assets/images/default-project.jpg' ?>" 
-                                     alt="<?= htmlspecialchars($project['title']) ?>" class="img-fluid">
-                                <div class="project-status">
-                                    <span class="badge bg-success">Aktif</span>
-                                </div>
-                            </div>
-                            <div class="project-content p-4">
-                                <h5 class="project-title mb-3"><?= htmlspecialchars($project['title']) ?></h5>
-                                <p class="project-description text-muted"><?= htmlspecialchars(substr($project['description'], 0, 100)) ?>...</p>
+                <?php foreach ($activeProjects as $project): ?>
+                    <div class="col-lg-6 mb-4">
+                        <div class="card h-100 project-card-simple">
+                            <div class="card-body">
+                                <!-- Kategori Badge -->
+                                <span class="badge bg-<?= $categoryColors[$project['category']] ?? 'secondary' ?> mb-3">
+                                    <?= $categoryLabels[$project['category']] ?? $project['category'] ?>
+                                </span>
                                 
-                                <div class="project-progress mb-3">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span class="text-muted">İlerleme</span>
-                                        <span class="fw-bold"><?= number_format($progress, 1) ?>%</span>
-                                    </div>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-primary" style="width: <?= $progress ?>%"></div>
-                                    </div>
-                                </div>
-
-                                <div class="project-meta">
-                                    <div class="row text-center">
-                                        <div class="col-6">
-                                            <div class="meta-item">
-                                                <strong class="d-block text-primary"><?= number_format($project['current_amount'], 0, ',', '.') ?> ₺</strong>
-                                                <small class="text-muted">Toplanan</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="meta-item">
-                                                <strong class="d-block text-dark"><?= number_format($project['target_amount'], 0, ',', '.') ?> ₺</strong>
-                                                <small class="text-muted">Hedef</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="project-actions mt-4">
-                                    <a href="/donate" class="btn btn-primary btn-sm me-2">
+                                <!-- Proje Başlığı -->
+                                <h4 class="card-title mb-3"><?= htmlspecialchars($project['title']) ?></h4>
+                                
+                                <!-- Proje Açıklaması -->
+                                <p class="card-text text-muted mb-4">
+                                    <?= htmlspecialchars($project['description']) ?>
+                                </p>
+                                
+                                <!-- Butonlar -->
+                                <div class="d-flex gap-2">
+                                    <a href="project-detail.php?slug=<?= $project['slug'] ?>" class="btn btn-outline-primary flex-fill">
+                                        <i class="fas fa-info-circle me-1"></i> Detaylar
+                                    </a>
+                                    <a href="donate.php?project=<?= $project['id'] ?>" class="btn btn-primary flex-fill">
                                         <i class="fas fa-heart me-1"></i> Bağış Yap
                                     </a>
-                                    <button class="btn btn-outline-secondary btn-sm" onclick="showProjectDetails(<?= $project['id'] ?>)">
-                                        <i class="fas fa-info-circle me-1"></i> Detaylar
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -218,9 +138,9 @@ try {
             </div>
         <?php else: ?>
             <div class="text-center py-5">
-                <i class="fas fa-project-diagram fa-5x text-muted mb-4"></i>
-                <h4 class="text-muted">Henüz aktif proje bulunmuyor</h4>
-                <p class="text-muted">Yakında yeni projelerimizi duyuracağız.</p>
+                <i class="fas fa-project-diagram fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">Şu anda aktif proje bulunmuyor</h4>
+                <p class="text-muted">Yeni projeler yakında duyurulacak</p>
             </div>
         <?php endif; ?>
     </div>
@@ -230,50 +150,34 @@ try {
 <?php if (!empty($completedProjects)): ?>
 <section class="py-5 bg-light">
     <div class="container">
-        <div class="row mb-5">
-            <div class="col-lg-8 mx-auto text-center">
-                <h2 class="section-title">Tamamlanan Projeler</h2>
-                <p class="section-subtitle">Başarıyla tamamladığımız ve fark yarattığımız projelerimiz</p>
-            </div>
+        <div class="text-center mb-5">
+            <span class="badge bg-success px-3 py-2 mb-3">Tamamlanan Projeler</span>
+            <h2>Başarıyla Tamamladığımız Projeler</h2>
+            <p class="text-muted">Desteğiniz sayesinde hayata geçirdiklerimiz</p>
         </div>
 
         <div class="row g-4">
             <?php foreach ($completedProjects as $project): ?>
-                <div class="col-lg-4 col-md-6">
-                    <div class="project-card h-100 completed">
-                        <div class="project-image">
-                            <img src="<?= !empty($project['image']) ? '../uploads/projects/' . $project['image'] : '../assets/images/default-project.jpg' ?>" 
-                                 alt="<?= htmlspecialchars($project['title']) ?>" class="img-fluid">
-                            <div class="project-status">
-                                <span class="badge bg-success">Tamamlandı</span>
-                            </div>
-                        </div>
-                        <div class="project-content p-4">
-                            <h5 class="project-title mb-3"><?= htmlspecialchars($project['title']) ?></h5>
-                            <p class="project-description text-muted"><?= htmlspecialchars(substr($project['description'], 0, 100)) ?>...</p>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 completed-project-card">
+                        <div class="card-body">
+                            <span class="badge bg-success mb-3">
+                                <i class="fas fa-check me-1"></i> Tamamlandı
+                            </span>
                             
-                            <div class="project-meta">
-                                <div class="row text-center">
-                                    <div class="col-6">
-                                        <div class="meta-item">
-                                            <strong class="d-block text-success"><?= number_format($project['current_amount'], 0, ',', '.') ?> ₺</strong>
-                                            <small class="text-muted">Toplanan</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="meta-item">
-                                            <strong class="d-block text-dark"><?= date('Y', strtotime($project['end_date'])) ?></strong>
-                                            <small class="text-muted">Tamamlanma</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="project-actions mt-4">
-                                <button class="btn btn-outline-primary btn-sm" onclick="showProjectDetails(<?= $project['id'] ?>)">
-                                    <i class="fas fa-eye me-1"></i> Detayları Gör
-                                </button>
-                            </div>
+                            <!-- Kategori -->
+                            <span class="badge bg-<?= $categoryColors[$project['category']] ?? 'secondary' ?> mb-2">
+                                <?= $categoryLabels[$project['category']] ?? $project['category'] ?>
+                            </span>
+                            
+                            <h5 class="card-title"><?= htmlspecialchars($project['title']) ?></h5>
+                            <p class="card-text text-muted mb-3">
+                                <?= htmlspecialchars($project['description']) ?>
+                            </p>
+                            
+                            <a href="project-detail.php?slug=<?= $project['slug'] ?>" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-eye me-1"></i> Detayları Gör
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -283,43 +187,291 @@ try {
 </section>
 <?php endif; ?>
 
-<!-- Proje Detay Modal -->
-<div class="modal fade" id="projectDetailModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Proje Detayları</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="projectDetailContent">
-                <!-- AJAX ile yüklenecek -->
-            </div>
+<!-- Call to Action - Simple (matching About page style) -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-3">Siz de Bir Projeye Destek Olun</h2>
+        <p class="lead mb-4">
+            Her bağışınız, birinin hayatına dokunuyor ve toplumsal değişime katkı sağlıyor.
+        </p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="index.php?page=donate" class="btn btn-accent btn-lg">
+                <i class="fas fa-heart me-2"></i> Bağış Yap
+            </a>
+            <a href="index.php?page=volunteer" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-hands-helping me-2"></i> Gönüllü Ol
+            </a>
         </div>
     </div>
-</div>
+</section>
 
-<script>
-function showProjectDetails(projectId) {
-    fetch('/ajax/get_project_details.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '<?= generateCSRFToken() ?>'
-        },
-        body: JSON.stringify({project_id: projectId})
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            document.getElementById('projectDetailContent').innerHTML = data.html;
-            new bootstrap.Modal(document.getElementById('projectDetailModal')).show();
-        } else {
-            alert('Proje detayları yüklenirken bir hata oluştu.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Bir hata oluştu.');
-    });
+<style>
+/* ========================================
+   CONSISTENT PROJECTS PAGE STYLES
+   ======================================== */
+
+/* Hero Section - Simple Design (matching About page) */
+.hero-section {
+    background: linear-gradient(135deg, #f8fafb 0%, #ffffff 100%);
+    padding: calc(80px + 4rem) 0 4rem 0;
+    position: relative;
 }
-</script>
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(78, 166, 116, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(211, 217, 43, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Statistics Styling with Consistent Logo Color */
+.stat-simple {
+    text-align: center;
+    padding: 1rem 0.5rem;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.stat-simple:hover {
+    transform: translateY(-2px);
+    background: rgba(78, 166, 116, 0.05);
+}
+
+/* Consistent color for all statistics */
+.stat-number-consistent {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color) !important; /* #4EA674 - Primary Green for all */
+    margin-bottom: 0.5rem;
+    line-height: 1;
+    font-family: 'Poppins', sans-serif;
+}
+
+.stat-label-muted {
+    font-size: 1rem;
+    color: var(--gray-600) !important;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Clean CTA Section */
+.py-5.bg-primary.text-white {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+    padding: 5rem 0;
+    position: relative;
+}
+
+.py-5.bg-primary.text-white::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+        rgba(78, 166, 116, 0.1) 0%, 
+        rgba(61, 133, 96, 0.1) 100%);
+    pointer-events: none;
+}
+
+.text-center {
+    position: relative;
+    z-index: 2;
+}
+
+.text-center h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.text-center p {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    opacity: 0.95;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Accent Button using Logo Yellow */
+.btn-accent {
+    background: var(--accent-color) !important;
+    color: var(--gray-900) !important;
+    border: 2px solid var(--accent-color) !important;
+    font-weight: 700;
+}
+
+.btn-accent:hover {
+    background: var(--secondary-color) !important;
+    color: var(--gray-900) !important;
+    border-color: var(--secondary-color) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(242, 229, 41, 0.3);
+}
+
+/* Clean Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    min-width: 180px;
+}
+
+.btn-outline-light {
+    background: transparent;
+    color: white;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .hero-section {
+        padding: calc(70px + 3rem) 0 3rem 0;
+    }
+    
+    .display-4 {
+        font-size: 2.5rem;
+    }
+    
+    .text-center h2 {
+        font-size: 2rem;
+    }
+    
+    .stat-number-consistent {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: calc(60px + 2rem) 0 2rem 0;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .lead {
+        font-size: 1.1rem;
+    }
+    
+    .stat-number-consistent {
+        font-size: 1.8rem;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .py-5.bg-primary.text-white {
+        padding: 3rem 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section {
+        padding: calc(50px + 1rem) 0 1rem 0;
+    }
+    
+    .display-4 {
+        font-size: 1.75rem;
+    }
+    
+    .lead {
+        font-size: 1rem;
+    }
+    
+    .text-center h2 {
+        font-size: 1.5rem;
+    }
+    
+    .text-center p {
+        font-size: 1rem;
+    }
+    
+    .stat-number-consistent {
+        font-size: 1.5rem;
+    }
+}
+
+/* Basit proje kartları için stiller */
+.project-card-simple {
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.project-card-simple:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.completed-project-card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.completed-project-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+.stat-item h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.stat-item small {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.hero-simple .stat-item {
+    background: rgba(255,255,255,0.1);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    backdrop-filter: blur(10px);
+}
+
+@media (max-width: 768px) {
+    .hero-simple .stat-item h3 {
+        font-size: 1.4rem;
+    }
+    
+    .d-flex.gap-2 {
+        flex-direction: column;
+    }
+    
+    .d-flex.gap-2 .btn {
+        margin-bottom: 0.5rem;
+    }
+}
+</style>

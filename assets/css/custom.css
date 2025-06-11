@@ -1,0 +1,11 @@
+/* Custom styling for "Daha Fazla Bilgi" button */
+.btn-outline-primary {
+    border-color: #your-desired-color;
+    color: #your-desired-color;
+}
+
+.btn-outline-primary:hover {
+    background-color: #your-desired-color;
+    border-color: #your-desired-color;
+    color: #ffffff;
+}

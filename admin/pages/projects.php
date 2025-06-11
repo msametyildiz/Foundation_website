@@ -27,24 +27,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($action === 'add') {
             $title = $_POST['title'] ?? '';
             $description = $_POST['description'] ?? '';
+            $short_description = $_POST['short_description'] ?? '';
             $target_amount = $_POST['target_amount'] ?? 0;
             $category = $_POST['category'] ?? '';
             $status = $_POST['status'] ?? 'planning';
+            $slug = strtolower(str_replace([' ', 'ç', 'ğ', 'ı', 'ö', 'ş', 'ü'], ['-', 'c', 'g', 'i', 'o', 's', 'u'], $title));
             
-            $stmt = $pdo->prepare("INSERT INTO projects (title, description, target_amount, current_amount, category, status, created_at) VALUES (?, ?, ?, 0, ?, ?, NOW())");
-            $stmt->execute([$title, $description, $target_amount, $category, $status]);
+            $stmt = $pdo->prepare("INSERT INTO projects (title, slug, short_description, description, target_amount, collected_amount, category, status, created_at) VALUES (?, ?, ?, ?, ?, 0, ?, ?, NOW())");
+            $stmt->execute([$title, $slug, $short_description, $description, $target_amount, $category, $status]);
             $success = "Yeni proje eklendi.";
         }
         
         if ($action === 'edit') {
             $title = $_POST['title'] ?? '';
             $description = $_POST['description'] ?? '';
+            $short_description = $_POST['short_description'] ?? '';
             $target_amount = $_POST['target_amount'] ?? 0;
             $category = $_POST['category'] ?? '';
             $status = $_POST['status'] ?? 'planning';
             
-            $stmt = $pdo->prepare("UPDATE projects SET title = ?, description = ?, target_amount = ?, category = ?, status = ? WHERE id = ?");
-            $stmt->execute([$title, $description, $target_amount, $category, $status, $id]);
+            $stmt = $pdo->prepare("UPDATE projects SET title = ?, short_description = ?, description = ?, target_amount = ?, category = ?, status = ? WHERE id = ?");
+            $stmt->execute([$title, $short_description, $description, $target_amount, $category, $status, $id]);
             $success = "Proje güncellendi.";
         }
         
@@ -298,7 +301,7 @@ $project_stats = $stmt->fetch(PDO::FETCH_ASSOC);
                                 </td>
                                 <td>
                                     <div class="text-center">
-                                        <strong class="text-primary"><?php echo number_format($project['current_amount']); ?> ₺</strong><br>
+                                        <strong class="text-primary"><?php echo number_format($project['collected_amount']); ?> ₺</strong><br>
                                         <small class="text-muted"><?php echo number_format($project['target_amount']); ?> ₺</small>
                                     </div>
                                 </td>
@@ -486,7 +489,12 @@ $project_stats = $stmt->fetch(PDO::FETCH_ASSOC);
                         </div>
                         
                         <div class="col-12">
-                            <label class="form-label">Açıklama</label>
+                            <label class="form-label">Kısa Açıklama</label>
+                            <textarea name="short_description" class="form-control" rows="2" required></textarea>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label">Detaylı Açıklama</label>
                             <textarea name="description" class="form-control" rows="4" required></textarea>
                         </div>
                         
@@ -547,7 +555,12 @@ $project_stats = $stmt->fetch(PDO::FETCH_ASSOC);
                         </div>
                         
                         <div class="col-12">
-                            <label class="form-label">Açıklama</label>
+                            <label class="form-label">Kısa Açıklama</label>
+                            <textarea name="short_description" id="editProjectShortDescription" class="form-control" rows="2" required></textarea>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label">Detaylı Açıklama</label>
                             <textarea name="description" id="editProjectDescription" class="form-control" rows="4" required></textarea>
                         </div>
                         
@@ -585,6 +598,7 @@ function editProject(id) {
                 document.getElementById('editProjectTitle').value = data.project.title;
                 document.getElementById('editProjectCategory').value = data.project.category;
                 document.getElementById('editProjectTarget').value = data.project.target_amount;
+                document.getElementById('editProjectShortDescription').value = data.project.short_description;
                 document.getElementById('editProjectDescription').value = data.project.description;
                 document.getElementById('editProjectStatus').value = data.project.status;
                 

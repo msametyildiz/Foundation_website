@@ -242,8 +242,8 @@ try {
         <div class="row mb-5">
             <div class="col-12 text-center">
                 <span class="section-badge">Projelerimiz</span>
-                <h2 class="section-title">
-                    Hayat Değiştiren 
+                <h2 class="section-title">  
+                    Öne Çıkan 
                     <span class="text-gradient">Projeler</span>
                 </h2>
                 <p class="section-description mx-auto">
@@ -256,34 +256,20 @@ try {
                 <?php foreach ($featured_projects as $project): ?>
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="project-card">
-                        <div class="project-image">
-                            <img src="<?= !empty($project['image']) ? $project['image'] : 'uploads/images/projects/default-project.jpg' ?>" 
-                                 alt="<?= clean_output($project['title']) ?>">
-                            <div class="project-overlay">
-                                <span class="project-category">
-                                    <i class="fas fa-heart me-2"></i>
-                                    <?= clean_output($project['category']) ?>
-                                </span>
-                            </div>
-                        </div>
                         <div class="project-content">
+                            <!-- Kategori Badge -->
+                            <span class="project-category badge bg-success mb-3">
+                                <i class="fas fa-heart me-2"></i>
+                                <?= clean_output($project['category']) ?>
+                            </span>
+                            
+                            <!-- Proje Başlığı -->
                             <h3><?= clean_output($project['title']) ?></h3>
-                            <p><?= clean_output($project['short_description']) ?></p>
-                            <div class="project-progress">
-                                <div class="progress-info">
-                                    <span>Toplanan: ₺<?= number_format($project['collected_amount']) ?></span>
-                                    <span>Hedef: ₺<?= number_format($project['target_amount']) ?></span>
-                                </div>
-                                <div class="progress">
-                                    <div class="progress-bar" style="width: <?= $project['target_amount'] > 0 ? min(100, ($project['collected_amount'] / $project['target_amount']) * 100) : 0 ?>%"></div>
-                                </div>
-                            </div>
-                            <div class="project-footer">
-                                <a href="index.php?page=projects" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-arrow-right me-2"></i>
-                                    Detayları Gör
-                                </a>
-                            </div>
+                            
+                            <!-- Proje Açıklaması -->
+                            <p><?= clean_output($project['description']) ?></p>
+                            
+                            
                         </div>
                     </div>
                 </div>
@@ -295,18 +281,19 @@ try {
                 foreach ($featured_activities as $index => $activity): ?>
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="project-card">
-                        <div class="project-image">
-                            <img src="uploads/images/projects/project-<?= $index + 1 ?>.jpg" alt="<?= clean_output($activity['title']) ?>">
-                            <div class="project-overlay">
-                                <span class="project-category">
-                                    <i class="<?= $activity['icon'] ?> me-2"></i>
-                                    <?= ucfirst(str_replace('_', ' ', $activity['category'])) ?>
-                                </span>
-                            </div>
-                        </div>
                         <div class="project-content">
+                            <!-- Kategori Badge -->
+                            <span class="project-category badge bg-success mb-3">
+                                <i class="<?= $activity['icon'] ?> me-2"></i>
+                                <?= ucfirst(str_replace('_', ' ', $activity['category'])) ?>
+                            </span>
+                            
+                            <!-- Proje Başlığı -->
                             <h3><?= clean_output($activity['title']) ?></h3>
+                            
+                            <!-- Proje Açıklaması -->
                             <p><?= clean_output($activity['description']) ?></p>
+                            
                             <div class="project-footer">
                                 <a href="index.php?page=projects" class="btn btn-primary btn-sm">
                                     <i class="fas fa-arrow-right me-2"></i>
@@ -379,285 +366,6 @@ try {
     </div>
 </section>
 
-<!-- Testimonials Section -->
-<section class="testimonials-section py-5 bg-light">
-    <div class="container">
-        <div class="row mb-5">
-            <div class="col-12 text-center">
-                <span class="section-badge">Referanslar</span>
-                <h2 class="section-title">
-                    Bizimle Yolculuk Edenler 
-                    <span class="text-gradient">Ne Diyor?</span>
-                </h2>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-4 mb-4">
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <div class="quote-icon">
-                            <i class="fas fa-quote-left"></i>
-                        </div>
-                        <p>"Necat Derneği sayesinde çocuğumun eğitim masraflarını karşılayabiliyoruz. Bu destek bizim için çok değerli."</p>
-                        <div class="testimonial-author">
-                            <img src="uploads/images/testimonials/avatar-1.jpg" alt="Ayşe Hanım">
-                            <div class="author-info">
-                                <h4>Ayşe Yılmaz</h4>
-                                <span>Faydalanan Aile</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 mb-4">
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <div class="quote-icon">
-                            <i class="fas fa-quote-left"></i>
-                        </div>
-                        <p>"Gönüllü olarak katıldığım projeler sayesinde hem yardım ediyor hem de çok şey öğreniyorum."</p>
-                        <div class="testimonial-author">
-                            <img src="uploads/images/testimonials/avatar-2.jpg" alt="Mehmet Bey">
-                            <div class="author-info">
-                                <h4>Mehmet Kaya</h4>
-                                <span>Gönüllü</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 mb-4">
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <div class="quote-icon">
-                            <i class="fas fa-quote-left"></i>
-                        </div>
-                        <p>"Şeffaf çalışmaları ve düzenli raporları sayesinde güvenle bağış yapabiliyorum."</p>
-                        <div class="testimonial-author">
-                            <img src="uploads/images/testimonials/avatar-3.jpg" alt="Fatma Hanım">
-                            <div class="author-info">
-                                <h4>Fatma Özkan</h4>
-                                <span>Bağışçı</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- CTA Section 
-<section class="cta-section py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <div class="cta-content">
-                    <h2 class="cta-title">Hayat Değiştiren Yolculuğa Sen de Katıl!</h2>
-                    <p class="cta-description">
-                        Bir bağış, bir gönüllülük, bir paylaşım... Her küçük adım büyük değişimlerin başlangıcıdır.
-                    </p>
-                </div>
-            </div>
-            <div class="col-lg-4 text-lg-end">
-                <div class="cta-actions">
-                    <a href="index.php?page=donate" class="btn btn-cta-primary me-2 mb-2">
-                        <i class="fas fa-heart"></i>
-                        Bağış Yap
-                    </a>
-                    <a href="index.php?page=volunteer" class="btn btn-cta-secondary mb-2">
-                        <i class="fas fa-hands-helping"></i>
-                        Gönüllü Ol
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>-->
-
-<!-- İstatistikler 
-<section class="stats-section">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="stat-item">
-                    <span class="stat-number"><?php echo number_format($total_donations); ?> ₺</span>
-                    <span class="stat-label">Toplanan Bağış</span>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="stat-item">
-                    <span class="stat-number"><?php echo $total_projects; ?></span>
-                    <span class="stat-label">Tamamlanan Proje</span>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="stat-item">
-                    <span class="stat-number"><?php echo $total_volunteers; ?></span>
-                    <span class="stat-label">Gönüllümüz</span>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="stat-item">
-                    <span class="stat-number"><?php echo $families_helped; ?></span>
-                    <span class="stat-label">Yardım Edilen Aile</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>-->
-
-<!-- Hakkımızda Özet 
-<section class="py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6 mb-4">
-                <h2 class="mb-4">Biz Kimiz?</h2>
-                <p class="lead">
-                    Necat Derneği olarak, yardım eli uzatan ve umut dağıtan bir toplum inşa etmek için 
-                    çalışıyoruz. Sosyal sorumluluk bilinciyle hareket ederek, muhtaç ailelere 
-                    ulaşmaya devam ediyoruz.
-                </p>
-                <p>
-                    Eğitim, sağlık, afet yardımı ve sosyal destek alanlarında yürüttüğümüz projelerle 
-                    binlerce insanın hayatına dokunuyoruz. Şeffaflık ve güven ilkelerimizle 
-                    her bağışın amacına uygun şekilde kullanılmasını sağlıyoruz.
-                </p>
-                <a href="index.php?page=about" class="btn btn-primary">Daha Fazla Bilgi</a>
-            </div>
-            <div class="col-lg-6">
-                <img src="assets/images/about-us.jpg" alt="Hakkımızda" class="img-fluid rounded shadow">
-            </div>
-        </div>
-    </div>
-</section>-->
-
-<!-- Öne Çıkan Projeler 
-<?php if (!empty($featured_projects)): ?>
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2>Öne Çıkan Projelerimiz</h2>
-            <p class="lead">Hayata dokunduğumuz projelerimizden öne çıkanlar</p>
-        </div>
-        
-        <div class="row">
-            <?php foreach ($featured_projects as $project): ?>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card project-card h-100">
-                        <?php if (!empty($project['image']) && file_exists($project['image'])): ?>
-                            <img src="<?php echo clean_output($project['image']); ?>" 
-                                 class="card-img-top" 
-                                 alt="<?php echo clean_output($project['title']); ?>">
-                        <?php endif; ?>
-                        
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo clean_output($project['title']); ?></h5>
-                            <p class="card-text">
-                                <?php echo clean_output($project['short_description'] ?? truncate_text($project['description'], 100)); ?>
-                            </p>
-                            
-                            <?php if ($project['target_amount'] > 0): ?>
-                                <div class="progress mb-3">
-                                    <?php 
-                                    $progress = ($project['collected_amount'] / $project['target_amount']) * 100;
-                                    $progress = min(100, $progress);
-                                    ?>
-                                    <div class="progress-bar" style="width: <?php echo $progress; ?>%"></div>
-                                </div>
-                                <div class="d-flex justify-content-between small text-muted">
-                                    <span><?php echo number_format($project['collected_amount']); ?> ₺</span>
-                                    <span><?php echo number_format($project['target_amount']); ?> ₺</span>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <div class="card-footer bg-transparent">
-                            <a href="index.php?page=projects&id=<?php echo $project['id']; ?>" 
-                               class="btn btn-outline-primary btn-sm">Detayları Gör</a>
-                            <a href="index.php?page=donate" class="btn btn-primary btn-sm">Destek Ol</a>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        
-        <div class="text-center">
-            <a href="index.php?page=projects" class="btn btn-primary">Tüm Projelerimiz</a>
-        </div>
-    </div>
-</section>
-<?php endif; ?>-->
-
-<!-- Nasıl Yardım Edebilirsiniz
-<section class="py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2>Nasıl Yardım Edebilirsiniz?</h2>
-            <p class="lead">Birlikte daha güçlüyüz, sizin de desteğinizle daha çok insana ulaşabiliriz</p>
-        </div>
-        
-        <div class="row">
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <i class="fas fa-heart fa-3x text-primary"></i>
-                        </div>
-                        <h5 class="card-title">Bağış Yapın</h5>
-                        <p class="card-text">
-                            Maddi desteğinizle projelerimize katkıda bulunun. 
-                            Her bağış bir aileye umut olur.
-                        </p>
-                        <a href="index.php?page=donate" class="btn btn-primary">Bağış Yap</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <i class="fas fa-hands-helping fa-3x text-success"></i>
-                        </div>
-                        <h5 class="card-title">Gönüllü Olun</h5>
-                        <p class="card-text">
-                            Zamanınızı ayırarak projelerimizde aktif rol alın. 
-                            Birlikte daha çok işe imza atabiliriz.
-                        </p>
-                        <a href="index.php?page=volunteer" class="btn btn-success">Gönüllü Ol</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <i class="fas fa-share-alt fa-3x text-info"></i>
-                        </div>
-                        <h5 class="card-title">Paylaşın</h5>
-                        <p class="card-text">
-                            Projelerimizi sosyal medyada paylaşarak 
-                            farkındalık yaratmaya yardımcı olun.
-                        </p>
-                        <div class="social-links">
-                            <a href="#" class="btn btn-outline-primary btn-sm me-2">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-info btn-sm me-2">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" class="btn btn-outline-danger btn-sm">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section> -->
 
 <!-- Haberler ve Duyurular -->
 <?php if (!empty($recent_news)): ?>
@@ -695,12 +403,7 @@ try {
                         <p class="news-excerpt">
                             <?= clean_output($news['summary'] ?: substr(strip_tags($news['content']), 0, 150) . '...') ?>
                         </p>
-                        <div class="news-footer">
-                            <a href="#" class="btn btn-outline-primary btn-sm">
-                                Devamını Oku
-                                <i class="fas fa-arrow-right ms-1"></i>
-                            </a>
-                        </div>
+                        
                     </div>
                 </article>
             </div>
