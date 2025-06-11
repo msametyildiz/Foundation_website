@@ -846,15 +846,31 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: var(--radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.2);
     transition: all 0.3s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .hero-scroll-indicator:hover {
     background: rgba(78, 166, 116, 0.2);
     transform: translateX(-50%) translateY(-2px);
     box-shadow: 0 8px 25px rgba(13, 13, 13, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
-.scroll-text {
+.hero-scroll-indicator:active {
+    transform: translateX(-50%) translateY(0);
+    background: rgba(78, 166, 116, 0.3);
+}
+
+.hero-scroll-indicator:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}
+
+.scroll-text,
+.hero-scroll-indicator span {
     display: block;
     font-size: var(--font-size-sm);
     margin-bottom: var(--spacing-sm);
@@ -862,10 +878,39 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 500;
 }
 
-.scroll-arrow {
+.scroll-arrow,
+.hero-scroll-indicator i {
     font-size: var(--font-size-xl);
     opacity: 0.9;
     filter: drop-shadow(0 2px 4px rgba(13, 13, 13, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.hero-scroll-indicator:hover i {
+    transform: translateY(2px);
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-5px);
+    }
+    60% {
+        transform: translateY(-3px);
+    }
+}
+
+/* Enhanced bounce animation for hover state */
+@keyframes bounceHover {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
 }
 
 /* ========================================

@@ -150,43 +150,8 @@ try {
     </div>
 </section>
 
-<!-- Features Section 
-<section class="features-section py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4 mb-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Güvenilir</h3>
-                    <p>Tüm bağışlar şeffaf şekilde takip edilir ve raporlanır.</p>
-                </div>
-            </div>
-            <div class="col-lg-4 mb-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>Hızlı</h3>
-                    <p>Acil durumlar için 7/24 hızlı müdahale ekibimiz hazır.</p>
-                </div>
-            </div>
-            <div class="col-lg-4 mb-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-globe"></i>
-                    </div>
-                    <h3>Kapsamlı</h3>
-                    <p>Eğitimden sağlığa, barınmadan beslenmeye geniş yelpaze.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>-->
-
 <!-- About Preview Section -->
-<section class="about-preview py-5">
+<section class="about-preview py-5" id="about-preview">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0">

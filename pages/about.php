@@ -414,11 +414,17 @@ try {
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8">
-                <h3 class="fw-light mb-4">Birlikte Daha Güçlü Olalım</h3>
-                <p class="mb-4">Sen de bu anlamlı yolculuğumuzda yer al.</p>
+                <h2 class="h3 fw-light mb-4">Birlikte Daha Güçlü Olalım</h2>
+                <p class="lead mb-4 opacity-90">
+                    Sen de bu anlamlı yolculuğumuzda yer al ve toplumsal değişimin bir parçası ol.
+                </p>
                 <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="index.php?page=volunteer" class="btn btn-light">Gönüllü Ol</a>
-                    <a href="index.php?page=donate" class="btn btn-outline-light">Bağış Yap</a>
+                    <a href="index.php?page=volunteer" class="btn btn-light btn-lg px-4 py-2">
+                        <i class="fas fa-hand-holding-heart me-2"></i>Gönüllü Ol
+                    </a>
+                    <a href="index.php?page=donate" class="btn btn-outline-light btn-lg px-4 py-2">
+                        <i class="fas fa-heart me-2"></i>Bağış Yap
+                    </a>
                 </div>
             </div>
         </div>

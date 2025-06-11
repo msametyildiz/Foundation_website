@@ -443,7 +443,7 @@ $volunteer_questions = [
 </section>
 
 <!-- Simple CTA (matching About page style) -->
-<section class="py-5 bg-primary text-white">
+<section class="py-5 bg-primary ">
     <div class="container text-center">
         <h2 class="mb-3">Siz de Bu Anlamlı Yolculuğa Katılın</h2>
         <p class="lead mb-4">

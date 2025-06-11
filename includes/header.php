@@ -572,20 +572,7 @@
                 <a href="index.php?page=volunteer" class="nav-link-modern <?php echo is_active_page('volunteer'); ?>">Gönüllü Ol</a>
                 <a href="index.php?page=faq" class="nav-link-modern <?php echo is_active_page('faq'); ?>">SSS</a>
                 <a href="index.php?page=contact" class="nav-link-modern <?php echo is_active_page('contact'); ?>">İletişim</a>
-                <div class="mobile-dropdown">
-                    <a href="index.php?page=press" class="nav-link-modern <?php echo is_active_page('press'); ?>">
-                        <i class="fas fa-newspaper me-2"></i>
-                        Basında Biz
-                    </a>
-                    <a href="index.php?page=documents" class="nav-link-modern <?php echo is_active_page('documents'); ?>">
-                        <i class="fas fa-file-alt me-2"></i>
-                        Belgelerimiz
-                    </a>
-                    <a href="index.php?page=team" class="nav-link-modern <?php echo is_active_page('team'); ?>">
-                        <i class="fas fa-users me-2"></i>
-                        Yönetim Kurulu
-                    </a>
-                </div>
+                
                 <a href="index.php?page=donate" class="btn-cta-modern <?php echo is_active_page('donate'); ?>" style="margin-top: 1rem; justify-self: center; width: fit-content;">
                     <i class="fas fa-heart"></i>
                     <span>Bağış Yap</span>

@@ -195,7 +195,7 @@ $categoryColors = [
             Her bağışınız, birinin hayatına dokunuyor ve toplumsal değişime katkı sağlıyor.
         </p>
         <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="index.php?page=donate" class="btn btn-accent btn-lg">
+            <a href="index.php?page=donate" class="btn btn-light btn-lg">
                 <i class="fas fa-heart me-2"></i> Bağış Yap
             </a>
             <a href="index.php?page=volunteer" class="btn btn-outline-light btn-lg">

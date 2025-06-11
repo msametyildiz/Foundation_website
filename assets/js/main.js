@@ -298,7 +298,22 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeProgressBars();
     
     // Hero scroll indicator
-    initializeScrollIndicator();
+    const scrollIndicator = document.querySelector('.hero-scroll-indicator');
+    if (scrollIndicator) {
+        scrollIndicator.addEventListener('click', function() {
+            // Look for the first section after hero
+            const nextSection = document.querySelector('#about-preview, .about-preview, .features-section, .projects-section');
+            if (nextSection) {
+                const offset = 80; // Account for fixed navbar
+                const targetPosition = nextSection.offsetTop - offset;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    }
     
     // Enhanced form handling with better UX
     enhanceFormUX();
@@ -451,9 +466,63 @@ function formatCurrency(amount) {
 
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(function() {
-        showAlert('success', 'Panoya kopyalandı!');
+        // Show success toast message
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.textContent = 'Kopyalandı!';
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4ea674;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        `;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.opacity = '1';
+        }, 100);
+        
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 300);
+        }, 2000);
     }, function() {
-        showAlert('danger', 'Kopyalama başarısız!');
+        // Show error toast message
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.textContent = 'Kopyalama başarısız!';
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        `;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.opacity = '1';
+        }, 100);
+        
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 300);
+        }, 2000);
     });
 }
 
@@ -676,12 +745,42 @@ function enhancedSmoothScroll() {
 function initializeScrollIndicator() {
     const indicator = document.querySelector('.hero-scroll-indicator');
     if (indicator) {
-        indicator.addEventListener('click', () => {
-            const nextSection = document.querySelector('.features-modern, .features-section');
-            if (nextSection) {
-                nextSection.scrollIntoView({ behavior: 'smooth' });
+        indicator.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Try multiple possible next sections in order of preference
+            const possibleSections = [
+                '#about-preview',
+                '.about-preview',
+                '.features-section', 
+                '.projects-section',
+                '.stats-section'
+            ];
+            
+            let targetSection = null;
+            for (const selector of possibleSections) {
+                targetSection = document.querySelector(selector);
+                if (targetSection) break;
+            }
+            
+            if (targetSection) {
+                const offset = 80; // Account for navbar height
+                const targetPosition = targetSection.offsetTop - offset;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            } else {
+                // Fallback: scroll down by viewport height
+                window.scrollTo({
+                    top: window.innerHeight,
+                    behavior: 'smooth'
+                });
             }
         });
+        
+        // Add cursor pointer style
+        indicator.style.cursor = 'pointer';
     }
 }
 

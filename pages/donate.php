@@ -234,7 +234,7 @@ try {
                             </div>
                             
                             <div class="mb-4 form-check">
-                                <input type="checkbox" class="form-check-input" id="privacy_consent" required>
+                                <input type="checkbox" class="form-check-input" id="privacy_consent" required onclick="handlePrivacyClick(this)">
                                 <label class="form-check-label" for="privacy_consent">
                                     <span class="text-success" style="cursor: pointer;" onclick="openKVKKModal()">
                                         Kişisel verilerin işlenmesi
@@ -966,7 +966,7 @@ document.querySelectorAll('.donation-amount-btn').forEach(btn => {
 // Copy to clipboard function
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(function() {
-        // Show success message
+        // Show success toast message
         const toast = document.createElement('div');
         toast.className = 'toast-message';
         toast.textContent = 'Kopyalandı!';
@@ -1005,6 +1005,15 @@ function openKVKKModal() {
     modal.show();
 }
 
+function handlePrivacyClick(checkbox) {
+    // If checkbox is being checked, open the modal
+    if (checkbox.checked) {
+        // Uncheck it first since user should read the text before accepting
+        checkbox.checked = false;
+        openKVKKModal();
+    }
+}
+
 function acceptKVKK() {
     // Check the privacy consent checkbox
     document.getElementById('privacy_consent').checked = true;
@@ -1015,6 +1024,22 @@ function acceptKVKK() {
         modal.hide();
     }
     
+    // Show success message
+    const toast = document.createElement('div');
+    toast.className = 'toast-message';
+    toast.textContent = 'KVKK metni kabul edildi!';
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #4ea674;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    `;
     
     document.body.appendChild(toast);
     

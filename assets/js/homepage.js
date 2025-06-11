@@ -84,13 +84,41 @@ document.addEventListener('DOMContentLoaded', function() {
     // Hero scroll indicator
     const scrollIndicator = document.querySelector('.hero-scroll-indicator');
     if (scrollIndicator) {
-        scrollIndicator.addEventListener('click', function() {
-            const nextSection = document.querySelector('.features-modern, .features-section');
+        scrollIndicator.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Find the next section after hero
+            const possibleTargets = [
+                document.querySelector('#about-preview'),
+                document.querySelector('.about-preview'),
+                document.querySelector('.features-section'),
+                document.querySelector('.projects-section'),
+                document.querySelector('.stats-section')
+            ].filter(Boolean); // Remove null values
+            
+            const nextSection = possibleTargets[0];
+            
             if (nextSection) {
-                nextSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
+                const headerHeight = 80; // Account for fixed header
+                const targetPosition = nextSection.offsetTop - headerHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
                 });
+            }
+        });
+        
+        // Add visual feedback
+        scrollIndicator.style.cursor = 'pointer';
+        scrollIndicator.setAttribute('role', 'button');
+        scrollIndicator.setAttribute('tabindex', '0');
+        
+        // Add keyboard support
+        scrollIndicator.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
             }
         });
     }
