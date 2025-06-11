@@ -52,25 +52,25 @@ try {
                 <div class="row g-3 mb-5">
                     <div class="col-md-3">
                         <div class="stat-simple">
-                            <h3 class="text-primary mb-1"><?= date('Y') - 2018 ?>+</h3>
+                            <h3 class="text-success mb-1"><?= date('Y') - 2018 ?>+</h3>
                             <small class="text-muted">Yıl Deneyim</small>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="stat-simple">
-                            <h3 class="text-primary mb-1"><?= number_format($stats['total_families'] ?? 0) ?>+</h3>
+                            <h3 class="text-success mb-1"><?= number_format($stats['total_families'] ?? 0) ?>+</h3>
                             <small class="text-muted">Aile</small>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="stat-simple">
-                            <h3 class="text-primary mb-1"><?= $stats['total_projects'] ?? 0 ?></h3>
+                            <h3 class="text-success mb-1"><?= $stats['total_projects'] ?? 0 ?></h3>
                             <small class="text-muted">Proje</small>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="stat-simple">
-                            <h3 class="text-primary mb-1"><?= $stats['total_volunteers'] ?? 0 ?>+</h3>
+                            <h3 class="text-success mb-1"><?= $stats['total_volunteers'] ?? 0 ?>+</h3>
                             <small class="text-muted">Gönüllü</small>
                         </div>
                     </div>
@@ -88,7 +88,7 @@ try {
                 <div class="simple-card h-100">
                     <div class="simple-card-body p-4">
                         <div class="d-flex align-items-center mb-3">
-                            <div class="icon-circle bg-primary text-white me-3">
+                            <div class="icon-circle bg-success text-white me-3">
                                 <i class="fas fa-bullseye"></i>
                             </div>
                             <h3 class="h4 mb-0">Misyonumuz</h3>
@@ -140,7 +140,7 @@ try {
                         <div class="mb-4">
                             <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light" 
                                  style="width: 80px; height: 80px;">
-                                <i class="<?= $principle['icon'] ?> fa-2x text-primary"></i>
+                                <i class="<?= $principle['icon'] ?> fa-2x text-success"></i>
                             </div>
                         </div>
                         
@@ -178,7 +178,7 @@ try {
                 <div class="text-center p-4">
                     <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" 
                          style="width: 70px; height: 70px;">
-                        <i class="fas fa-hand-holding-heart fa-lg text-primary"></i>
+                        <i class="fas fa-hand-holding-heart fa-lg text-success"></i>
                     </div>
                     <h5 class="fw-semibold text-dark mb-3">Şefkat</h5>
                     <p class="text-muted mb-0" style="font-size: 0.95rem; line-height: 1.6;">
@@ -191,7 +191,7 @@ try {
                 <div class="text-center p-4">
                     <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" 
                          style="width: 70px; height: 70px;">
-                        <i class="fas fa-eye fa-lg text-primary"></i>
+                        <i class="fas fa-eye fa-lg text-success"></i>
                     </div>
                     <h5 class="fw-semibold text-dark mb-3">Şeffaflık</h5>
                     <p class="text-muted mb-0" style="font-size: 0.95rem; line-height: 1.6;">
@@ -204,7 +204,7 @@ try {
                 <div class="text-center p-4">
                     <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" 
                          style="width: 70px; height: 70px;">
-                        <i class="fas fa-shield-alt fa-lg text-primary"></i>
+                        <i class="fas fa-shield-alt fa-lg text-success"></i>
                     </div>
                     <h5 class="fw-semibold text-dark mb-3">Güvenilirlik</h5>
                     <p class="text-muted mb-0" style="font-size: 0.95rem; line-height: 1.6;">
@@ -217,7 +217,7 @@ try {
                 <div class="text-center p-4">
                     <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light mb-4" 
                          style="width: 70px; height: 70px;">
-                        <i class="fas fa-users fa-lg text-primary"></i>
+                        <i class="fas fa-users fa-lg text-success"></i>
                     </div>
                     <h5 class="fw-semibold text-dark mb-3">Dayanışma</h5>
                     <p class="text-muted mb-0" style="font-size: 0.95rem; line-height: 1.6;">
@@ -342,7 +342,7 @@ try {
                         <div class="mb-4">
                             <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-light" 
                                  style="width: 80px; height: 80px;">
-                                <i class="<?= $activity['icon'] ?> fa-2x text-primary"></i>
+                                <i class="<?= $activity['icon'] ?> fa-2x text-success"></i>
                             </div>
                         </div>
                         
@@ -358,7 +358,7 @@ try {
                         
                         <!-- Stats -->
                         <div class="mt-auto">
-                            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
+                            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
                                 <?= $activity['stats'] ?>
                             </span>
                         </div>
@@ -380,28 +380,28 @@ try {
         <div class="row g-3">
             <div class="col-lg-3 col-md-6">
                 <div class="text-center p-3">
-                    <h3 class="text-primary mb-1">25</h3>
+                    <h3 class="text-success mb-1">25</h3>
                     <small class="text-muted">Tamamlanan Proje</small>
                 </div>
             </div>
             
             <div class="col-lg-3 col-md-6">
                 <div class="text-center p-3">
-                    <h3 class="text-primary mb-1">500+</h3>
+                    <h3 class="text-success mb-1">500+</h3>
                     <small class="text-muted">Yardım Ulaştırılan Aile</small>
                 </div>
             </div>
             
             <div class="col-lg-3 col-md-6">
                 <div class="text-center p-3">
-                    <h3 class="text-primary mb-1">120</h3>
+                    <h3 class="text-success mb-1">120</h3>
                     <small class="text-muted">Aktif Gönüllü</small>
                 </div>
             </div>
             
             <div class="col-lg-3 col-md-6">
                 <div class="text-center p-3">
-                    <h3 class="text-primary mb-1">150K ₺</h3>
+                    <h3 class="text-success mb-1">150K ₺</h3>
                     <small class="text-muted">Toplam Bağış</small>
                 </div>
             </div>
@@ -410,7 +410,7 @@ try {
 </section>
 
 <!-- Simple CTA -->
-<section class="py-5 bg-primary text-white">
+<section class="py-5 bg-success text-white">
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8">
@@ -439,7 +439,7 @@ try {
     top: 0;
     bottom: 0;
     width: 2px;
-    background: var(--primary-color);
+    background: var(--success-color);
 }
 
 .timeline-item {
@@ -455,14 +455,14 @@ try {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: var(--primary-color);
+    background: var(--success-color);
     border: 3px solid white;
-    box-shadow: 0 0 0 3px var(--primary-color);
+    box-shadow: 0 0 0 3px var(--success-color);
 }
 
 .timeline-date {
     font-weight: bold;
-    color: var(--primary-color);
+    color: var(--success-color);
     margin-bottom: 5px;
 }
 

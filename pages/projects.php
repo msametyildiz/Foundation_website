@@ -247,7 +247,7 @@ $categoryColors = [
 .stat-number-consistent {
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--primary-color) !important; /* #4EA674 - Primary Green for all */
+    color: #4ea674 !important; /* Primary Green for all statistics */
     margin-bottom: 0.5rem;
     line-height: 1;
     font-family: 'Poppins', sans-serif;
@@ -261,9 +261,9 @@ $categoryColors = [
     letter-spacing: 0.5px;
 }
 
-/* Clean CTA Section */
+/* Clean CTA Section with consistent colors */
 .py-5.bg-primary.text-white {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+    background: linear-gradient(135deg, #4ea674 0%, #3d8760 100%) !important;
     padding: 5rem 0;
     position: relative;
 }
@@ -277,7 +277,7 @@ $categoryColors = [
     bottom: 0;
     background: linear-gradient(45deg, 
         rgba(78, 166, 116, 0.1) 0%, 
-        rgba(61, 133, 96, 0.1) 100%);
+        rgba(61, 135, 96, 0.1) 100%);
     pointer-events: none;
 }
 
@@ -304,23 +304,23 @@ $categoryColors = [
     margin-right: auto;
 }
 
-/* Accent Button using Logo Yellow */
+/* Accent Button using consistent green */
 .btn-accent {
-    background: var(--accent-color) !important;
+    background: #ffc107 !important;
     color: var(--gray-900) !important;
-    border: 2px solid var(--accent-color) !important;
+    border: 2px solid #ffc107 !important;
     font-weight: 700;
 }
 
 .btn-accent:hover {
-    background: var(--secondary-color) !important;
+    background: #e0a800 !important;
     color: var(--gray-900) !important;
-    border-color: var(--secondary-color) !important;
+    border-color: #e0a800 !important;
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(242, 229, 41, 0.3);
 }
 
-/* Clean Buttons */
+/* Clean Buttons with consistent colors */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -346,6 +346,150 @@ $categoryColors = [
     color: white;
     border-color: rgba(255, 255, 255, 0.5);
     transform: translateY(-2px);
+}
+
+/* Project Card Buttons - Consistent Green Colors */
+.btn-primary {
+    background-color: #4ea674 !important;
+    border-color: #4ea674 !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:hover {
+    background-color: #3d8760 !important;
+    border-color: #3d8760 !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(78, 166, 116, 0.3);
+}
+
+.btn-outline-primary {
+    color: #4ea674 !important;
+    border-color: #4ea674 !important;
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    color: #ffffff !important;
+    background-color: #4ea674 !important;
+    border-color: #4ea674 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(78, 166, 116, 0.3);
+}
+
+/* Project Category Badges - Consistent Colors */
+.badge.bg-primary,
+.badge.bg-success,
+.project-category.badge {
+    background-color: rgba(78, 166, 116, 0.1) !important;
+    color: #4ea674 !important;
+    border: 1px solid rgba(78, 166, 116, 0.2) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.project-card:hover .badge.bg-primary,
+.project-card:hover .badge.bg-success,
+.project-card:hover .project-category.badge {
+    background-color: #4ea674 !important;
+    color: #ffffff !important;
+    border-color: #4ea674 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(78, 166, 116, 0.3);
+}
+
+/* Override all other category colors to use consistent green */
+.badge.bg-warning,
+.badge.bg-danger,
+.badge.bg-info,
+.badge.bg-secondary {
+    background-color: rgba(78, 166, 116, 0.1) !important;
+    color: #4ea674 !important;
+    border: 1px solid rgba(78, 166, 116, 0.2) !important;
+}
+
+.project-card:hover .badge.bg-warning,
+.project-card:hover .badge.bg-danger,
+.project-card:hover .badge.bg-info,
+.project-card:hover .badge.bg-secondary {
+    background-color: #4ea674 !important;
+    color: #ffffff !important;
+    border-color: #4ea674 !important;
+}
+
+/* Section Badges */
+.badge.bg-primary.px-3.py-2.mb-3 {
+    background-color: #4ea674 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+.badge.bg-success.px-3.py-2.mb-3 {
+    background-color: #4ea674 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+/* Success badges for completed projects */
+.badge.bg-success {
+    background-color: #4ea674 !important;
+    color: #ffffff !important;
+}
+
+/* Completed project cards success buttons */
+.btn-outline-success {
+    border-color: #4ea674 !important;
+    color: #4ea674 !important;
+}
+
+.btn-outline-success:hover {
+    background-color: #4ea674 !important;
+    border-color: #4ea674 !important;
+    color: #ffffff !important;
+}
+
+/* Progress bars in project cards */
+.progress .progress-bar {
+    background-color: #4ea674 !important;
+}
+
+/* Project card hover effects with consistent colors */
+.project-card-simple {
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.project-card-simple:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(78, 166, 116, 0.15);
+    border-left-color: #4ea674;
+}
+
+.completed-project-card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.completed-project-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(78, 166, 116, 0.12);
+    border-left-color: #4ea674;
+}
+
+/* Make sure all icons use consistent color */
+.card-body i,
+.project-card i {
+    color: #4ea674 !important;
+}
+
+.project-card:hover .card-title {
+    color: #4ea674 !important;
 }
 
 /* Responsive Design */
@@ -418,47 +562,6 @@ $categoryColors = [
     .stat-number-consistent {
         font-size: 1.5rem;
     }
-}
-
-/* Basit proje kartları için stiller */
-.project-card-simple {
-    border: none;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}
-
-.project-card-simple:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-.completed-project-card {
-    border: none;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-}
-
-.completed-project-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-}
-
-.stat-item h3 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-}
-
-.stat-item small {
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-
-.hero-simple .stat-item {
-    background: rgba(255,255,255,0.1);
-    padding: 1rem;
-    border-radius: 0.5rem;
-    backdrop-filter: blur(10px);
 }
 
 @media (max-width: 768px) {

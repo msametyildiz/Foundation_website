@@ -2,17 +2,17 @@
    MODERN HOMEPAGE STYLES - 2024/2025 TRENDS
    ======================================== */
 
-/* CSS Custom Properties */
+/* CSS Custom Properties - Updated to match About page */
 :root {
-    /* Brand Colors - Logo-based palette */
-    --primary-color: #4EA674;
-    --primary-dark: #3d8560;
-    --primary-light: #69b387;
-    --secondary-color: #D3D92B;
-    --secondary-dark: #b8bf24;
-    --accent-color: #F2E529;
-    --accent-dark: #e6d421;
-    --success-color: #4EA674;
+    /* Brand Colors - Updated for consistent project colors */
+    --primary-color: #4ea674; /* Consistent green matching stat-number-consistent */
+    --primary-dark: #3d8760;
+    --primary-light: #5cb885;
+    --secondary-color: #6c757d; /* Bootstrap secondary */
+    --secondary-dark: #5a6268;
+    --accent-color: #ffc107; /* Bootstrap warning yellow */
+    --accent-dark: #e0a800;
+    --success-color: #4ea674; /* Same as primary for consistency */
     --danger-color: #dc3545;
     --warning-color: #F2E529;
     
@@ -34,10 +34,10 @@
     /* Gradients - Updated with new color palette */
     --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     --gradient-secondary: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%);
-    --gradient-hero: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    --gradient-cta: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-color) 100%);
-    --gradient-overlay: linear-gradient(45deg, rgba(78, 166, 116, 0.9) 0%, rgba(211, 217, 43, 0.8) 100%);
-    --gradient-text: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    --gradient-hero: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    --gradient-cta: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
+    --gradient-overlay: linear-gradient(45deg, rgba(40, 167, 69, 0.9) 0%, rgba(108, 117, 125, 0.8) 100%);
+    --gradient-text: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -1295,9 +1295,9 @@ h1, h2, h3, h4, h5, h6 {
 /* Enhanced Project Category Badge Styling */
 .project-card .project-category.badge {
     position: static;
-    background: rgba(78, 166, 116, 0.1) !important;
-    color: var(--primary-color) !important;
-    border: 1px solid rgba(78, 166, 116, 0.2);
+    background: rgba(40, 167, 69, 0.1) !important;
+    color: #28a745 !important;
+    border: 1px solid rgba(40, 167, 69, 0.2);
     font-size: var(--font-size-xs);
     font-weight: 700;
     padding: var(--spacing-xs) var(--spacing-md);
@@ -1311,462 +1311,101 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .project-card:hover .project-category.badge {
-    background: var(--primary-color) !important;
+    background: #28a745 !important;
     color: var(--white) !important;
-    border-color: var(--primary-color);
+    border-color: #28a745;
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(78, 166, 116, 0.3);
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
 }
 
 /* Override Bootstrap badge colors for project categories */
 .project-card .badge.bg-primary {
-    background: rgba(78, 166, 116, 0.1) !important;
-    color: var(--primary-color) !important;
-    border: 1px solid rgba(78, 166, 116, 0.2);
+    background: rgba(40, 167, 69, 0.1) !important;
+    color: #28a745 !important;
+    border: 1px solid rgba(40, 167, 69, 0.2);
 }
 
 .project-card:hover .badge.bg-primary {
-    background: var(--primary-color) !important;
+    background: #28a745 !important;
     color: var(--white) !important;
 }
 
 .project-card .badge.bg-success {
-    background: rgba(78, 166, 116, 0.1) !important;
-    color: var(--primary-color) !important;
-    border: 1px solid rgba(78, 166, 116, 0.2);
+    background: rgba(40, 167, 69, 0.1) !important;
+    color: #28a745 !important;
+    border: 1px solid rgba(40, 167, 69, 0.2);
 }
 
 .project-card:hover .badge.bg-success {
-    background: var(--primary-color) !important;
+    background: #28a745 !important;
     color: var(--white) !important;
 }
 
-/* Project category icon styling */
-.project-category i {
-    font-size: 0.9em;
-    opacity: 0.9;
-    transition: all 0.3s ease;
+/* Proje sayfası butonları için de aynı renk */
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
 }
 
-.project-card:hover .project-category i {
-    opacity: 1;
-    transform: scale(1.1);
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #218838;
 }
 
-/* ========================================
-   TESTIMONIALS SECTION
-   ======================================== */
-
-.testimonials-section {
-    padding: var(--spacing-3xl) 0;
+.btn-outline-success {
+    border-color: #28a745;
+    color: #28a745;
 }
 
-.testimonials-section.bg-light {
-    background: var(--gray-50);
+.btn-outline-success:hover {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #ffffff;
 }
 
-.testimonial-card {
-    background: var(--white);
-    border-radius: var(--radius-xl);
-    padding: var(--spacing-xl);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-    border: 1px solid var(--gray-100);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    height: 100%;
+/* Proje kartlarındaki butonları about sayfası renkleriyle uyumlu yap */
+.btn-primary {
+    background-color: #28a745;
+    border-color: #28a745;
 }
 
-.testimonial-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+.btn-primary:hover {
+    background-color: #218838;
+    border-color: #218838;
 }
 
-.testimonial-content {
-    position: relative;
-    margin-bottom: var(--spacing-xl);
+.btn-primary:focus,
+.btn-primary.focus {
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5);
 }
 
-.quote-icon {
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    width: 40px;
-    height: 40px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--white);
-    font-size: var(--font-size-sm);
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn-primary:not(:disabled):not(.disabled).active {
+    background-color: #218838;
+    border-color: #218838;
 }
 
-.testimonial-text {
-    font-size: var(--font-size-lg);
-    line-height: 1.6;
-    color: var(--gray-700);
-    font-style: italic;
-    margin-left: var(--spacing-lg);
-    margin-bottom: 0;
+/* Detaylar butonları için outline stil */
+.btn-outline-primary {
+    color: #28a745;
+    border-color: #28a745;
 }
 
-.testimonial-author {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: var(--spacing-lg);
-    border-top: 1px solid var(--gray-100);
+.btn-outline-primary:hover {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
 }
 
-.author-name {
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    color: var(--gray-900);
-    margin-bottom: var(--spacing-xs);
-}
-
-.author-role {
-    font-size: var(--font-size-sm);
-    color: var(--gray-500);
-    font-weight: 500;
-}
-
-.testimonial-rating {
-    display: flex;
-    gap: 2px;
-}
-
-/* Enhanced CTA Section */
-.cta-section-enhanced {
-    position: relative;
-    background: var(--gray-900);
-    overflow: hidden;
-}
-
-.cta-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, 
-        rgba(78, 166, 116, 0.9) 0%, 
-        rgba(13, 13, 13, 0.8) 50%, 
-        rgba(211, 217, 43, 0.7) 100%);
-    z-index: 1;
-}
-
-.cta-section-enhanced::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="3" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="2" fill="rgba(242,235,182,0.1)"/></svg>') repeat;
-    z-index: 2;
-}
-
-.cta-section-enhanced .container {
-    position: relative;
-    z-index: 3;
-}
-
-.cta-content {
-    text-align: center;
-}
-
-.cta-title {
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    font-weight: 800;
-    font-family: var(--font-family-heading);
-    line-height: 1.2;
-    margin-bottom: var(--spacing-lg);
-}
-
-.cta-description {
-    font-size: var(--font-size-xl);
-    line-height: 1.6;
-    max-width: 600px;
-    margin: 0 auto var(--spacing-2xl);
-}
-
-.cta-actions {
-    display: flex;
-    gap: var(--spacing-lg);
-    justify-content: center;
-    flex-wrap: wrap;
+.btn-outline-primary:focus,
+.btn-outline-primary.focus {
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5);
 }
 
 /* ========================================
-   SIMPLE ABOUT PAGE STYLES
+   RESPONSIVE IMPROVEMENTS
    ======================================== */
 
-/* Simple icon circles */
-.icon-circle {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-}
-
-/* Simple cards */
-.simple-card {
-    background: white;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--gray-200);
-    transition: var(--transition-base);
-}
-
-.simple-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-}
-
-.simple-card-body {
-    padding: var(--spacing-xl);
-}
-
-/* Simple statistics */
-.stat-simple {
-    padding: var(--spacing-md);
-}
-
-.stat-simple h3 {
-    font-weight: 600;
-    margin-bottom: var(--spacing-xs);
-}
-
-/* Timeline simplified */
-.timeline {
-    position: relative;
-    padding-left: 30px;
-}
-
-.timeline::before {
-    content: '';
-    position: absolute;
-    left: 15px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: var(--primary-color);
-}
-
-.timeline-item {
-    position: relative;
-    margin-bottom: 30px;
-}
-
-.timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -23px;
-    top: 5px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--primary-color);
-    border: 3px solid white;
-    box-shadow: 0 0 0 3px var(--primary-color);
-}
-
-.timeline-date {
-    font-weight: 600;
-    color: var(--primary-color);
-    margin-bottom: var(--spacing-xs);
-    font-size: var(--font-size-sm);
-}
-
-.timeline-content h5 {
-    margin-bottom: var(--spacing-xs);
-    color: var(--gray-900);
-    font-size: var(--font-size-lg);
-}
-
-.timeline-content p {
-    margin-bottom: 0;
-    color: var(--gray-600);
-    font-size: var(--font-size-sm);
-}
-
-/* Mobile optimizations for simple design */
-@media (max-width: 768px) {
-    .icon-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-    }
-    
-    .simple-card-body {
-        padding: var(--spacing-lg);
-    }
-    
-    .timeline {
-        padding-left: 20px;
-    }
-    
-    .timeline::before {
-        left: 10px;
-    }
-    
-    .timeline-item::before {
-        left: -18px;
-        width: 12px;
-        height: 12px;
-    }
-}
-
-/* Activity Areas Section Styles */
-.activity-areas-section {
-    position: relative;
-}
-
-.geometric-pattern {
-    background-image: 
-        radial-gradient(circle at 20% 20%, rgba(78, 166, 116, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(211, 217, 43, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 60%, rgba(78, 166, 116, 0.05) 0%, transparent 50%);
-    width: 100%;
-    height: 100%;
-}
-
-.section-badge {
-    border: 1px solid rgba(78, 166, 116, 0.1);
-    transition: all 0.3s ease;
-}
-
-.section-badge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-/* Simple Activity Cards Styles */
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.card .card-body {
-    transition: all 0.3s ease;
-}
-
-/* Modern Activity Cards */
-.activity-card-modern {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    cursor: pointer;
-}
-
-.activity-card-modern:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
-    border-color: rgba(78, 166, 116, 0.2);
-}
-
-.activity-card-modern:hover .hover-bg {
-    opacity: 0.03 !important;
-}
-
-.activity-card-modern:hover .activity-title-modern {
-    color: var(--primary-color) !important;
-}
-
-.activity-card-modern:hover .icon-circle-modern {
-    transform: scale(1.1);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.icon-circle-modern {
-    transition: all 0.3s ease;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-}
-
-.activity-title-modern {
-    transition: color 0.3s ease;
-    font-size: 1.1rem;
-    line-height: 1.3;
-}
-
-.activity-description-modern {
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
-
-.activity-stats {
-    font-size: 0.8rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.btn-link-modern {
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-}
-
-.btn-link-modern:hover {
-    transform: translateX(5px);
-    text-shadow: 0 2px  4px rgba(0, 0, 0, 0.1);
-}
-
-.btn-link-modern i {
-    transition: transform 0.3s ease;
-}
-
-.btn-link-modern:hover i {
-    transform: translateX(3px);
-}
-
-.hover-bg {
-    transition: opacity 0.4s ease;
-    z-index: -1;
-}
-
-/* Impact Statistics */
-.stats-container {
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
-}
-
-.stat-item-modern {
-    padding: 1rem 0.5rem;
-}
-
-.stat-number {
-    font-family: var(--font-family-heading);
-    line-height: 1;
-    transition: transform 0.3s ease;
-}
-
-.stat-item-modern:hover .stat-number {
-    transform: scale(1.1);
-}
-
-.stat-label {
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-
-/* Counter Animation */
-@keyframes countUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.stat-number[data-counter] {
-    animation: countUp 1s ease-out;
-}
-
-/* Responsive Design */
 @media (max-width: 768px) {
     .hero-actions {
         flex-direction: column;
@@ -2076,7 +1715,7 @@ h1, h2, h3, h4, h5, h6 {
     left: 0;
     right: 0;
     height: 4px;
-    background: var(--gradient-primary);
+    background: linear-gradient(135deg, #4ea674 0%, #3d8760 100%);
     transform: scaleX(0);
     transition: var(--transition-base);
 }
@@ -2099,16 +1738,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .project-card .project-category {
-    background: rgba(78, 166, 116, 0.1);
-    color: var(--primary-color);
+    background: rgba(78, 166, 116, 0.1) !important;
+    color: #4ea674 !important;
     border: 1px solid rgba(78, 166, 116, 0.2);
     transition: var(--transition-base);
 }
 
 .project-card:hover .project-category {
-    background: var(--primary-color);
-    color: var(--white);
-    border-color: var(--primary-color);
+    background: #4ea674 !important;
+    color: var(--white) !important;
+    border-color: #4ea674;
 }
 
 .project-card h3 {
@@ -2120,7 +1759,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .project-card:hover h3 {
-    color: var(--primary-color);
+    color: #4ea674 !important;
 }
 
 .project-card p {
@@ -2136,115 +1775,137 @@ h1, h2, h3, h4, h5, h6 {
     border-top: 1px solid var(--gray-100);
 }
 
-/* ========================================
-   STATS SECTION ENHANCEMENT
-   ======================================== */
-
-.stats-section {
-    background: var(--gray-900);
-    position: relative;
-    overflow: hidden;
+/* Proje sayfası detaylar butonları için özel renkler */
+.project-footer .btn-primary {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
 }
 
-.stats-bg-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, 
-        rgba(78, 166, 116, 0.1) 0%, 
-        rgba(13, 13, 13, 0.8) 50%, 
-        rgba(211, 217, 43, 0.1) 100%);
-    z-index: 1;
+.project-footer .btn-primary:hover {
+    background-color: #5a6268 !important;
+    border-color: #545b62 !important;
 }
 
-.stats-section .container {
-    position: relative;
-    z-index: 2;
+/* Proje kartlarındaki tüm butonlar için */
+.project-card .btn-primary {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
 }
 
-.stats-section .stat-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: var(--white);
+.project-card .btn-primary:hover {
+    background-color: #5a6268 !important;
+    border-color: #545b62 !important;
 }
 
-.stats-section .stat-card:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(78, 166, 116, 0.3);
+/* "Detayları Gör" butonları */
+a[href*="projects"].btn-primary,
+.btn-primary[href*="projects"] {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
 }
 
-.stats-section .stat-icon {
-    color: var(--accent-color);
-    filter: drop-shadow(0 2px 8px rgba(242, 229, 41, 0.3));
+a[href*="projects"].btn-primary:hover,
+.btn-primary[href*="projects"]:hover {
+    background-color: #5a6268 !important;
+    border-color: #545b62 !important;
 }
 
-.stats-section .stat-number {
-    color: var(--white);
+/* FAQ sayfasındaki detaylar butonları */
+.popular-topic .btn-outline-primary {
+    border-color: #6c757d !important;
+    color: #6c757d !important;
 }
 
-.stats-section .stat-label {
-    color: rgba(255, 255, 255, 0.8);
+.popular-topic .btn-outline-primary:hover {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: #ffffff !important;
 }
 
-/* ========================================
-   CTA SECTION FINAL STYLING
-   ======================================== */
-
-.bg-gradient-primary {
-    background: var(--gradient-primary) !important;
-    position: relative;
-    overflow: hidden;
+/* Bağış sayfasındaki butonlar */
+.donation-amount-btn.btn-outline-primary {
+    border-color: #6c757d !important;
+    color: #6c757d !important;
 }
 
-.bg-gradient-primary::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, 
-        rgba(255, 255, 255, 0.1) 0%, 
-        transparent 50%, 
-        rgba(255, 255, 255, 0.05) 100%);
-    z-index: 1;
+.donation-amount-btn.btn-outline-primary:hover,
+.donation-amount-btn.btn-outline-primary:focus {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: #ffffff !important;
 }
 
-.bg-gradient-primary .container {
-    position: relative;
-    z-index: 2;
+/* IBAN kopyalama butonları */
+.btn-outline-primary[onclick*="copyToClipboard"] {
+    border-color: #6c757d !important;
+    color: #6c757d !important;
 }
 
-.bg-gradient-primary .btn-light {
-    background: var(--white);
-    color: var(--primary-color);
-    border: 2px solid var(--white);
-    font-weight: 600;
-    transition: var(--transition-base);
+.btn-outline-primary[onclick*="copyToClipboard"]:hover {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: #ffffff !important;
 }
 
-.bg-gradient-primary .btn-light:hover {
-    background: transparent;
-    color: var(--white);
-    border-color: var(--white);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+/* Admin panel proje butonları */
+.btn-outline-primary[title="Düzenle"] {
+    border-color: #6c757d !important;
+    color: #6c757d !important;
 }
 
-.bg-gradient-primary .btn-outline-light {
-    border-color: rgba(255, 255, 255, 0.8);
-    color: var(--white);
-    background: transparent;
+.btn-outline-primary[title="Düzenle"]:hover {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: #ffffff !important;
 }
 
-.bg-gradient-primary .btn-outline-light:hover {
-    background: var(--white);
-    color: var(--primary-color);
-    border-color: var(--white);
-    transform: translateY(-2px);
+/* Genel proje detay butonları */
+.project-section .btn-primary,
+.projects-section .btn-primary {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+.project-section .btn-primary:hover,
+.projects-section .btn-primary:hover {
+    background-color: #5a6268 !important;
+    border-color: #545b62 !important;
+}
+
+/* İstatistik renkleriyle uyumlu gradient */
+.stat-number-consistent {
+    color: #6c757d !important;
+    font-weight: 700;
+}
+
+.stat-label-muted {
+    color: #6c757d !important;
+    opacity: 0.8;
+}
+
+/* Proje kartı kategori badgeleri */
+.project-card .badge.bg-success {
+    background-color: #6c757d !important;
+}
+
+.project-card:hover .badge.bg-success {
+    background-color: #5a6268 !important;
+}
+
+/* Proje progress barları */
+.project-card .progress-bar {
+    background-color: #6c757d !important;
+}
+
+/* Modal butonları da uyumlu yap */
+.modal .btn-primary {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+.modal .btn-primary:hover {
+    background-color: #5a6268 !important;
+    border-color: #545b62 !important;
 }
 
 /* ========================================
@@ -2299,7 +1960,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .projects-view-all-btn {
     position: relative;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: linear-gradient(135deg, #4ea674 0%, #3d8760 100%);
     border: none;
     color: var(--white);
     padding: var(--spacing-lg) var(--spacing-2xl);
@@ -2312,7 +1973,7 @@ h1, h2, h3, h4, h5, h6 {
     overflow: hidden;
     box-shadow: 
         0 8px 25px rgba(78, 166, 116, 0.3),
-        0 4px 15px rgba(211, 217, 43, 0.2),
+        0 4px 15px rgba(78, 166, 116, 0.2),
         0 0 0 1px rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     text-decoration: none;
@@ -2341,11 +2002,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .projects-view-all-btn:hover {
-    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+    background: linear-gradient(135deg, #3d8760 0%, #2d6446 100%);
     transform: translateY(-4px) scale(1.02);
     box-shadow: 
         0 15px 40px rgba(78, 166, 116, 0.4),
-        0 8px 25px rgba(211, 217, 43, 0.3),
+        0 8px 25px rgba(78, 166, 116, 0.3),
         0 0 0 1px rgba(255, 255, 255, 0.2),
         0 0 30px rgba(78, 166, 116, 0.2);
     color: var(--white);
@@ -2421,23 +2082,23 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Sadece "Daha Fazla Bilgi" butonu için özel renk */
 a[href="index.php?page=about"].btn-outline-primary {
-    border-color: #28a745;
-    color: #28a745;
+    border-color: #4ea674;
+    color: #4ea674;
 }
 
 a[href="index.php?page=about"].btn-outline-primary:hover {
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: #4ea674;
+    border-color: #4ea674;
     color: #ffffff;
 }
 
 /* Sadece "Tüm Haberleri Gör" butonu için özel renk */
 a[href="index.php?page=press"].btn-primary {
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: #4ea674;
+    border-color: #4ea674;
 }
 
 a[href="index.php?page=press"].btn-primary:hover {
-    background-color: #1e7e34;
-    border-color: #1c7430;
+    background-color: #3d8760;
+    border-color: #3d8760;
 }
