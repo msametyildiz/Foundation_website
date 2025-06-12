@@ -282,12 +282,12 @@ try {
 
 <!-- Stats Section -->
 <section class="stats-section py-5">
-    <div class="stats-bg-overlay"></div>
+  <div class="stats-bg-overlay"></div>
     <div class="container">
         <div class="row">
             <div class="col-12 text-center mb-5">
                 <span class="section-badge text-white">İstatistikler</span>
-                <h2 class="section-title text-white">
+                <h2 class="section-title text-white" style="color: white !important;">
                     Birlikte Başardıklarımız
                 </h2>
             </div>
@@ -332,7 +332,7 @@ try {
 </section>
 
 
-<!-- Haberler ve Duyurular -->
+<!-- Haberler ve Duyurular
 <?php if (!empty($recent_news)): ?>
 <section class="news-section py-5 bg-light">
     <div class="container">
@@ -382,9 +382,9 @@ try {
         </div>
     </div>
 </section>
-<?php endif; ?>
+<?php endif; ?> -->
 
-<!-- CTA Section -->
+<!-- CTA Section
 <section class="py-5 bg-gradient-primary text-white">
     <div class="container text-center">
         <h2 class="mb-4">Birlikte Değişim Yaratın</h2>
@@ -400,3 +400,4 @@ try {
         </a>
     </div>
 </section>
+ -->

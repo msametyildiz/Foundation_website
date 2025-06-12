@@ -152,7 +152,7 @@ $categoryColors = [
     <div class="container">
         <div class="text-center mb-5">
             <span class="badge bg-success px-3 py-2 mb-3">Tamamlanan Projeler</span>
-            <h2>Başarıyla Tamamladığımız Projeler</h2>
+            <h2 style="color=black">Başarıyla Tamamladığımız Projeler</h2>
             <p class="text-muted">Desteğiniz sayesinde hayata geçirdiklerimiz</p>
         </div>
 

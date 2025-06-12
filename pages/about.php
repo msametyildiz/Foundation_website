@@ -410,7 +410,7 @@ try {
 </section>
 
 <!-- Simple CTA -->
-<section class="py-5 bg-success text-white">
+<section class="py-5 bg-primary text-white">
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8">
@@ -433,6 +433,32 @@ try {
 
 <!-- CSS for Timeline -->
 <style>
+    /* Clean CTA Section with consistent colors */
+.py-5.bg-primary.text-white {
+    background: linear-gradient(135deg, #4ea674 0%, #3d8760 100%) !important;
+    padding: 5rem 0;
+    position: relative;
+}
+
+.py-5.bg-primary.text-white::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+        rgba(78, 166, 116, 0.1) 0%, 
+        rgba(61, 135, 96, 0.1) 100%);
+    pointer-events: none;
+}
+
+/* Badges with consistent primary color */
+.badge.bg-primary,
+.badge.bg-light.text-primary {
+    background: #4ea674 !important;
+    color: #ffffff !important;
+}
 .timeline {
     position: relative;
     padding-left: 30px;
