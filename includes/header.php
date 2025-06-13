@@ -34,6 +34,27 @@
     
     <!-- Modern Navbar Styling -->
     <style>
+        /* Critical CSS loaded first to prevent jumping */
+        body { 
+            margin: 0; 
+            padding-top: 80px !important; 
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        body.loaded { 
+            opacity: 1; 
+        }
+        
+        .navbar-modern { 
+            position: fixed !important; 
+            top: 0 !important; 
+            left: 0 !important; 
+            right: 0 !important; 
+            z-index: 1000 !important; 
+            height: 80px !important;
+        }
+        
         :root {
             --primary-color: #4EA674;
             --primary-dark: #3d8560;
@@ -66,16 +87,10 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            padding-top: 80px;
         }
 
         /* Modern Navbar */
         .navbar-modern {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -121,15 +136,90 @@
         .logo-container {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: transparent;
             border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 4px;
+            transition: var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            transition: var(--transition-base);
+            border-radius: var(--radius-lg);
+        }
+
+        .logo-container:hover::before {
+            opacity: 0.1;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: calc(var(--radius-lg) - 4px);
+            transition: var(--transition-fast);
+            position: relative;
+            z-index: 1;
+            opacity: 1 !important; /* Logo'nun görünür olmasını sağla */
+        }
+
+        .logo-container:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-container:hover img {
+            transform: scale(1.1);
+        }
+        
+        /* Logo loading state */
+        .logo-container.loading {
+            background: var(--gray-100);
+        }
+        
+        .logo-container.loading::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--gray-300);
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            z-index: 2;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .logo-container img.loaded {
+            opacity: 1 !important;
+        }
+
+        /* Logo fallback - Heart icon */
+        .logo-fallback {
             color: white;
             font-size: 1.5rem;
             font-weight: 700;
-            box-shadow: 0 4px 15px rgba(78, 166, 116, 0.3);
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .brand-text {
@@ -486,8 +576,17 @@
         <div class="navbar-container">
             <!-- Brand -->
             <a href="index.php" class="navbar-brand-modern">
-                <div class="logo-container">
-                    <i class="fas fa-heart"></i>
+                <div class="logo-container" id="logoContainer">
+                    <!-- Farklı format seçenekleri ile logo -->
+                    <img src="assets/images/favicon.ico?v=<?php echo time(); ?>" 
+                         alt="Necat Derneği Logo" 
+                         id="logoImage"
+                         onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex';"
+                         onload="console.log('Logo loaded successfully');">
+                    <!-- Fallback logo -->
+                    <div class="logo-fallback" id="logoFallback" style="display: none;">
+                        <i class="fas fa-heart"></i>
+                    </div>
                 </div>
                 <div class="brand-text">
                     <h1 class="brand-name">Necat Derneği</h1>
@@ -580,6 +679,83 @@
             </nav>
         </div>
     </nav>
+
+    <script>
+        // Prevent page jumping during load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loaded class to body to show content
+            document.body.classList.add('loaded');
+            
+            const logoContainer = document.getElementById('logoContainer');
+            const logoImage = document.getElementById('logoImage');
+            const logoFallback = document.getElementById('logoFallback');
+            
+            if (logoImage) {
+                // Logo yükleme kontrolü - basitleştirilmiş
+                logoImage.onload = function() {
+                    console.log('Logo loaded successfully');
+                    logoContainer.classList.remove('loading');
+                    logoImage.classList.add('loaded');
+                    logoImage.style.opacity = '1';
+                    logoImage.style.display = 'block';
+                    if (logoFallback) logoFallback.style.display = 'none';
+                };
+                
+                logoImage.onerror = function() {
+                    console.log('Logo failed to load, showing fallback');
+                    logoContainer.classList.remove('loading');
+                    logoImage.style.display = 'none';
+                    if (logoFallback) {
+                        logoFallback.style.display = 'flex';
+                    }
+                };
+                
+                // Eğer resim zaten yüklendiyse
+                if (logoImage.complete && logoImage.naturalWidth > 0) {
+                    logoImage.onload();
+                } else if (logoImage.complete) {
+                    logoImage.onerror();
+                }
+            }
+            
+            // Navbar scroll behavior
+            let lastScrollTop = 0;
+            const navbar = document.getElementById('navbar');
+            
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > 100) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+                
+                // Hide/show navbar on scroll
+                if (scrollTop > lastScrollTop && scrollTop > 200) {
+                    navbar.classList.add('hidden');
+                } else {
+                    navbar.classList.remove('hidden');
+                }
+                
+                lastScrollTop = scrollTop;
+            });
+            
+            // Mobile menu toggle
+            const mobileToggle = document.getElementById('mobileToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileToggle && mobileMenu) {
+                mobileToggle.addEventListener('click', function() {
+                    mobileToggle.classList.toggle('active');
+                    mobileMenu.classList.toggle('active');
+                });
+            }
+        });
+        
+        // Prevent FOUC (Flash of Unstyled Content)
+        document.documentElement.style.visibility = 'visible';
+    </script>
 
     <!-- Main Content -->
     <main>
