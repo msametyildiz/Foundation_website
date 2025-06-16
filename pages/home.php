@@ -29,46 +29,72 @@ try {
     $recent_news = [];
 }
 
-// Gerçek istatistikler
+// Settings tablosundan hero ve istatistik verilerini çek
 try {
-    // Toplam bağış tutarı
-    $stmt = $pdo->prepare("SELECT SUM(collected_amount) as total FROM projects WHERE status IN ('active', 'completed')");
+    // Settings tablosundan tüm ayarları çek
+    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings");
     $stmt->execute();
-    $total_donations = $stmt->fetchColumn() ?: 0;
-    
-    // Toplam proje sayısı
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM projects WHERE status IN ('active', 'completed')");
-    $stmt->execute();
-    $total_projects = $stmt->fetchColumn() ?: 0;
-    
-    // Toplam gönüllü sayısı (volunteer_applications tablosundan)
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM volunteer_applications WHERE status = 'approved'");
-    $stmt->execute();
-    $total_volunteers = $stmt->fetchColumn() ?: 0;
-    
-    // Yardım edilen aile sayısı (projelerden toplam beneficiaries)
-    $stmt = $pdo->prepare("SELECT SUM(beneficiaries) as total FROM projects WHERE status IN ('active', 'completed') AND beneficiaries IS NOT NULL");
-    $stmt->execute();
-    $total_families = $stmt->fetchColumn() ?: 0;
-    
-    // Site ayarlarını çek
-    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM site_settings");
-    $stmt->execute();
-    $site_settings = [];
+    $settings = [];
     while ($row = $stmt->fetch()) {
-        $site_settings[$row['setting_key']] = $row['setting_value'];
+        $settings[$row['setting_key']] = $row['setting_value'];
     }
+
+    // Hero Section verileri - settings tablosundan dinamik olarak al
+    $hero_title = $settings['hero_title'] ?? 'Umut Olmaya Devam Ediyoruz';
+    $hero_subtitle = $settings['hero_subtitle'] ?? 'Her bağış bir umut, her yardım bir gülümseme. Muhtaç ailelere ulaşan yardımlarınızla hayatlara dokunmaya devam ediyoruz.';
+    
+    // İstatistik verileri - öncelikle settings tablosundan al
+    $stats_projects = (int)($settings['stats_projects'] ?? 0);
+    $stats_beneficiaries = (int)($settings['stats_beneficiaries'] ?? 0);
+    $stats_volunteers = (int)($settings['stats_volunteers'] ?? 0);
+    $stats_donations = (int)($settings['stats_donations'] ?? 0);
+    
+    // Eğer settings'te veri yoksa veritabanından hesapla
+    if ($stats_projects == 0) {
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM projects WHERE status IN ('active', 'completed')");
+        $stmt->execute();
+        $stats_projects = (int)($stmt->fetchColumn() ?: 0);
+    }
+    
+    if ($stats_volunteers == 0) {
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM volunteer_applications WHERE status = 'approved'");
+        $stmt->execute();
+        $stats_volunteers = (int)($stmt->fetchColumn() ?: 0);
+    }
+    
+    if ($stats_beneficiaries == 0) {
+        $stmt = $pdo->prepare("SELECT SUM(beneficiaries) as total FROM projects WHERE status IN ('active', 'completed') AND beneficiaries IS NOT NULL");
+        $stmt->execute();
+        $stats_beneficiaries = (int)($stmt->fetchColumn() ?: 0);
+    }
+
+    // Bağış miktarı için de aynı kontrol (eğer projects tablosunda collected_amount alanı varsa)
+    if ($stats_donations == 0) {
+        // Projeler tablosunda collected_amount alanı yoksa sadece settings'teki değeri kullan
+        $stmt = $pdo->prepare("SHOW COLUMNS FROM projects LIKE 'collected_amount'");
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            $stmt = $pdo->prepare("SELECT SUM(collected_amount) as total FROM projects WHERE status IN ('active', 'completed')");
+            $stmt->execute();
+            $stats_donations = (int)($stmt->fetchColumn() ?: 0);
+        }
+    }
+
+    // Geriye uyumluluk için eski değişken adlarını koruyalım
+    $total_donations = $stats_donations;
+    $total_projects = $stats_projects;
+    $total_volunteers = $stats_volunteers;
+    $total_families = $stats_beneficiaries;
+
 } catch (PDOException $e) {
-    $total_donations = 0;
-    $total_projects = 0;
-    $total_volunteers = 0;
-    $total_families = 0;
-} catch (PDOException $e) {
-    $total_donations = 0;
-    $total_projects = 0;
-    $total_volunteers = 0;
-    $total_families = 0;
-    $site_settings = [];
+    // Hata durumunda varsayılan değerler
+    $hero_title = 'Umut Olmaya Devam Ediyoruz';
+    $hero_subtitle = 'Her bağış bir umut, her yardım bir gülümseme. Muhtaç ailelere ulaşan yardımlarınızla hayatlara dokunmaya devam ediyoruz.';
+    $total_donations = 500000;
+    $total_projects = 10;
+    $total_volunteers = 25;
+    $total_families = 5000;
+    $settings = [];
 }
 ?>
 
@@ -81,12 +107,10 @@ try {
                 <div class="hero-content">
                     <span class="hero-badge">🌟 Birlikte Güçlüyüz</span>
                     <h1 class="hero-title">
-                        Gönüllü Ol,
-                        <span class="text-gradient">Hayat Değiştir</span>
+                        <?= htmlspecialchars($hero_title) ?>
                     </h1>
                     <p class="hero-subtitle">
-                        Birlikte daha güçlüyüz. Gönüllü ekibimize katılın ve 
-                        muhtaç ailelere umut olun. Her katkı bir hayatı değiştirir.
+                        <?= htmlspecialchars($hero_subtitle) ?>
                     </p>
                     <div class="hero-actions">
                         <a href="index.php?page=donate" class="btn btn-hero-primary">
@@ -133,7 +157,7 @@ try {
                     </div>
                     <div class="hero-image-container">
                         <img src="uploads/images/hero/hero-image.jpg" 
-                             alt="Necat Derneği - Birlikte güçlü bir toplum için çalışan gönüllüler ve yardım faaliyetleri" 
+                             alt="<?= htmlspecialchars($hero_title) ?> - Necat Derneği" 
                              class="hero-main-image"
                              loading="eager"
                              decoding="async"
@@ -180,11 +204,11 @@ try {
                     <div class="about-features">
                         <div class="about-feature">
                             <i class="fas fa-check-circle text-success"></i>
-                            <span>Şeffaf mali raporlama</span>
+                            <span>İnsana Odaklı Yaklaşım</span>
                         </div>
                         <div class="about-feature">
                             <i class="fas fa-check-circle text-success"></i>
-                            <span>Profesyonel ekip</span>
+                            <span>Kapsayıcı Toplumsal Destek</span>
                         </div>
                         <div class="about-feature">
                             <i class="fas fa-check-circle text-success"></i>

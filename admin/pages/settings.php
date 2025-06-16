@@ -63,6 +63,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $success = "E-posta ayarları güncellendi.";
         }
         
+        if ($action === 'update_hero') {
+            $hero_title = sanitizeInput($_POST['hero_title'] ?? '');
+            $hero_subtitle = sanitizeInput($_POST['hero_subtitle'] ?? '');
+            $stats_projects = (int)($_POST['stats_projects'] ?? 0);
+            $stats_beneficiaries = (int)($_POST['stats_beneficiaries'] ?? 0);
+            $stats_volunteers = (int)($_POST['stats_volunteers'] ?? 0);
+            $stats_donations = (int)($_POST['stats_donations'] ?? 0);
+            
+            $hero_settings = [
+                'hero_title' => $hero_title,
+                'hero_subtitle' => $hero_subtitle,
+                'stats_projects' => $stats_projects,
+                'stats_beneficiaries' => $stats_beneficiaries,
+                'stats_volunteers' => $stats_volunteers,
+                'stats_donations' => $stats_donations
+            ];
+            
+            foreach ($hero_settings as $key => $value) {
+                $stmt = $pdo->prepare("INSERT INTO settings (setting_key, setting_value, setting_type, category) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)");
+                $type = in_array($key, ['hero_title', 'hero_subtitle']) ? 'text' : 'number';
+                $category = in_array($key, ['hero_title', 'hero_subtitle']) ? 'anasayfa' : 'istatistik';
+                $stmt->execute([$key, $value, $type, $category]);
+            }
+            
+            $success = "Ana sayfa Hero bölümü güncellendi.";
+        }
+        
         if ($action === 'update_security') {
             $maintenance_mode = isset($_POST['maintenance_mode']) ? 1 : 0;
             $login_attempts = (int)($_POST['login_attempts'] ?? 5);
@@ -141,6 +168,15 @@ $site_settings = [
     'social_linkedin' => $settings_data['social_linkedin'] ?? ''
 ];
 
+$hero_settings = [
+    'hero_title' => $settings_data['hero_title'] ?? 'Umut Olmaya Devam Ediyoruz',
+    'hero_subtitle' => $settings_data['hero_subtitle'] ?? 'Her bağış bir umut, her yardım bir gülümseme. Muhtaç ailelere ulaşan yardımlarınızla hayatlara dokunmaya devam ediyoruz.',
+    'stats_projects' => $settings_data['stats_projects'] ?? 10,
+    'stats_beneficiaries' => $settings_data['stats_beneficiaries'] ?? 5000,
+    'stats_volunteers' => $settings_data['stats_volunteers'] ?? 25,
+    'stats_donations' => $settings_data['stats_donations'] ?? 500000
+];
+
 $email_settings = [
     'smtp_host' => $settings_data['smtp_host'] ?? '',
     'smtp_port' => $settings_data['smtp_port'] ?? 587,
@@ -191,6 +227,11 @@ $security_settings = [
                     <li class="nav-item">
                         <a class="nav-link active" data-bs-toggle="tab" href="#site-settings">
                             <i class="fas fa-globe me-2"></i>Site Ayarları
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#hero-settings">
+                            <i class="fas fa-home me-2"></i>Ana Sayfa Hero
                         </a>
                     </li>
                     <li class="nav-item">
@@ -297,6 +338,82 @@ $security_settings = [
                                         <input type="url" name="social_linkedin" class="form-control" 
                                                value="<?php echo htmlspecialchars($site_settings['social_linkedin']); ?>" 
                                                placeholder="https://linkedin.com/company/...">
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Kaydet
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Hero Settings Tab -->
+                    <div class="tab-pane fade" id="hero-settings">
+                        <form method="POST">
+                            <input type="hidden" name="action" value="update_hero">
+                            
+                            <div class="row g-4">
+                                <div class="col-12">
+                                    <h5 class="border-bottom pb-2 mb-3">
+                                        <i class="fas fa-home me-2"></i>Ana Sayfa Hero Section
+                                    </h5>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label class="form-label">Ana Başlık</label>
+                                    <input type="text" name="hero_title" class="form-control" 
+                                           value="<?php echo htmlspecialchars($hero_settings['hero_title']); ?>" 
+                                           placeholder="Umut Olmaya Devam Ediyoruz" required>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label class="form-label">Alt Başlık</label>
+                                    <textarea name="hero_subtitle" class="form-control" rows="3" 
+                                              placeholder="Hero section alt başlığı" required><?php echo htmlspecialchars($hero_settings['hero_subtitle']); ?></textarea>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <h5 class="border-bottom pb-2 mb-3 mt-4">
+                                        <i class="fas fa-chart-bar me-2"></i>İstatistik Verileri
+                                    </h5>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label">Toplam Proje Sayısı</label>
+                                    <input type="number" name="stats_projects" class="form-control" 
+                                           value="<?php echo $hero_settings['stats_projects']; ?>" 
+                                           min="0" placeholder="10">
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label">Yardım Edilen Aile Sayısı</label>
+                                    <input type="number" name="stats_beneficiaries" class="form-control" 
+                                           value="<?php echo $hero_settings['stats_beneficiaries']; ?>" 
+                                           min="0" placeholder="5000">
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label">Aktif Gönüllü Sayısı</label>
+                                    <input type="number" name="stats_volunteers" class="form-control" 
+                                           value="<?php echo $hero_settings['stats_volunteers']; ?>" 
+                                           min="0" placeholder="25">
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label">Toplam Bağış Miktarı (TL)</label>
+                                    <input type="number" name="stats_donations" class="form-control" 
+                                           value="<?php echo $hero_settings['stats_donations']; ?>" 
+                                           min="0" placeholder="500000">
+                                </div>
+                                
+                                <div class="col-12">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        <strong>Bilgi:</strong> Bu değerler ana sayfanın Hero Section'ında görüntülenir. 
+                                        Eğer değer 0 ise, sistem otomatik olarak veritabanından gerçek verileri çekmeye çalışır.
                                     </div>
                                 </div>
                                 

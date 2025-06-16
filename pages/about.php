@@ -1,25 +1,54 @@
 <?php
 // Veritabanından gerçek verileri çek
 try {
-    // Site ayarlarını çek
-    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM site_settings");
+    // Settings tablosundan dinamik verileri çek
+    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings");
     $stmt->execute();
-    $site_settings = [];
+    $settings = [];
     while ($row = $stmt->fetch()) {
-        $site_settings[$row['setting_key']] = $row['setting_value'];
+        $settings[$row['setting_key']] = $row['setting_value'];
     }
 
-    // İstatistikleri çek
-    $stmt = $pdo->prepare("SELECT 
-        (SELECT COUNT(*) FROM projects WHERE status IN ('active', 'completed')) as total_projects,
-        (SELECT SUM(beneficiaries) FROM projects WHERE status IN ('active', 'completed') AND beneficiaries IS NOT NULL) as total_families,
-        (SELECT COUNT(*) FROM volunteer_applications WHERE status = 'approved') as total_volunteers,
-        (SELECT COUNT(*) FROM team_members WHERE is_active = 1) as total_team,
-        (SELECT SUM(collected_amount) FROM projects WHERE status IN ('active', 'completed')) as total_donations
-    ");
-    $stmt->execute();
-    $stats = $stmt->fetch();
+    // About sayfası hero verileri
+    $about_hero = [
+        'title' => $settings['site_name'] ?? 'Necat Derneği',
+        'subtitle' => $settings['about_description'] ?? 'Necat Derneği hakkında...',
+        'foundation_year' => $settings['foundation_year'] ?? '1995',
+        'mission' => $settings['about_mission'] ?? '',
+        'vision' => $settings['about_vision'] ?? '',
+        'values' => $settings['about_values'] ?? ''
+    ];
 
+    // İstatistikler - önce settings'ten al, yoksa hesapla
+    $hero_stats = [
+        'experience_years' => date('Y') - (int)($settings['foundation_year'] ?? 1995),
+        'total_projects' => (int)($settings['stats_projects'] ?? 0),
+        'total_beneficiaries' => (int)($settings['stats_beneficiaries'] ?? 0),
+        'total_volunteers' => (int)($settings['stats_volunteers'] ?? 0)
+    ];
+
+    // Eğer settings'te istatistik yoksa veritabanından hesapla
+    if ($hero_stats['total_projects'] == 0) {
+        $stmt = $pdo->prepare("SELECT 
+            (SELECT COUNT(*) FROM projects WHERE status IN ('active', 'completed')) as total_projects,
+            (SELECT SUM(beneficiaries) FROM projects WHERE status IN ('active', 'completed') AND beneficiaries IS NOT NULL) as total_families,
+            (SELECT COUNT(*) FROM volunteer_applications WHERE status = 'approved') as total_volunteers,
+            (SELECT COUNT(*) FROM team_members WHERE is_active = 1) as total_team,
+            (SELECT SUM(collected_amount) FROM projects WHERE status IN ('active', 'completed')) as total_donations
+        ");
+        $stmt->execute();
+        $db_stats = $stmt->fetch();
+        
+        if ($db_stats) {
+            $hero_stats['total_projects'] = (int)($db_stats['total_projects'] ?? 0);
+            $hero_stats['total_beneficiaries'] = (int)($db_stats['total_families'] ?? 0);
+            $hero_stats['total_volunteers'] = (int)($db_stats['total_volunteers'] ?? 0);
+        }
+    }
+
+    // Diğer sayfalar için eski veriler (geriye dönük uyumluluk)
+    $stats = ['total_projects' => $hero_stats['total_projects'], 'total_families' => $hero_stats['total_beneficiaries'], 'total_volunteers' => $hero_stats['total_volunteers'], 'total_team' => 0, 'total_donations' => 0];
+    
     // Yönetim kurulu üyelerini çek
     $stmt = $pdo->prepare("SELECT * FROM team_members WHERE category = 'yonetim' AND is_active = 1 ORDER BY sort_order ASC");
     $stmt->execute();
@@ -30,11 +59,194 @@ try {
     $stmt->execute();
     $completed_projects = $stmt->fetchAll();
 
+    // Kuruluş ilkelerini settings'ten al ve işle
+    $values_string = $about_hero['values'] ?? '';
+    $values_array = array_filter(array_map('trim', explode(',', $values_string)));
+    
+    // İlkeler için icon ve açıklama eşleştirmesi
+    $principles_mapping = [
+        'Hakk\'a Riayet' => [
+            'icon' => 'fas fa-balance-scale',
+            'description' => 'Allah\'ın emirlerine uygun hareket eder, hakkı gözetir ve adaleti savunuruz.'
+        ],
+        'Emanete Sadakat' => [
+            'icon' => 'fas fa-handshake',
+            'description' => 'Bize tevdi edilen her sorumluluğu titizlikle yerine getirir, güveni koruruz.'
+        ],
+        'Ahde Vefa' => [
+            'icon' => 'fas fa-heart',
+            'description' => 'Verdiğimiz sözlerde dururuz ve taahhütlerimizi eksiksiz yerine getiririz.'
+        ],
+        'İnsana Hürmet' => [
+            'icon' => 'fas fa-users',
+            'description' => 'Her insanın onur ve saygınlığını korur, insan haklarına saygı gösteririz.'
+        ],
+        'Adalet' => [
+            'icon' => 'fas fa-gavel',
+            'description' => 'Herkesi eşit görür, adil davranır ve hakkaniyeti gözetiriz.'
+        ],
+        'Vicdan' => [
+            'icon' => 'fas fa-heart-pulse',
+            'description' => 'Vicdani sorumluluklarımızı yerine getirir, içten ve samimi davranırız.'
+        ],
+        'Şeffaflık' => [
+            'icon' => 'fas fa-eye',
+            'description' => 'Tüm faaliyetlerimizi açık ve şeffaf şekilde yürütür, hesap verebilirlik ilkesiyle hareket ederiz.'
+        ],
+        'Sorumluluk' => [
+            'icon' => 'fas fa-clipboard-check',
+            'description' => 'Üstlendiğimiz her görevi sorumluluk bilinciyle yerine getirir, hesabını veririz.'
+        ],
+        'Dürüstlük' => [
+            'icon' => 'fas fa-shield-alt',
+            'description' => 'Doğruluk ve dürüstlük ilkelerimizle hareket eder, güvenilir oluruz.'
+        ]
+    ];
+    
+    // Dinamik ilkeler dizisi oluştur
+    $about_content = ['principles' => []];
+    foreach ($values_array as $value) {
+        $clean_value = trim($value);
+        if (isset($principles_mapping[$clean_value])) {
+            $about_content['principles'][] = [
+                'title' => $clean_value,
+                'icon' => $principles_mapping[$clean_value]['icon'],
+                'description' => $principles_mapping[$clean_value]['description']
+            ];
+        }
+    }
+
+    // Tarihçe verilerini settings'ten al ve dinamik olarak oluştur
+    $history_timeline = [];
+    $history_years = ['1995', '1998', '2005', '2010', '2020', '2024'];
+    
+    foreach ($history_years as $year) {
+        $title_key = "history_{$year}_title";
+        $desc_key = "history_{$year}_description";
+        
+        if (isset($settings[$title_key]) && isset($settings[$desc_key])) {
+            $history_timeline[] = [
+                'year' => $year,
+                'title' => $settings[$title_key],
+                'description' => $settings[$desc_key]
+            ];
+        }
+    }
+
+    // Faaliyet alanları için projelerden veri çek
+    $stmt = $pdo->prepare("SELECT title, short_description, category, beneficiaries, status FROM projects WHERE status IN ('active', 'completed') ORDER BY sort_order ASC");
+    $stmt->execute();
+    $projects_data = $stmt->fetchAll();
+
+    // Kategori bazında icon eşleştirmesi
+    $category_icons = [
+        'Sosyal Yardım' => 'fas fa-home',
+        'Eğitim' => 'fas fa-graduation-cap',
+        'Gıda Yardımı' => 'fas fa-moon',
+        'Sosyal Hizmet' => 'fas fa-rings-wedding',
+        'Acil Yardım' => 'fas fa-cut',
+        'Sağlık' => 'fas fa-heartbeat',
+        'Toplum Destek' => 'fas fa-users'
+    ];
+
+    // Faaliyet alanlarını dinamik olarak oluştur
+    $activities_data = [];
+    foreach ($projects_data as $project) {
+        $category = $project['category'] ?? 'Genel';
+        $icon = $category_icons[$category] ?? 'fas fa-hand-holding-heart';
+        $beneficiaries = $project['beneficiaries'] ?? 0;
+        $stats = $beneficiaries > 0 ? number_format($beneficiaries) . '+ Kişi' : 'Aktif';
+        
+        $activities_data[] = [
+            'title' => $project['title'],
+            'description' => $project['short_description'] ?? 'Proje açıklaması yükleniyor...',
+            'icon' => $icon,
+            'stats' => $stats
+        ];
+    }
+
 } catch (PDOException $e) {
+    // Fallback veriler
+    $about_hero = [
+        'title' => 'Necat Derneği',
+        'subtitle' => 'İhtiyaç sahiplerine maddi ve manevi destek sağlamak amacıyla kurulmuş bir yardım kuruluşudur.',
+        'foundation_year' => '1995',
+        'mission' => 'İnsani değerler temelinde toplumsal dayanışmayı güçlendirmek.',
+        'vision' => 'Toplumsal dayanışmanın en üst seviyede yaşandığı bir toplum inşa etmek.',
+        'values' => 'Şeffaflık, Hesap Verebilirlik, Eşitlik, Adalet, Dayanışma'
+    ];
+    $hero_stats = ['experience_years' => date('Y') - 1995, 'total_projects' => 0, 'total_beneficiaries' => 0, 'total_volunteers' => 0];
     $stats = ['total_projects' => 0, 'total_families' => 0, 'total_volunteers' => 0, 'total_team' => 0, 'total_donations' => 0];
     $team_members = [];
     $completed_projects = [];
-    $site_settings = [];
+    $settings = [];
+    
+    // Fallback için basit ilkeler
+    $about_content = [
+        'principles' => [
+            [
+                'title' => 'Şeffaflık',
+                'icon' => 'fas fa-eye',
+                'description' => 'Tüm faaliyetlerimizi açık ve şeffaf şekilde yürütür, hesap verebilirlik ilkesiyle hareket ederiz.'
+            ],
+            [
+                'title' => 'Hesap Verebilirlik',
+                'icon' => 'fas fa-clipboard-check',
+                'description' => 'Yaptığımız her işin hesabını verebilir, sorumluluklarımızı yerine getiririz.'
+            ],
+            [
+                'title' => 'Dayanışma',
+                'icon' => 'fas fa-hands-helping',
+                'description' => 'Toplumsal birlik ve beraberliği güçlendiren dayanışma ruhuyla çalışırız.'
+            ]
+        ]
+    ];
+    
+    // Fallback tarihçe verileri
+    $history_timeline = [
+        [
+            'year' => '1995',
+            'title' => 'Kuruluş',
+            'description' => 'Necat Derneği, sosyal yardımlaşma amacıyla kuruldu.'
+        ],
+        [
+            'year' => '1998',
+            'title' => 'İlk Projeler',
+            'description' => 'Eğitim burs programı ve gıda yardımı projeleri başlatıldı.'
+        ],
+        [
+            'year' => '2020',
+            'title' => 'Pandemi Desteği',
+            'description' => 'COVID-19 salgını döneminde acil yardım programları hayaya geçirildi.'
+        ],
+        [
+            'year' => '2024',
+            'title' => 'Büyüme',
+            'description' => 'Sağlık, eğitim ve afet yardımı alanlarında projeler genişletildi.'
+        ]
+    ];
+    
+    // Fallback faaliyet alanları
+    $activities_data = [
+        [
+            'title' => 'Gıda ve Giyim Yardımı',
+            'description' => 'Yetim, yoksul ve kimsesiz ailelere temel gıda, yakacak ve giyecek yardımları ulaştırıyoruz.',
+            'icon' => 'fas fa-home',
+            'stats' => '1000+ Kişi'
+        ],
+        [
+            'title' => 'Kırtasiye Yardımı',
+            'description' => 'Maddi durumu yetersiz olan öğrencilere okul dönemlerinde defter, kalem, çanta gibi ihtiyaçlar sağlıyoruz.',
+            'icon' => 'fas fa-graduation-cap',
+            'stats' => '500+ Kişi'
+        ],
+        [
+            'title' => 'Burs Destek Programı',
+            'description' => 'Eğitimine devam edebilmesi için yardıma ihtiyacı olan öğrencilere aylık burs desteği veriyoruz.',
+            'icon' => 'fas fa-graduation-cap',
+            'stats' => '250+ Kişi'
+        ]
+    ];
 }
 ?>
 
@@ -47,31 +259,31 @@ try {
             <div class="col-lg-8">
                 <h1 class="display-4 fw-light text-dark mb-4">Hakkımızda</h1>
                 <p class="lead text-muted mb-5">
-                    2018'den beri toplumsal değişim için çalışan, sosyal sorumluluk bilinciyle hareket eden bir derneğiz.
+                    <?= htmlspecialchars($about_hero['subtitle']) ?>
                 </p>
                 <div class="row g-3 mb-5">
                     <div class="col-md-3">
                         <div class="stat-simple">
-                            <h3 class="text-success mb-1"><?= date('Y') - 2018 ?>+</h3>
-                            <small class="text-muted">Yıl Deneyim</small>
+                            <h3 class="stat-number-consistent mb-1"><?= $hero_stats['experience_years'] ?>+</h3>
+                            <small class="stat-label-muted">Yıl Deneyim</small>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="stat-simple">
-                            <h3 class="text-success mb-1"><?= number_format($stats['total_families'] ?? 0) ?>+</h3>
-                            <small class="text-muted">Aile</small>
+                            <h3 class="stat-number-consistent mb-1"><?= number_format($hero_stats['total_beneficiaries']) ?>+</h3>
+                            <small class="stat-label-muted">Yararlanıcı</small>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="stat-simple">
-                            <h3 class="text-success mb-1"><?= $stats['total_projects'] ?? 0 ?></h3>
-                            <small class="text-muted">Proje</small>
+                            <h3 class="stat-number-consistent mb-1"><?= $hero_stats['total_projects'] ?></h3>
+                            <small class="stat-label-muted">Proje</small>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="stat-simple">
-                            <h3 class="text-success mb-1"><?= $stats['total_volunteers'] ?? 0 ?>+</h3>
-                            <small class="text-muted">Gönüllü</small>
+                            <h3 class="stat-number-consistent mb-1"><?= $hero_stats['total_volunteers'] ?>+</h3>
+                            <small class="stat-label-muted">Gönüllü</small>
                         </div>
                     </div>
                 </div>
@@ -94,7 +306,7 @@ try {
                             <h3 class="h4 mb-0">Misyonumuz</h3>
                         </div>
                         <p class="text-muted">
-                            <?= nl2br(htmlspecialchars($site_settings['mission'] ?? 'Misyon bilgisi yükleniyor...')) ?>
+                            <?= nl2br(htmlspecialchars($about_hero['mission'] ?? 'Misyon bilgisi yükleniyor...')) ?>
                         </p>
                     </div>
                 </div>
@@ -110,7 +322,7 @@ try {
                             <h3 class="h4 mb-0">Vizyonumuz</h3>
                         </div>
                         <p class="text-muted">
-                            <?= nl2br(htmlspecialchars($site_settings['vision'] ?? 'Vizyon bilgisi yükleniyor...')) ?>
+                            <?= nl2br(htmlspecialchars($about_hero['vision'] ?? 'Vizyon bilgisi yükleniyor...')) ?>
                         </p>
                     </div>
                 </div>
@@ -161,7 +373,7 @@ try {
     </div>
 </section>
 
-<!-- Simple Values -->
+<!-- Simple Values
 <section class="py-5">
     <div class="container">
         <div class="row mb-5">
@@ -227,9 +439,9 @@ try {
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
-<!-- Tarihçe -->
+<!-- Tarihçe 
 <section class="py-5">
     <div class="container">
         <div class="row align-items-center">
@@ -275,7 +487,7 @@ try {
             </div>
         </div>
     </div>
-</section>
+</section>-->
 
 <!-- Faaliyet Alanlarımız -->
 <section class="py-5" style="background-color: #fafafa;">
@@ -293,46 +505,7 @@ try {
         <!-- Activity Cards Grid -->
         <div class="row g-4">
             <?php 
-            // Faaliyet alanları verisi
-            $activities_data = [
-                [
-                    'title' => 'Yetim ve Kimsesiz Aile Yardımları',
-                    'description' => 'Yetim, yoksul ve kimsesiz ailelere temel ihtiyaçlarını karşılayarak destek oluyoruz.',
-                    'icon' => 'fas fa-home',
-                    'stats' => '500+ Aile'
-                ],
-                [
-                    'title' => 'Eğitim Desteği',
-                    'description' => 'Yetim ve yoksul öğrencilere burs ve kırtasiye yardımı yaparak eğitimlerini destekliyoruz.',
-                    'icon' => 'fas fa-graduation-cap',
-                    'stats' => '250+ Öğrenci'
-                ],
-                [
-                    'title' => 'Ramazan Organizasyonları',
-                    'description' => 'Ramazan ayında yoksul ailelere iftar yemeği organizasyonları düzenliyoruz.',
-                    'icon' => 'fas fa-moon',
-                    'stats' => '2000+ İftar'
-                ],
-                [
-                    'title' => 'Evlilik Yardımları',
-                    'description' => 'Maddi imkânsızlıktan evlenemeyen gençlere evlilik yardımları yapıyoruz.',
-                    'icon' => 'fas fa-rings-wedding',
-                    'stats' => '75+ Çift'
-                ],
-                [
-                    'title' => 'Sağlık Hizmetleri',
-                    'description' => 'Kurban kesimleri, dağıtımı ve hastalara kan temin etme gibi sağlık destekleri sağlıyoruz.',
-                    'icon' => 'fas fa-heartbeat',
-                    'stats' => '300+ Hasta'
-                ],
-                [
-                    'title' => 'Sosyal Aktiviteler',
-                    'description' => 'Yoksul aileler için çeşitli organizasyonlar düzenleyerek manevi eğitimler veriyoruz.',
-                    'icon' => 'fas fa-users',
-                    'stats' => '150+ Etkinlik'
-                ]
-            ];
-            
+            // Faaliyet alanları verisi artık dinamik olarak projects tablosundan geliyor
             foreach ($activities_data as $index => $activity): 
             ?>
             <div class="col-lg-4 col-md-6 mb-4">
@@ -370,7 +543,7 @@ try {
     </div>
 </section>
 
-<!-- Simple Statistics -->
+<!-- Simple Statistics 
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-4">
@@ -407,7 +580,7 @@ try {
             </div>
         </div>
     </div>
-</section>
+</section>-->
 
 <!-- Simple CTA -->
 <section class="py-5 bg-primary text-white">
@@ -459,6 +632,33 @@ try {
     background: #4ea674 !important;
     color: #ffffff !important;
 }
+
+/* Statistics Styling with Consistent Logo Color */
+.stat-simple {
+    text-align: center;
+    padding: 1rem 0.5rem;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.stat-simple:hover {
+    transform: translateY(-2px);
+}
+
+/* Consistent color for all statistics */
+.stat-number-consistent {
+    color: #4ea674 !important;
+    font-weight: 600;
+    font-size: 2rem;
+}
+
+.stat-label-muted {
+    color: #6c757d !important;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
 .timeline {
     position: relative;
     padding-left: 30px;
