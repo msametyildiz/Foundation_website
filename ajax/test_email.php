@@ -1,46 +1,71 @@
 <?php
-session_start();
 require_once '../config/database.php';
-require_once '../includes/functions.php';
+require_once '../includes/EmailService.php';
 
 header('Content-Type: application/json');
 
-// Check if admin is logged in
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'message' => 'Only POST requests allowed']);
     exit;
 }
 
-$response = ['success' => false, 'message' => ''];
+// Get JSON input
+$input = json_decode(file_get_contents('php://input'), true);
+
+$action = $input['action'] ?? '';
+$to = $input['to'] ?? '';
+$subject = $input['subject'] ?? 'Test Email';
+$message = $input['message'] ?? 'This is a test email.';
 
 try {
-    // Get email settings
-    $stmt = $pdo->query("SELECT setting_key, setting_value FROM settings WHERE setting_key LIKE 'smtp_%' OR setting_key LIKE 'from_%'");
-    $settings = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-    
-    if (empty($settings['smtp_host']) || empty($settings['from_email'])) {
-        $response['message'] = 'E-posta ayarları eksik. Lütfen SMTP ayarlarını tamamlayın.';
-        echo json_encode($response);
-        exit;
-    }
-    
-    // Use PHPMailer for testing (basic implementation)
-    // For now, we'll just simulate the test
-    $test_email = $_SESSION['admin_email'] ?? 'admin@necatdernegi.org';
-    
-    // Simulate email sending
-    $success = true; // In real implementation, use PHPMailer
-    
-    if ($success) {
-        $response['success'] = true;
-        $response['message'] = 'Test e-postası başarıyla gönderildi: ' . $test_email;
+    if ($action === 'test_email') {
+        if (empty($to)) {
+            throw new Exception('No email address provided');
+        }
+        
+        $emailService = new EmailService($pdo);
+        $result = $emailService->sendTestEmail($to, $subject, $message);
+        
+        echo json_encode($result);
+        
     } else {
-        $response['message'] = 'E-posta gönderilemedi.';
+        throw new Exception('Unknown action: ' . $action);
     }
     
 } catch (Exception $e) {
-    $response['message'] = 'Hata: ' . $e->getMessage();
+    echo json_encode([
+        'success' => false, 
+        'message' => $e->getMessage()
+    ]);
 }
-
-echo json_encode($response);
+?>
+    
+    echo "Testing mail() function...\n";
+    echo "To: {$to}\n";
+    echo "Subject: {$subject}\n";
+    echo "Message length: " . strlen($message) . " characters\n";
+    echo "Headers: {$headers}\n";
+    echo "---\n";
+    
+    $result = mail($to, $subject, $message, $headers);
+    
+    if ($result) {
+        echo "SUCCESS: mail() function returned TRUE\n";
+        echo "E-posta gönderildi (sunucu tarafında başarılı)\n";
+        echo "Not: E-postanın gerçekte ulaşması için SMTP ayarları gerekli olabilir.\n";
+    } else {
+        echo "ERROR: mail() function returned FALSE\n";
+        echo "Muhtemel sebepler:\n";
+        echo "- SMTP sunucu ayarları eksik\n";
+        echo "- PHP mail konfigürasyonu hatalı\n";
+        echo "- Sunucu mail gönderim izni yok\n";
+    }
+    
+    // PHP mail configuration info
+    echo "\n--- PHP Mail Configuration ---\n";
+    echo "sendmail_path: " . ini_get('sendmail_path') . "\n";
+    echo "SMTP: " . ini_get('SMTP') . "\n";
+    echo "smtp_port: " . ini_get('smtp_port') . "\n";
+    echo "sendmail_from: " . ini_get('sendmail_from') . "\n";
+}
 ?>

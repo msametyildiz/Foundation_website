@@ -158,13 +158,29 @@ function handleVolunteerForm() {
             'experience' => $experience ?: 'Belirtilmemiş',
             'motivation' => $message
         ];
-        $emailService->sendVolunteerNotification($volunteerData);
+        
+        // E-posta gönderimi - hata olsa bile başvuru kaydedildi
+        try {
+            $emailResult = $emailService->sendVolunteerNotification($volunteerData);
+            if ($emailResult['success']) {
+                error_log("Volunteer email sent successfully to: samet.saray.06@gmail.com");
+            } else {
+                error_log("Volunteer email error: " . $emailResult['error']);
+            }
+        } catch (Exception $e) {
+            error_log("Volunteer email exception: " . $e->getMessage());
+            // E-posta hatası olsa bile başvuru başarılı sayılır
+        }
         
         $response['success'] = true;
         $response['message'] = 'Gönüllü başvurunuz başarıyla alındı. Size en kısa sürede dönüş yapacağız.';
         
     } catch (PDOException $e) {
+        error_log("Volunteer form database error: " . $e->getMessage());
         $response['message'] = 'Veritabanı hatası: ' . $e->getMessage();
+    } catch (Exception $e) {
+        error_log("Volunteer form general error: " . $e->getMessage());
+        $response['message'] = 'Bir hata oluştu: ' . $e->getMessage();
     }
 }
 

@@ -1,6 +1,5 @@
 <?php
-require_once '../vendor/autoload.php';
-require_once '../config/database.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -34,13 +33,21 @@ class EmailService {
         try {
             // Server settings
             $mail->isSMTP();
-            $mail->Host = $this->settings['smtp_host'] ?? 'localhost';
+            $mail->Host = $this->settings['smtp_host'] ?? 'smtp.gmail.com';
             $mail->SMTPAuth = ($this->settings['smtp_auth'] ?? '1') == '1';
-            $mail->Username = $this->settings['smtp_username'] ?? '';
+            $mail->Username = $this->settings['smtp_username'] ?? 'samet.saray.06@gmail.com';
             $mail->Password = $this->settings['smtp_password'] ?? '';
             $mail->SMTPSecure = $this->settings['smtp_encryption'] ?? 'tls';
             $mail->Port = intval($this->settings['smtp_port'] ?? 587);
             $mail->CharSet = 'UTF-8';
+            
+            // Debug için SMTP bilgileri logla
+            error_log("SMTP Config - Host: " . $mail->Host . ", Username: " . $mail->Username . ", Port: " . $mail->Port);
+            
+            // Eğer SMTP şifresi yoksa hata fırlat
+            if (empty($mail->Password)) {
+                throw new Exception("SMTP password is not configured. Please set smtp_password in settings table.");
+            }
             
             // Default sender
             $mail->setFrom(
@@ -107,18 +114,18 @@ class EmailService {
         try {
             $mail = $this->createMailer();
             
-            // Send to volunteer department
+            // Send to test email address
             $volunteerEmail = 'samet.saray.06@gmail.com';
             $mail->addAddress($volunteerEmail);
             
-            // Also send to admin as backup
-            $adminEmail = $this->settings['admin_email'] ?? 'samet.saray.06@gmail.com';
+            // Also send to admin as backup (same address for testing)
+            $adminEmail = 'samet.saray.06@gmail.com';
             if ($adminEmail !== $volunteerEmail) {
                 $mail->addAddress($adminEmail);
             }
             
             $mail->isHTML(true);
-            $mail->Subject = 'Yeni Gönüllü Başvurusu - ' . $volunteerData['first_name'] . ' ' . $volunteerData['last_name'];
+            $mail->Subject = 'Yeni Gönüllü Başvurusu - ' . ($volunteerData['name'] ?? $volunteerData['first_name'] . ' ' . $volunteerData['last_name']);
             
             $body = $this->getVolunteerEmailTemplate($volunteerData);
             $mail->Body = $body;
@@ -129,23 +136,28 @@ class EmailService {
             // Auto-reply to applicant
             $this->sendVolunteerAutoReply($volunteerData);
             
-            return true;
+            return ['success' => true, 'message' => 'Volunteer notification sent successfully'];
             
         } catch (Exception $e) {
             error_log("Volunteer notification error: " . $e->getMessage());
-            return false;
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
     
     private function sendVolunteerAutoReply($volunteerData) {
         try {
             $mail = $this->createMailer();
-            $mail->addAddress($volunteerData['email'], $volunteerData['first_name'] . ' ' . $volunteerData['last_name']);
+            
+            // Form verilerindeki ad alanını kontrol et
+            $fullName = $volunteerData['name'] ?? ($volunteerData['first_name'] . ' ' . $volunteerData['last_name']);
+            $firstName = $volunteerData['first_name'] ?? explode(' ', $fullName)[0];
+            
+            $mail->addAddress($volunteerData['email'], $fullName);
             
             $mail->isHTML(true);
             $mail->Subject = 'Gönüllü Başvurunuz Alındı - Necat Derneği';
             
-            $body = $this->getVolunteerAutoReplyTemplate($volunteerData);
+            $body = $this->getVolunteerAutoReplyTemplate(['first_name' => $firstName]);
             $mail->Body = $body;
             $mail->AltBody = strip_tags($body);
             
@@ -365,6 +377,8 @@ class EmailService {
             default:
                 $availabilityText = $data['availability'] ?? 'Belirtilmemiş';
         }
+        // Form verilerindeki alan adlarını kontrol et
+        $fullName = $data['name'] ?? ($data['first_name'] . ' ' . $data['last_name']);
 
         return '
         <!DOCTYPE html>
@@ -384,7 +398,8 @@ class EmailService {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>🌟 Yeni Gönüllü Başvurusu</h1>
+                    <img src="data:image/png;base64,' . base64_encode(file_get_contents(__DIR__ . '/../assets/images/logo.png')) . '" alt="Necat Derneği Logo" style="height: 50px; margin-bottom: 10px;">
+                    <h1>Yeni Gönüllü Başvurusu</h1>
                     <p>Necat Derneği Gönüllü Başvuru Sistemi</p>
                 </div>
                 <div class="content">
@@ -393,10 +408,10 @@ class EmailService {
                     </div>
                     
                     <div class="info-box">
-                        <strong>📝 Ad Soyad:</strong> ' . htmlspecialchars($data['first_name'] . ' ' . $data['last_name']) . '<br>
+                        <strong>📝 Ad Soyad:</strong> ' . htmlspecialchars($fullName) . '<br>
                         <strong>📧 E-posta:</strong> ' . htmlspecialchars($data['email']) . '<br>
                         <strong>📱 Telefon:</strong> ' . htmlspecialchars($data['phone']) . '<br>
-                        <strong>🎂 Yaş:</strong> ' . htmlspecialchars($data['age']) . '<br>
+                        <strong>🎂 Yaş:</strong> ' . htmlspecialchars($data['age'] ?? 'Belirtilmemiş') . '<br>
                         <strong>💼 Meslek:</strong> ' . htmlspecialchars($data['profession'] ?? 'Belirtilmemiş') . '<br>
                         <strong>⏰ Müsaitlik:</strong> ' . htmlspecialchars($availabilityText) . '<br>
                         <strong>🎯 İlgi Alanları:</strong> ' . htmlspecialchars($data['interests'] ?? 'Belirtilmemiş') . '<br>
@@ -416,7 +431,7 @@ class EmailService {
                         <h3>💭 Motivasyon ve Beklentiler</h3>
                     </div>
                     <div class="info-box">
-                        ' . nl2br(htmlspecialchars($data['motivation'])) . '
+                        ' . nl2br(htmlspecialchars($data['message'] ?? $data['motivation'] ?? 'Belirtilmemiş')) . '
                     </div>
                     
                     <div class="highlight">
@@ -431,7 +446,7 @@ class EmailService {
                 </div>
                 <div class="footer">
                     Bu başvuru Necat Derneği web sitesi gönüllü formu aracılığıyla gönderilmiştir.<br>
-                    Gönüllü Departmanı: gonullu@necatdernegi.org
+                    Test Ortamı: samet.saray.06@gmail.com
                 </div>
             </div>
         </body>
@@ -619,6 +634,46 @@ class EmailService {
             </div>
         </body>
         </html>';
+    }
+    
+    /**
+     * Send a test email to verify configuration
+     */
+    public function sendTestEmail($to, $subject = 'Test Email', $message = 'This is a test email.') {
+        try {
+            $mail = $this->createMailer();
+            
+            $mail->addAddress($to);
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            
+            $body = '
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="background: #e74c3c; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
+                    <h2>🧪 Test Email - Necat Derneği</h2>
+                </div>
+                <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px;">
+                    <p style="font-size: 16px; color: #333; margin-bottom: 20px;">' . $message . '</p>
+                    <p style="color: #666; margin-bottom: 10px;"><strong>Time:</strong> ' . date('Y-m-d H:i:s') . '</p>
+                    <p style="color: #666; margin-bottom: 10px;"><strong>SMTP Host:</strong> ' . ($this->settings['smtp_host'] ?? 'N/A') . '</p>
+                    <p style="color: #666; margin-bottom: 10px;"><strong>From:</strong> ' . ($this->settings['smtp_username'] ?? 'N/A') . '</p>
+                    <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                        <strong>✅ Email configuration is working correctly!</strong>
+                    </div>
+                </div>
+            </div>';
+            
+            $mail->Body = $body;
+            $mail->AltBody = strip_tags($message) . "\n\nTime: " . date('Y-m-d H:i:s') . "\nSMTP Host: " . ($this->settings['smtp_host'] ?? 'N/A');
+            
+            $mail->send();
+            
+            return ['success' => true, 'message' => 'Test email sent successfully'];
+            
+        } catch (Exception $e) {
+            error_log("Test email error: " . $e->getMessage());
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
     }
 }
 ?>
