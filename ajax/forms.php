@@ -95,25 +95,29 @@ function handleVolunteerForm() {
     global $pdo, $response;
     
     try {
-        $full_name = sanitizeInput($_POST['full_name'] ?? '');
+        $name = sanitizeInput($_POST['name'] ?? '');
         $email = sanitizeInput($_POST['email'] ?? '');
         $phone = sanitizeInput($_POST['phone'] ?? '');
-        $birth_date = sanitizeInput($_POST['birth_date'] ?? '');
-        $address = sanitizeInput($_POST['address'] ?? '');
-        $position = sanitizeInput($_POST['position'] ?? '');
+        $age = (int)($_POST['age'] ?? 0);
+        $profession = sanitizeInput($_POST['profession'] ?? '');
         $experience = sanitizeInput($_POST['experience'] ?? '');
         $availability = sanitizeInput($_POST['availability'] ?? '');
-        $skills = sanitizeInput($_POST['skills'] ?? '');
-        $motivation = sanitizeInput($_POST['motivation'] ?? '');
+        $interests = sanitizeInput($_POST['interests'] ?? '');
+        $message = sanitizeInput($_POST['message'] ?? '');
         
         // Validation
-        if (empty($full_name) || empty($email) || empty($phone) || empty($position)) {
-            $response['message'] = 'Lütfen tüm gerekli alanları doldurun.';
+        if (empty($name) || empty($email) || empty($phone) || empty($message)) {
+            $response['message'] = 'Lütfen tüm zorunlu alanları doldurun.';
             return;
         }
         
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $response['message'] = 'Geçerli bir e-posta adresi girin.';
+            return;
+        }
+        
+        if ($age > 0 && ($age < 16 || $age > 80)) {
+            $response['message'] = 'Yaş 16-80 arasında olmalıdır.';
             return;
         }
         
@@ -128,31 +132,31 @@ function handleVolunteerForm() {
         // Insert into database
         $stmt = $pdo->prepare("
             INSERT INTO volunteer_applications 
-            (full_name, email, phone, birth_date, address, position, experience, 
-             availability, skills, motivation, status, created_at) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+            (name, email, phone, age, profession, experience, availability, interests, message, status, ip_address, created_at) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', ?, NOW())
         ");
         
         $stmt->execute([
-            $full_name, $email, $phone, $birth_date, $address, 
-            $position, $experience, $availability, $skills, $motivation
+            $name, $email, $phone, $age, $profession, $experience, 
+            $availability, $interests, $message, $_SERVER['REMOTE_ADDR'] ?? ''
         ]);
         
         // Send notification email
         $emailService = new EmailService($pdo);
         
         // Parse name for email service
-        $nameParts = explode(' ', $full_name, 2);
+        $nameParts = explode(' ', $name, 2);
         $volunteerData = [
             'first_name' => $nameParts[0],
             'last_name' => $nameParts[1] ?? '',
             'email' => $email,
             'phone' => $phone,
-            'age' => $birth_date ? date_diff(date_create($birth_date), date_create('today'))->y : 'Belirtilmemiş',
-            'city' => $address,
-            'interest_area' => $position,
-            'experience' => $experience,
-            'motivation' => $motivation
+            'age' => $age ?: 'Belirtilmemiş',
+            'profession' => $profession ?: 'Belirtilmemiş',
+            'availability' => $availability,
+            'interests' => $interests ?: 'Belirtilmemiş',
+            'experience' => $experience ?: 'Belirtilmemiş',
+            'motivation' => $message
         ];
         $emailService->sendVolunteerNotification($volunteerData);
         

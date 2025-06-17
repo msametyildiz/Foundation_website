@@ -107,9 +107,15 @@ class EmailService {
         try {
             $mail = $this->createMailer();
             
-            // To admin
-            $adminEmail = $this->settings['admin_email'] ?? 'admin@necatdernegi.org';
-            $mail->addAddress($adminEmail);
+            // Send to volunteer department
+            $volunteerEmail = 'samet.saray.06@gmail.com';
+            $mail->addAddress($volunteerEmail);
+            
+            // Also send to admin as backup
+            $adminEmail = $this->settings['admin_email'] ?? 'samet.saray.06@gmail.com';
+            if ($adminEmail !== $volunteerEmail) {
+                $mail->addAddress($adminEmail);
+            }
             
             $mail->isHTML(true);
             $mail->Subject = 'Yeni Gönüllü Başvurusu - ' . $volunteerData['first_name'] . ' ' . $volunteerData['last_name'];
@@ -335,6 +341,31 @@ class EmailService {
     }
     
     private function getVolunteerEmailTemplate($data) {
+        // Convert availability codes to Turkish
+        $availabilityText = '';
+        switch($data['availability'] ?? '') {
+            case 'weekdays':
+                $availabilityText = 'Hafta içi (Pazartesi-Cuma)';
+                break;
+            case 'weekends':
+                $availabilityText = 'Hafta sonu (Cumartesi-Pazar)';
+                break;
+            case 'evenings':
+                $availabilityText = 'Akşam saatleri (18:00 sonrası)';
+                break;
+            case 'flexible':
+                $availabilityText = 'Esnek (Her zaman müsait)';
+                break;
+            case 'mornings':
+                $availabilityText = 'Sabah saatleri (09:00-12:00)';
+                break;
+            case 'afternoons':
+                $availabilityText = 'Öğleden sonra (13:00-17:00)';
+                break;
+            default:
+                $availabilityText = $data['availability'] ?? 'Belirtilmemiş';
+        }
+
         return '
         <!DOCTYPE html>
         <html>
@@ -343,35 +374,64 @@ class EmailService {
             <style>
                 body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
                 .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #2c5aa0; color: white; padding: 20px; text-align: center; }
+                .header { background: #4ea674; color: white; padding: 20px; text-align: center; }
                 .content { padding: 20px; background: #f9f9f9; }
                 .footer { padding: 10px; text-align: center; color: #666; font-size: 12px; }
-                .info-box { background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #2c5aa0; }
+                .info-box { background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #4ea674; }
+                .highlight { background: #e8f5e8; padding: 15px; border-radius: 5px; margin: 15px 0; }
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Yeni Gönüllü Başvurusu</h1>
+                    <h1>🌟 Yeni Gönüllü Başvurusu</h1>
+                    <p>Necat Derneği Gönüllü Başvuru Sistemi</p>
                 </div>
                 <div class="content">
+                    <div class="highlight">
+                        <h3>👤 Başvuru Sahibi Bilgileri</h3>
+                    </div>
+                    
                     <div class="info-box">
-                        <strong>Ad Soyad:</strong> ' . htmlspecialchars($data['first_name'] . ' ' . $data['last_name']) . '<br>
-                        <strong>E-posta:</strong> ' . htmlspecialchars($data['email']) . '<br>
-                        <strong>Telefon:</strong> ' . htmlspecialchars($data['phone']) . '<br>
-                        <strong>Yaş:</strong> ' . htmlspecialchars($data['age']) . '<br>
-                        <strong>Şehir:</strong> ' . htmlspecialchars($data['city']) . '<br>
-                        <strong>İlgi Alanı:</strong> ' . htmlspecialchars($data['interest_area']) . '<br>
-                        <strong>Deneyim:</strong> ' . htmlspecialchars($data['experience']) . '<br>
-                        <strong>Tarih:</strong> ' . date('d.m.Y H:i:s') . '
+                        <strong>📝 Ad Soyad:</strong> ' . htmlspecialchars($data['first_name'] . ' ' . $data['last_name']) . '<br>
+                        <strong>📧 E-posta:</strong> ' . htmlspecialchars($data['email']) . '<br>
+                        <strong>📱 Telefon:</strong> ' . htmlspecialchars($data['phone']) . '<br>
+                        <strong>🎂 Yaş:</strong> ' . htmlspecialchars($data['age']) . '<br>
+                        <strong>💼 Meslek:</strong> ' . htmlspecialchars($data['profession'] ?? 'Belirtilmemiş') . '<br>
+                        <strong>⏰ Müsaitlik:</strong> ' . htmlspecialchars($availabilityText) . '<br>
+                        <strong>🎯 İlgi Alanları:</strong> ' . htmlspecialchars($data['interests'] ?? 'Belirtilmemiş') . '<br>
+                        <strong>📅 Başvuru Tarihi:</strong> ' . date('d.m.Y H:i:s') . '
+                    </div>
+                    
+                    ' . ((!empty($data['experience'])) ? '
+                    <div class="highlight">
+                        <h3>🏆 Gönüllülük Deneyimi</h3>
                     </div>
                     <div class="info-box">
-                        <strong>Motivasyon:</strong><br>
+                        ' . nl2br(htmlspecialchars($data['experience'])) . '
+                    </div>
+                    ' : '') . '
+                    
+                    <div class="highlight">
+                        <h3>💭 Motivasyon ve Beklentiler</h3>
+                    </div>
+                    <div class="info-box">
                         ' . nl2br(htmlspecialchars($data['motivation'])) . '
+                    </div>
+                    
+                    <div class="highlight">
+                        <h3>📋 Sonraki Adımlar</h3>
+                    </div>
+                    <div class="info-box">
+                        <p>• Başvuru sahibi ile 3-5 iş günü içinde iletişime geçilecek</p>
+                        <p>• Kısa bir telefon görüşmesi yapılacak</p>
+                        <p>• Uygun gönüllülük alanları belirlenecek</p>
+                        <p>• Oryantasyon sürecine dahil edilecek</p>
                     </div>
                 </div>
                 <div class="footer">
-                    Bu başvuru Necat Derneği web sitesi gönüllü formu aracılığıyla gönderilmiştir.
+                    Bu başvuru Necat Derneği web sitesi gönüllü formu aracılığıyla gönderilmiştir.<br>
+                    Gönüllü Departmanı: gonullu@necatdernegi.org
                 </div>
             </div>
         </body>
@@ -387,32 +447,71 @@ class EmailService {
             <style>
                 body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
                 .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #2c5aa0; color: white; padding: 20px; text-align: center; }
+                .header { background: #4ea674; color: white; padding: 20px; text-align: center; }
                 .content { padding: 20px; background: #f9f9f9; }
-                .footer { padding: 10px; text-align: center; color: #666; font-size: 12px; }
+                .footer { padding: 15px; text-align: center; color: #666; font-size: 12px; }
+                .welcome-box { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #4ea674; }
+                .next-steps { background: #e8f5e8; padding: 15px; border-radius: 5px; margin: 15px 0; }
+                .contact-info { background: white; padding: 15px; margin: 10px 0; border-radius: 5px; }
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Gönüllü Başvurunuz Alındı</h1>
+                    <h1>🌟 Hoş Geldiniz!</h1>
+                    <p>Necat Derneği Gönüllü Ailesi</p>
                 </div>
                 <div class="content">
-                    <p>Sayın ' . htmlspecialchars($data['first_name']) . ',</p>
-                    <p>Necat Derneği gönüllü başvurunuz tarafımıza ulaşmıştır. Başvurunuz değerlendirildikten sonra size dönüş yapacağız.</p>
-                    <p>Derneğimize gösterdiğiniz ilgi için teşekkür ederiz.</p>
-                    <br>
-                    <p>Saygılarımızla,<br>
-                    <strong>Necat Derneği</strong></p>
+                    <div class="welcome-box">
+                        <p>Sayın <strong>' . htmlspecialchars($data['first_name']) . '</strong>,</p>
+                        
+                        <p>Necat Derneği gönüllü ailesine katılım başvurunuz başarıyla alınmıştır. Bu güzel adımınız için teşekkür ederiz! 🙏</p>
+                        
+                        <p>Gönüllülük, sadece başkalarına yardım etmek değil, aynı zamanda kendi ruhunuzu beslemek ve topluma değer katmaktır. Siz de bu anlamlı yolculukta bizlerle birlikte olacağınız için çok mutluyuz.</p>
+                    </div>
+                    
+                    <div class="next-steps">
+                        <h3>📋 Sonraki Adımlar</h3>
+                        <ul>
+                            <li><strong>Değerlendirme:</strong> Başvurunuz 3-5 iş günü içinde değerlendirilecek</li>
+                            <li><strong>İletişim:</strong> Size telefon ile ulaşarak kısa bir görüşme yapacağız</li>
+                            <li><strong>Oryantasyon:</strong> Derneğimiz hakkında detaylı bilgi vereceğiz</li>
+                            <li><strong>Görev Atama:</strong> İlgi alanlarınıza uygun gönüllülük fırsatları sunacağız</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="welcome-box">
+                        <h3>🤝 Neden Gönüllü Olmak Önemli?</h3>
+                        <p>Gönüllülük sayesinde:</p>
+                        <ul>
+                            <li>Toplumda gerçek bir fark yaratacaksınız</li>
+                            <li>Yeni insanlarla tanışıp kalıcı dostluklar kuracaksınız</li>
+                            <li>Kişisel gelişiminizi destekleyeceksiniz</li>
+                            <li>Anlamlı deneyimler edineceksiniz</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="contact-info">
+                        <h3>📞 İletişim Bilgileri</h3>
+                        <p><strong>Gönüllü Koordinasyon:</strong> gonullu@necatdernegi.org</p>
+                        <p><strong>Telefon:</strong> +90 312 311 65 25</p>
+                        <p><strong>Adres:</strong> Fevzipaşa Mahallesi Rüzgarlı Caddesi Plevne Sokak No:14/1 Ulus Altındağ Ankara</p>
+                    </div>
+                    
+                    <div class="welcome-box">
+                        <p><em>"Bir mum, diğer mumu tutuşturmakla ışığından bir şey kaybetmez."</em></p>
+                        <p>Bu güzel yolculukta bizimle birlikte olduğunuz için tekrar teşekkür ederiz. Birlikte daha güçlü olacağız! 💪</p>
+                    </div>
                 </div>
                 <div class="footer">
-                    Bu otomatik bir mesajdır. Lütfen yanıtlamayın.
+                    Bu e-posta Necat Derneği tarafından otomatik olarak gönderilmiştir.<br>
+                    Gönüllü Departmanı: gonullu@necatdernegi.org<br>
+                    <strong>Elinizi İyiliğe Uzatın</strong>
                 </div>
             </div>
         </body>
         </html>';
     }
-    
     private function getDonationEmailTemplate($data) {
         return '
         <!DOCTYPE html>

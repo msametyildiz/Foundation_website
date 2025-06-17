@@ -4,6 +4,25 @@ require_once 'includes/content_catalog.php';
 
 // Veritabanından projeler ve kategoriler
 try {
+    // Hero ayarlarını getir
+    $stmt = $pdo->prepare("SELECT * FROM projects_hero_settings WHERE is_active = 1 ORDER BY id DESC LIMIT 1");
+    $stmt->execute();
+    $heroSettings = $stmt->fetch();
+    
+    // Eğer hero ayarları yoksa varsayılan değerleri kullan
+    if (!$heroSettings) {
+        $heroSettings = [
+            'hero_title' => 'Projelerimiz',
+            'hero_subtitle' => 'Toplumun farklı kesimlerine ulaşarak hayırlı işler yapıyor, birlikte daha güzel bir dünya inşa ediyoruz.',
+            'show_stats' => 1,
+            'stats_title_1' => 'Aktif Proje',
+            'stats_title_2' => 'Tamamlanan',
+            'stats_title_3' => 'Kişiye Ulaştık',
+            'stats_title_4' => 'Toplam Proje',
+            'use_custom_stats' => 0
+        ];
+    }
+
     // Aktif projeler
     $stmt = $pdo->prepare("SELECT * FROM projects WHERE status = 'active' ORDER BY sort_order ASC, created_at DESC");
     $stmt->execute();
@@ -14,22 +33,41 @@ try {
     $stmt->execute();
     $completedProjects = $stmt->fetchAll();
 
-    // Toplam istatistikler
+    // Toplam istatistikler - düzeltilmiş sorgu (collected_amount ve target_amount sütunları mevcut değil)
     $stmt = $pdo->prepare("SELECT 
         COUNT(*) as total_projects,
         SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active_count,
         SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_count,
-        SUM(collected_amount) as total_collected,
-        SUM(target_amount) as total_target,
-        SUM(beneficiaries) as total_beneficiaries
-        FROM projects WHERE status IN ('active', 'completed')");
+        SUM(CASE WHEN status = 'paused' THEN 1 ELSE 0 END) as paused_count,
+        SUM(CASE WHEN beneficiaries IS NOT NULL THEN beneficiaries ELSE 0 END) as total_beneficiaries,
+        COUNT(DISTINCT category) as total_categories,
+        COUNT(CASE WHEN is_featured = 1 THEN 1 END) as featured_count
+        FROM projects WHERE status IN ('active', 'completed', 'paused')");
     $stmt->execute();
     $stats = $stmt->fetch();
+
+    // Özel istatistikler kullanılıyorsa bunları kullan
+    if ($heroSettings['use_custom_stats']) {
+        $stats['custom_stat_1'] = $heroSettings['custom_stat_1'] ?? $stats['active_count'];
+        $stats['custom_stat_2'] = $heroSettings['custom_stat_2'] ?? $stats['completed_count'];
+        $stats['custom_stat_3'] = $heroSettings['custom_stat_3'] ?? $stats['total_beneficiaries'];
+        $stats['custom_stat_4'] = $heroSettings['custom_stat_4'] ?? $stats['total_projects'];
+    }
 
 } catch (PDOException $e) {
     $activeProjects = [];
     $completedProjects = [];
-    $stats = ['total_projects' => 0, 'active_count' => 0, 'completed_count' => 0, 'total_collected' => 0, 'total_target' => 0, 'total_beneficiaries' => 0];
+    $stats = ['total_projects' => 0, 'active_count' => 0, 'completed_count' => 0, 'total_beneficiaries' => 0];
+    $heroSettings = [
+        'hero_title' => 'Projelerimiz',
+        'hero_subtitle' => 'Toplumun farklı kesimlerine ulaşarak hayırlı işler yapıyor, birlikte daha güzel bir dünya inşa ediyoruz.',
+        'show_stats' => 1,
+        'stats_title_1' => 'Aktif Proje',
+        'stats_title_2' => 'Tamamlanan',
+        'stats_title_3' => 'Kişiye Ulaştık',
+        'stats_title_4' => 'Toplam Proje',
+        'use_custom_stats' => 0
+    ];
 }
 
 // Kategori çevirileri
@@ -51,44 +89,61 @@ $categoryColors = [
 ];
 ?>
 
-<!-- Hero Section - Simple (matching About page) -->
+<!-- Hero Section - Dynamic (database driven) -->
 <section class="hero-section">
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8">
-                <h1 class="display-4 mb-3">Projelerimiz</h1>
+                <h1 class="display-4 mb-3"><?= htmlspecialchars($heroSettings['hero_title']) ?></h1>
                 <p class="lead mb-4">
-                    Toplumun farklı kesimlerine ulaşarak hayırlı işler yapıyor, 
-                    birlikte daha güzel bir dünya inşa ediyoruz.
+                    <?= htmlspecialchars($heroSettings['hero_subtitle']) ?>
                 </p>
                 
-                <!-- İstatistikler -->
+                <?php if ($heroSettings['show_stats']): ?>
+                <!-- İstatistikler - Dinamik -->
                 <div class="row text-center mt-4">
                     <div class="col-md-3 col-6 mb-3">
                         <div class="stat-simple">
-                            <h3 class="stat-number-consistent"><?= number_format($stats['active_count']) ?></h3>
-                            <small class="stat-label-muted">Aktif Proje</small>
+                            <h3 class="stat-number-consistent">
+                                <?= number_format($heroSettings['use_custom_stats'] ? 
+                                    ($stats['custom_stat_1'] ?? $stats['active_count']) : 
+                                    $stats['active_count']) ?>
+                            </h3>
+                            <small class="stat-label-muted"><?= htmlspecialchars($heroSettings['stats_title_1']) ?></small>
                         </div>
                     </div>
                     <div class="col-md-3 col-6 mb-3">
                         <div class="stat-simple">
-                            <h3 class="stat-number-consistent"><?= number_format($stats['completed_count']) ?></h3>
-                            <small class="stat-label-muted">Tamamlanan</small>
+                            <h3 class="stat-number-consistent">
+                                <?= number_format($heroSettings['use_custom_stats'] ? 
+                                    ($stats['custom_stat_2'] ?? $stats['completed_count']) : 
+                                    $stats['completed_count']) ?>
+                            </h3>
+                            <small class="stat-label-muted"><?= htmlspecialchars($heroSettings['stats_title_2']) ?></small>
                         </div>
                     </div>
                     <div class="col-md-3 col-6 mb-3">
                         <div class="stat-simple">
-                            <h3 class="stat-number-consistent"><?= number_format($stats['total_beneficiaries']) ?></h3>
-                            <small class="stat-label-muted">Kişiye Ulaştık</small>
+                            <h3 class="stat-number-consistent">
+                                <?= number_format($heroSettings['use_custom_stats'] ? 
+                                    ($stats['custom_stat_3'] ?? $stats['total_beneficiaries']) : 
+                                    $stats['total_beneficiaries']) ?>
+                            </h3>
+                            <small class="stat-label-muted"><?= htmlspecialchars($heroSettings['stats_title_3']) ?></small>
                         </div>
                     </div>
                     <div class="col-md-3 col-6 mb-3">
                         <div class="stat-simple">
-                            <h3 class="stat-number-consistent">₺<?= number_format($stats['total_collected']) ?></h3>
-                            <small class="stat-label-muted">Toplanan Bağış</small>
+                            <h3 class="stat-number-consistent">
+                                <?= number_format($heroSettings['use_custom_stats'] ? 
+                                    ($stats['custom_stat_4'] ?? $stats['total_projects']) : 
+                                    $stats['total_projects']) ?>
+                            </h3>
+                            <small class="stat-label-muted"><?= htmlspecialchars($heroSettings['stats_title_4']) ?></small>
                         </div>
                     </div>
                 </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -122,7 +177,7 @@ $categoryColors = [
                                     <?= htmlspecialchars($project['description']) ?>
                                 </p>
                                 
-                                <!-- Butonlar -->
+                                <!-- Butonlar 
                                 <div class="d-flex gap-2">
                                     <a href="project-detail.php?slug=<?= $project['slug'] ?>" class="btn btn-outline-primary flex-fill">
                                         <i class="fas fa-info-circle me-1"></i> Detaylar
@@ -130,7 +185,7 @@ $categoryColors = [
                                     <a href="donate.php?project=<?= $project['id'] ?>" class="btn btn-primary flex-fill">
                                         <i class="fas fa-heart me-1"></i> Bağış Yap
                                     </a>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                     </div>

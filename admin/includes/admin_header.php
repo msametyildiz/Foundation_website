@@ -42,6 +42,12 @@
                     </a>
                 </li>
                 
+                <li class="<?php echo $page === 'projects_hero' ? 'active' : ''; ?>">
+                    <a href="?page=projects_hero">
+                        <i class="fas fa-cog"></i> Projeler Sayfası Ayarları
+                    </a>
+                </li>
+                
                 <li class="<?php echo $page === 'news' ? 'active' : ''; ?>">
                     <a href="?page=news">
                         <i class="fas fa-newspaper"></i> Haberler

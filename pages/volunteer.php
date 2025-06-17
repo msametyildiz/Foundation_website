@@ -1,32 +1,6 @@
 <?php
 // Veritabanından gönüllü verileri
 try {
-    // Gönüllü başvuru formu işleme
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'volunteer_apply') {
-        $name = trim($_POST['name'] ?? '');
-        $email = trim($_POST['email'] ?? '');
-        $phone = trim($_POST['phone'] ?? '');
-        $age = (int)($_POST['age'] ?? 0);
-        $profession = trim($_POST['profession'] ?? '');
-        $experience = trim($_POST['experience'] ?? '');
-        $availability = trim($_POST['availability'] ?? '');
-        $interests = trim($_POST['interests'] ?? '');
-        $message = trim($_POST['message'] ?? '');
-        
-        if (!empty($name) && !empty($email) && !empty($phone)) {
-            try {
-                $stmt = $pdo->prepare("INSERT INTO volunteer_applications (name, email, phone, age, profession, experience, availability, interests, message, status, ip_address, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', ?, NOW())");
-                $stmt->execute([$name, $email, $phone, $age, $profession, $experience, $availability, $interests, $message, $_SERVER['REMOTE_ADDR'] ?? '']);
-                
-                $success_message = "Gönüllü başvurunuz başarıyla alınmıştır. En kısa sürede sizinle iletişime geçeceğiz.";
-            } catch (PDOException $e) {
-                $error_message = "Başvuru gönderilirken bir hata oluştu. Lütfen tekrar deneyin.";
-            }
-        } else {
-            $error_message = "Lütfen tüm zorunlu alanları doldurunuz.";
-        }
-    }
-
     // Gönüllü istatistikleri
     $stmt = $pdo->prepare("SELECT 
         COUNT(*) as total_volunteers,
@@ -290,84 +264,97 @@ $volunteer_questions = [
                             <p class="text-muted">Bizimle birlikte iyiliği yaymaya hazır mısınız?</p>
                         </div>
 
-                        <?php if (isset($success_message)): ?>
-                            <div class="alert alert-success alert-dismissible fade show">
-                                <i class="fas fa-check-circle me-2"></i>
-                                <?= $success_message ?>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        <?php endif; ?>
+                        <!-- Alert Messages -->
+                        <div id="alertContainer" style="display: none;"></div>
 
-                        <?php if (isset($error_message)): ?>
-                            <div class="alert alert-danger alert-dismissible fade show">
-                                <i class="fas fa-exclamation-circle me-2"></i>
-                                <?= $error_message ?>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        <?php endif; ?>
-
-                        <form method="POST" id="volunteerForm" novalidate>
-                            <input type="hidden" name="action" value="volunteer_apply">
+                        <form id="volunteerForm" novalidate>
+                            <input type="hidden" name="action" value="volunteer">
 
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Ad Soyad *</label>
                                     <input type="text" class="form-control" id="name" name="name" required>
+                                    <div class="invalid-feedback">
+                                        Lütfen adınızı ve soyadınızı girin.
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">E-posta *</label>
                                     <input type="email" class="form-control" id="email" name="email" required>
+                                    <div class="invalid-feedback">
+                                        Lütfen geçerli bir e-posta adresi girin.
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="row g-3 mt-1">
                                 <div class="col-md-6">
                                     <label for="phone" class="form-label">Telefon *</label>
-                                    <input type="tel" class="form-control" id="phone" name="phone" required>
+                                    <input type="tel" class="form-control" id="phone" name="phone" required 
+                                           placeholder="">
+                                    <div class="invalid-feedback">
+                                        Lütfen telefon numaranızı girin.
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="age" class="form-label">Yaş</label>
-                                    <input type="number" class="form-control" id="age" name="age" min="16" max="80">
+                                    <input type="number" class="form-control" id="age" name="age" min="16" max="80" 
+                                           placeholder="">
+                                    <div class="invalid-feedback">
+                                        Yaş 16-80 arasında olmalıdır.
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="row g-3 mt-1">
                                 <div class="col-md-6">
                                     <label for="profession" class="form-label">Meslek</label>
-                                    <input type="text" class="form-control" id="profession" name="profession">
+                                    <input type="text" class="form-control" id="profession" name="profession" 
+                                           placeholder="Öğretmen, Mühendis, Öğrenci...">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="availability" class="form-label">Müsaitlik Durumu *</label>
                                     <select class="form-select" id="availability" name="availability" required>
                                         <option value="">Seçiniz</option>
-                                        <option value="weekdays">Hafta içi</option>
-                                        <option value="weekends">Hafta sonu</option>
-                                        <option value="evenings">Akşam saatleri</option>
-                                        <option value="flexible">Esnek</option>
+                                        <option value="weekdays">Hafta içi (Pazartesi-Cuma)</option>
+                                        <option value="weekends">Hafta sonu (Cumartesi-Pazar)</option>
+                                        <option value="evenings">Akşam saatleri (18:00 sonrası)</option>
+                                        <option value="flexible">Esnek (Her zaman müsait)</option>
+                                        <option value="mornings">Sabah saatleri (09:00-12:00)</option>
+                                        <option value="afternoons">Öğleden sonra (13:00-17:00)</option>
                                     </select>
+                                    <div class="invalid-feedback">
+                                        Lütfen müsaitlik durumunuzu belirtin.
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="mt-3">
                                 <label for="interests" class="form-label">İlgi Alanları</label>
                                 <input type="text" class="form-control" id="interests" name="interests" 
-                                       placeholder="Örn: Eğitim, sağlık, organizasyon...">
+                                       placeholder="Örn: Eğitim, sağlık, organizasyon, teknoloji...">
+                                <small class="form-text text-muted">Hangi alanlarda gönüllü olmak istediğinizi belirtin</small>
                             </div>
 
                             <div class="mt-3">
                                 <label for="experience" class="form-label">Gönüllülük Deneyimi</label>
                                 <textarea class="form-control" id="experience" name="experience" rows="3" 
-                                          placeholder="Daha önce katıldığınız gönüllü çalışmalar..."></textarea>
+                                          placeholder="Daha önce katıldığınız gönüllü çalışmalar, deneyimleriniz..."></textarea>
+                                <small class="form-text text-muted">Varsa önceki gönüllülük deneyimlerinizi paylaşın</small>
                             </div>
 
                             <div class="mt-3">
                                 <label for="message" class="form-label">Neden Gönüllü Olmak İstiyorsunuz? *</label>
                                 <textarea class="form-control" id="message" name="message" rows="4" 
-                                          placeholder="Motivasyonunuzu paylaşın..." required></textarea>
+                                          placeholder="Motivasyonunuzu, hedeflerinizi ve beklentilerinizi paylaşın..." required></textarea>
+                                <div class="invalid-feedback">
+                                    Lütfen motivasyonunuzu paylaşın.
+                                </div>
+                                <small class="form-text text-muted">Bu bilgi, size en uygun gönüllülük fırsatını sunmamızda yardımcı olacaktır</small>
                             </div>
 
                             <div class="text-center mt-4">
-                                <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
                                     <i class="fas fa-paper-plane me-2"></i>
                                     Başvuru Gönder
                                 </button>
@@ -691,3 +678,135 @@ i.text-success {
     }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const volunteerForm = document.getElementById('volunteerForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const alertContainer = document.getElementById('alertContainer');
+
+    if (volunteerForm) {
+        volunteerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!volunteerForm.checkValidity()) {
+                e.stopPropagation();
+                volunteerForm.classList.add('was-validated');
+                showAlert('Lütfen tüm zorunlu alanları doğru şekilde doldurun.', 'danger');
+                return;
+            }
+
+            // Disable submit button and show loading
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Gönderiliyor...';
+
+            // Create FormData
+            const formData = new FormData(volunteerForm);
+
+            // Send AJAX request
+            fetch('ajax/forms.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    volunteerForm.reset();
+                    volunteerForm.classList.remove('was-validated');
+                    
+                    // Scroll to success message
+                    alertContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    showAlert(data.message, 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Bir hata oluştu. Lütfen tekrar deneyin.', 'danger');
+            })
+            .finally(() => {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            });
+        });
+    }
+
+    // Phone number formatting
+    const phoneInput = document.getElementById('phone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+            if (value.length > 0) {
+                if (value.startsWith('0')) {
+                    // Format: 0555 123 4567
+                    value = value.replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4');
+                } else if (value.startsWith('90')) {
+                    // Format: 90 555 123 4567
+                    value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4 $5');
+                }
+            }
+            e.target.value = value;
+        });
+    }
+
+    // Age validation
+    const ageInput = document.getElementById('age');
+    if (ageInput) {
+        ageInput.addEventListener('input', function(e) {
+            const value = parseInt(e.target.value);
+            if (value && (value < 16 || value > 80)) {
+                e.target.setCustomValidity('Yaş 16-80 arasında olmalıdır');
+            } else {
+                e.target.setCustomValidity('');
+            }
+        });
+    }
+
+    // Real-time validation feedback
+    const inputs = volunteerForm.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (volunteerForm.classList.contains('was-validated')) {
+                this.checkValidity();
+            }
+        });
+
+        input.addEventListener('input', function() {
+            if (this.classList.contains('is-invalid')) {
+                this.classList.remove('is-invalid');
+                if (this.checkValidity()) {
+                    this.classList.add('is-valid');
+                }
+            }
+        });
+    });
+
+    function showAlert(message, type) {
+        const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+        const iconClass = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+        
+        alertContainer.innerHTML = `
+            <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                <i class="${iconClass} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+        alertContainer.style.display = 'block';
+        
+        // Auto-hide success messages after 5 seconds
+        if (type === 'success') {
+            setTimeout(() => {
+                const alert = alertContainer.querySelector('.alert');
+                if (alert) {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }
+            }, 5000);
+        }
+    }
+});
+</script>
