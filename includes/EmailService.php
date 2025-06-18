@@ -115,14 +115,8 @@ class EmailService {
             $mail = $this->createMailer();
             
             // Send to test email address
-            $volunteerEmail = 'samet.saray.06@gmail.com';
+            $volunteerEmail = 'samet.saray.06@gmail.com'; // Admin'e gönderilen adres
             $mail->addAddress($volunteerEmail);
-            
-            // Also send to admin as backup (same address for testing)
-            $adminEmail = 'samet.saray.06@gmail.com';
-            if ($adminEmail !== $volunteerEmail) {
-                $mail->addAddress($adminEmail);
-            }
             
             $mail->isHTML(true);
             $mail->Subject = 'Yeni Gönüllü Başvurusu - ' . ($volunteerData['name'] ?? $volunteerData['first_name'] . ' ' . $volunteerData['last_name']);
@@ -282,13 +276,73 @@ class EmailService {
         <html>
         <head>
             <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Yeni İletişim Mesajı</title>
             <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #2c5aa0; color: white; padding: 20px; text-align: center; }
-                .content { padding: 20px; background: #f9f9f9; }
-                .footer { padding: 10px; text-align: center; color: #666; font-size: 12px; }
-                .info-box { background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #2c5aa0; }
+                body {
+                    font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f4f4f4;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 20px auto;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+                }
+                .header {
+                    background-color: #2c5aa0; /* Primary Blue */
+                    color: white;
+                    padding: 30px 20px;
+                    text-align: center;
+                    border-top-left-radius: 8px;
+                    border-top-right-radius: 8px;
+                }
+                .header h1 {
+                    margin: 0;
+                    font-size: 28px;
+                    font-weight: bold;
+                }
+                .content {
+                    padding: 30px;
+                    background-color: #ffffff;
+                }
+                .info-box {
+                    background-color: #f9f9f9;
+                    padding: 20px;
+                    margin-bottom: 20px;
+                    border-left: 5px solid #2c5aa0; /* Primary Blue */
+                    border-radius: 5px;
+                    font-size: 15px;
+                }
+                .info-box strong {
+                    color: #2c5aa0;
+                }
+                .message-box {
+                    background-color: #f9f9f9;
+                    padding: 20px;
+                    border-left: 5px solid #2c5aa0;
+                    border-radius: 5px;
+                    font-size: 15px;
+                }
+                .footer {
+                    padding: 20px;
+                    text-align: center;
+                    color: #777;
+                    font-size: 12px;
+                    background-color: #f0f0f0;
+                    border-bottom-left-radius: 8px;
+                    border-bottom-right-radius: 8px;
+                }
+                .footer a {
+                    color: #2c5aa0;
+                    text-decoration: none;
+                }
             </style>
         </head>
         <body>
@@ -297,20 +351,21 @@ class EmailService {
                     <h1>Yeni İletişim Mesajı</h1>
                 </div>
                 <div class="content">
+                    <p style="font-size: 16px; color: #555;">Web siteniz üzerinden yeni bir iletişim formu gönderildi.</p>
                     <div class="info-box">
-                        <strong>Gönderen:</strong> ' . htmlspecialchars($data['name']) . '<br>
-                        <strong>E-posta:</strong> ' . htmlspecialchars($data['email']) . '<br>
-                        <strong>Telefon:</strong> ' . htmlspecialchars($data['phone'] ?? 'Belirtilmemiş') . '<br>
-                        <strong>Konu:</strong> ' . htmlspecialchars($data['subject'] ?? 'Genel') . '<br>
-                        <strong>Tarih:</strong> ' . date('d.m.Y H:i:s') . '
+                        <p><strong>Gönderen:</strong> ' . htmlspecialchars($data['name']) . '</p>
+                        <p><strong>E-posta:</strong> <a href="mailto:' . htmlspecialchars($data['email']) . '" style="color: #2c5aa0; text-decoration: none;">' . htmlspecialchars($data['email']) . '</a></p>
+                        <p><strong>Telefon:</strong> ' . htmlspecialchars($data['phone'] ?? 'Belirtilmemiş') . '</p>
+                        <p><strong>Konu:</strong> ' . htmlspecialchars($data['subject'] ?? 'Genel') . '</p>
+                        <p><strong>Tarih:</strong> ' . date('d.m.Y H:i:s') . '</p>
                     </div>
-                    <div class="info-box">
-                        <strong>Mesaj:</strong><br>
-                        ' . nl2br(htmlspecialchars($data['message'])) . '
+                    <div class="message-box">
+                        <p style="margin-top: 0;"><strong>Mesaj:</strong></p>
+                        <p style="white-space: pre-wrap;">' . htmlspecialchars($data['message']) . '</p>
                     </div>
                 </div>
                 <div class="footer">
-                    Bu mesaj Necat Derneği web sitesi iletişim formu aracılığıyla gönderilmiştir.
+                    <p>Bu mesaj Necat Derneği web sitesi iletişim formu aracılığıyla gönderilmiştir.</p>
                 </div>
             </div>
         </body>
@@ -323,12 +378,60 @@ class EmailService {
         <html>
         <head>
             <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Mesajınız Alındı - Necat Derneği</title>
             <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #2c5aa0; color: white; padding: 20px; text-align: center; }
-                .content { padding: 20px; background: #f9f9f9; }
-                .footer { padding: 10px; text-align: center; color: #666; font-size: 12px; }
+                body {
+                    font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f4f4f4;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 20px auto;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+                }
+                .header {
+                    background-color: #2c5aa0; /* Primary Blue */
+                    color: white;
+                    padding: 30px 20px;
+                    text-align: center;
+                    border-top-left-radius: 8px;
+                    border-top-right-radius: 8px;
+                }
+                .header h1 {
+                    margin: 0;
+                    font-size: 28px;
+                    font-weight: bold;
+                }
+                .content {
+                    padding: 30px;
+                    background-color: #ffffff;
+                }
+                .content p {
+                    font-size: 16px;
+                    color: #555;
+                    margin-bottom: 15px;
+                }
+                .footer {
+                    padding: 20px;
+                    text-align: center;
+                    color: #777;
+                    font-size: 12px;
+                    background-color: #f0f0f0;
+                    border-bottom-left-radius: 8px;
+                    border-bottom-right-radius: 8px;
+                }
+                .footer a {
+                    color: #2c5aa0;
+                    text-decoration: none;
+                }
             </style>
         </head>
         <body>
@@ -337,15 +440,14 @@ class EmailService {
                     <h1>Mesajınız Alındı</h1>
                 </div>
                 <div class="content">
-                    <p>Sayın ' . htmlspecialchars($data['name']) . ',</p>
-                    <p>Necat Derneği\'ne gönderdiğiniz mesaj tarafımıza ulaşmıştır. En kısa sürede size dönüş yapacağız.</p>
-                    <p>İlginiz için teşekkür ederiz.</p>
-                    <br>
-                    <p>Saygılarımızla,<br>
-                    <strong>Necat Derneği</strong></p>
+                    <p>Sayın <strong>' . htmlspecialchars($data['name']) . '</strong>,</p>
+                    <p>Necat Derneği\'ne göndermiş olduğunuz mesajınız tarafımıza başarıyla ulaşmıştır. En kısa sürede sizinle iletişime geçeceğiz.</p>
+                    <p>İlginiz ve anlayışınız için teşekkür ederiz.</p>
+                    <p style="margin-top: 30px;">Saygılarımızla,<br>
+                    <strong>Necat Derneği Ekibi</strong></p>
                 </div>
                 <div class="footer">
-                    Bu otomatik bir mesajdır. Lütfen yanıtlamayın.
+                    <p>Bu otomatik bir yanıttır, lütfen bu e-postayı doğrudan yanıtlamayınız.</p>
                 </div>
             </div>
         </body>
@@ -377,6 +479,7 @@ class EmailService {
             default:
                 $availabilityText = $data['availability'] ?? 'Belirtilmemiş';
         }
+        
         // Form verilerindeki alan adlarını kontrol et
         $fullName = $data['name'] ?? ($data['first_name'] . ' ' . $data['last_name']);
 
@@ -385,72 +488,121 @@ class EmailService {
         <html>
         <head>
             <meta charset="UTF-8">
-            <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #4ea674; color: white; padding: 20px; text-align: center; }
-                .content { padding: 20px; background: #f9f9f9; }
-                .footer { padding: 10px; text-align: center; color: #666; font-size: 12px; }
-                .info-box { background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #4ea674; }
-                .highlight { background: #e8f5e8; padding: 15px; border-radius: 5px; margin: 15px 0; }
-            </style>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Yeni Gönüllü Başvurusu</title>
         </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <img src="data:image/png;base64,' . base64_encode(file_get_contents(__DIR__ . '/../assets/images/logo.png')) . '" alt="Necat Derneği Logo" style="height: 50px; margin-bottom: 10px;">
-                    <h1>Yeni Gönüllü Başvurusu</h1>
-                    <p>Necat Derneği Gönüllü Başvuru Sistemi</p>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; background-color: #f4f4f4;">
+            
+            <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                
+                <!-- Header -->
+                <div style="background: #4ea674; color: white; padding: 30px 20px; text-align: center;">
+                    <div style="margin-bottom: 15px;">
+                        <img src="https://necatdernegi.org/assets/images/logo.png" alt="Necat Derneği" style="height: 40px; max-width: 200px; vertical-align: middle;" onerror="this.style.display=\'none\'">
+                    </div>
+                    <h1 style="margin: 0; font-size: 24px;">Yeni Gönüllü Başvurusu</h1>
+                    <p style="margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;">Necat Derneği Gönüllü Başvuru Sistemi</p>
                 </div>
-                <div class="content">
-                    <div class="highlight">
-                        <h3>👤 Başvuru Sahibi Bilgileri</h3>
+                
+                <!-- Content -->
+                <div style="padding: 30px 25px;">
+                    
+                    <!-- Applicant Info -->
+                    <div style="background: #e8f5e8; color: #2d5016; padding: 12px 15px; margin: 0 0 15px 0; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                        👤 Başvuru Sahibi Bilgileri
                     </div>
                     
-                    <div class="info-box">
-                        <strong>📝 Ad Soyad:</strong> ' . htmlspecialchars($fullName) . '<br>
-                        <strong>📧 E-posta:</strong> ' . htmlspecialchars($data['email']) . '<br>
-                        <strong>📱 Telefon:</strong> ' . htmlspecialchars($data['phone']) . '<br>
-                        <strong>🎂 Yaş:</strong> ' . htmlspecialchars($data['age'] ?? 'Belirtilmemiş') . '<br>
-                        <strong>💼 Meslek:</strong> ' . htmlspecialchars($data['profession'] ?? 'Belirtilmemiş') . '<br>
-                        <strong>⏰ Müsaitlik:</strong> ' . htmlspecialchars($availabilityText) . '<br>
-                        <strong>🎯 İlgi Alanları:</strong> ' . htmlspecialchars($data['interests'] ?? 'Belirtilmemiş') . '<br>
-                        <strong>📅 Başvuru Tarihi:</strong> ' . date('d.m.Y H:i:s') . '
+                    <div style="background: #f9f9f9; padding: 20px; margin: 15px 0; border-left: 4px solid #4ea674; border-radius: 0 5px 5px 0;">
+                        <div style="margin: 8px 0; font-size: 14px;">
+                            <span style="font-weight: bold; color: #2d5016; display: inline-block; min-width: 120px;">📝 Ad Soyad:</span> ' . htmlspecialchars($fullName) . '
+                        </div>
+                        <div style="margin: 8px 0; font-size: 14px;">
+                            <span style="font-weight: bold; color: #2d5016; display: inline-block; min-width: 120px;">📧 E-posta:</span> ' . htmlspecialchars($data['email']) . '
+                        </div>
+                        <div style="margin: 8px 0; font-size: 14px;">
+                            <span style="font-weight: bold; color: #2d5016; display: inline-block; min-width: 120px;">📱 Telefon:</span> ' . htmlspecialchars($data['phone']) . '
+                        </div>
+                        <div style="margin: 8px 0; font-size: 14px;">
+                            <span style="font-weight: bold; color: #2d5016; display: inline-block; min-width: 120px;">🎂 Yaş:</span> ' . htmlspecialchars($data['age'] ?? 'Belirtilmemiş') . '
+                        </div>
+                        <div style="margin: 8px 0; font-size: 14px;">
+                            <span style="font-weight: bold; color: #2d5016; display: inline-block; min-width: 120px;">💼 Meslek:</span> ' . htmlspecialchars($data['profession'] ?? 'Belirtilmemiş') . '
+                        </div>
+                        <div style="margin: 8px 0; font-size: 14px;">
+                            <span style="font-weight: bold; color: #2d5016; display: inline-block; min-width: 120px;">⏰ Müsaitlik:</span> ' . htmlspecialchars($availabilityText) . '
+                        </div>
+                        <div style="margin: 8px 0; font-size: 14px;">
+                            <span style="font-weight: bold; color: #2d5016; display: inline-block; min-width: 120px;">🎯 İlgi Alanları:</span> ' . htmlspecialchars($data['interests'] ?? 'Belirtilmemiş') . '
+                        </div>
+                        <div style="margin: 8px 0; font-size: 14px;">
+                            <span style="font-weight: bold; color: #2d5016; display: inline-block; min-width: 120px;">📅 Başvuru Tarihi:</span> ' . date('d.m.Y H:i:s') . '
+                        </div>
+                    </div>';
+            
+        if (!empty($data['experience'])) {
+            $emailContent .= '
+            <div style="background: #e8f5e8; color: #2d5016; padding: 12px 15px; margin: 20px 0 15px 0; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                🏆 Gönüllülük Deneyimi
+            </div>
+            <div style="background: #f9f9f9; padding: 20px; margin: 15px 0; border-left: 4px solid #4ea674; border-radius: 0 5px 5px 0;">
+                ' . nl2br(htmlspecialchars($data['experience'])) . '
+            </div>';
+        }
+        
+        $emailContent .= '
+                    <div style="background: #e8f5e8; color: #2d5016; padding: 12px 15px; margin: 20px 0 15px 0; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                        💭 Motivasyon ve Beklentiler
                     </div>
-                    
-                    ' . ((!empty($data['experience'])) ? '
-                    <div class="highlight">
-                        <h3>🏆 Gönüllülük Deneyimi</h3>
-                    </div>
-                    <div class="info-box">
-                        ' . nl2br(htmlspecialchars($data['experience'])) . '
-                    </div>
-                    ' : '') . '
-                    
-                    <div class="highlight">
-                        <h3>💭 Motivasyon ve Beklentiler</h3>
-                    </div>
-                    <div class="info-box">
+                    <div style="background: #f9f9f9; padding: 20px; margin: 15px 0; border-left: 4px solid #4ea674; border-radius: 0 5px 5px 0;">
                         ' . nl2br(htmlspecialchars($data['message'] ?? $data['motivation'] ?? 'Belirtilmemiş')) . '
                     </div>
                     
-                    <div class="highlight">
-                        <h3>📋 Sonraki Adımlar</h3>
+                    <div style="background: #e8f5e8; color: #2d5016; padding: 12px 15px; margin: 20px 0 15px 0; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                        📋 Sonraki Adımlar
                     </div>
-                    <div class="info-box">
-                        <p>• Başvuru sahibi ile 3-5 iş günü içinde iletişime geçilecek</p>
-                        <p>• Kısa bir telefon görüşmesi yapılacak</p>
-                        <p>• Uygun gönüllülük alanları belirlenecek</p>
-                        <p>• Oryantasyon sürecine dahil edilecek</p>
+                    <div style="background: #f8fffe; padding: 25px; margin: 10px 0; border-radius: 8px; border: 1px solid #e0f0e0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: flex-start; margin-bottom: 18px; padding-bottom: 15px; border-bottom: 1px solid #f0f8f0;">
+                            <div style="background: #4ea674; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; margin-right: 15px; flex-shrink: 0;">1</div>
+                            <div>
+                                <div style="font-weight: bold; color: #2d5016; margin-bottom: 4px; font-size: 15px;">Değerlendirme Süreci</div>
+                                <div style="color: #555; font-size: 14px; line-height: 1.5;">Başvurunuz 3-5 iş günü içinde ekibimiz tarafından titizlikle değerlendirilecektir.</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; margin-bottom: 18px; padding-bottom: 15px; border-bottom: 1px solid #f0f8f0;">
+                            <div style="background: #4ea674; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; margin-right: 15px; flex-shrink: 0;">2</div>
+                            <div>
+                                <div style="font-weight: bold; color: #2d5016; margin-bottom: 4px; font-size: 15px;">İletişim ve Tanışma</div>
+                                <div style="color: #555; font-size: 14px; line-height: 1.5;">Değerlendirme sonrası size telefon veya e-posta yoluyla ulaşarak kısa bir tanışma görüşmesi yapacağız.</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start; margin-bottom: 18px; padding-bottom: 15px; border-bottom: 1px solid #f0f8f0;">
+                            <div style="background: #4ea674; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; margin-right: 15px; flex-shrink: 0;">3</div>
+                            <div>
+                                <div style="font-weight: bold; color: #2d5016; margin-bottom: 4px; font-size: 15px;">Oryantasyon Programı</div>
+                                <div style="color: #555; font-size: 14px; line-height: 1.5;">Derneğimizin çalışmaları, projeleri ve gönüllülük fırsatları hakkında detaylı bilgi vereceğiz.</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: flex-start;">
+                            <div style="background: #4ea674; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; margin-right: 15px; flex-shrink: 0;">4</div>
+                            <div>
+                                <div style="font-weight: bold; color: #2d5016; margin-bottom: 4px; font-size: 15px;">Görev Atama</div>
+                                <div style="color: #555; font-size: 14px; line-height: 1.5;">İlgi alanlarınıza ve müsaitlik durumunuza en uygun gönüllülük görevlerini sizinle birlikte belirleyeceğiz.</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="footer">
-                    Bu başvuru Necat Derneği web sitesi gönüllü formu aracılığıyla gönderilmiştir.<br>
-                    Test Ortamı: samet.saray.06@gmail.com
+                
+                <!-- Footer -->
+                <div style="padding: 20px; text-align: center; color: #666; font-size: 12px; background: #f8f8f8; border-top: 1px solid #eee;">
+                    <p style="margin: 0;"><strong>Bu başvuru Necat Derneği web sitesi gönüllü formu aracılığıyla gönderilmiştir.</strong></p>
+                    <p style="margin: 5px 0 0 0;">Test Ortamı: samet.saray.06@gmail.com</p>
+                    <p style="margin: 15px 0 0 0; color: #4ea674; font-weight: bold;">🤝 Birlikte Daha Güçlüyüz</p>
                 </div>
             </div>
         </body>
         </html>';
+        
+        return $emailContent;
     }
     
     private function getVolunteerAutoReplyTemplate($data) {
@@ -459,69 +611,77 @@ class EmailService {
         <html>
         <head>
             <meta charset="UTF-8">
-            <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #4ea674; color: white; padding: 20px; text-align: center; }
-                .content { padding: 20px; background: #f9f9f9; }
-                .footer { padding: 15px; text-align: center; color: #666; font-size: 12px; }
-                .welcome-box { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #4ea674; }
-                .next-steps { background: #e8f5e8; padding: 15px; border-radius: 5px; margin: 15px 0; }
-                .contact-info { background: white; padding: 15px; margin: 10px 0; border-radius: 5px; }
-            </style>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Gönüllü Başvurunuz Alındı - Necat Derneği</title>
         </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <h1>🌟 Hoş Geldiniz!</h1>
-                    <p>Necat Derneği Gönüllü Ailesi</p>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px; background-color: #f4f4f4;">
+            
+            <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                
+                <!-- Header -->
+                <div style="background: #4ea674; color: white; padding: 30px 20px; text-align: center;">
+                    <div style="margin-bottom: 15px;">
+                        <img src="https://necatdernegi.org/assets/images/logo.png" alt="Necat Derneği" style="height: 40px; max-width: 200px; vertical-align: middle;" onerror="this.style.display=\'none\'">
+                    </div>
+                    <h1 style="margin: 0; font-size: 24px;">Hoş Geldiniz!</h1>
+                    <p style="margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;">Necat Derneği Gönüllü Ailesi</p>
                 </div>
-                <div class="content">
-                    <div class="welcome-box">
-                        <p>Sayın <strong>' . htmlspecialchars($data['first_name']) . '</strong>,</p>
-                        
-                        <p>Necat Derneği gönüllü ailesine katılım başvurunuz başarıyla alınmıştır. Bu güzel adımınız için teşekkür ederiz! 🙏</p>
-                        
-                        <p>Gönüllülük, sadece başkalarına yardım etmek değil, aynı zamanda kendi ruhunuzu beslemek ve topluma değer katmaktır. Siz de bu anlamlı yolculukta bizlerle birlikte olacağınız için çok mutluyuz.</p>
+                
+                <!-- Content -->
+                <div style="padding: 30px 25px;">
+                    
+                    <div style="background: #e8f5e8; padding: 25px; margin-bottom: 20px; border-radius: 8px; border-left: 5px solid #4ea674;">
+                        <p style="margin: 0 0 10px 0; font-size: 16px; color: #333;">Sayın <strong>' . htmlspecialchars($data['first_name']) . '</strong>,</p>
+                        <p style="margin: 0 0 10px 0; font-size: 16px; color: #333;">Necat Derneği gönüllü ailesine katılım başvurunuzu başarıyla aldık. Bu değerli adımınız için size içtenlikle teşekkür ederiz! 🙏</p>
+                        <p style="margin: 0; font-size: 16px; color: #333;">Gönüllülük, sadece başkalarına yardım etmekle kalmaz, aynı zamanda topluma anlamlı bir değer katarken kişisel gelişiminize de katkıda bulunur. Bu anlamlı yolculukta sizinle birlikte olacağımız için çok mutluyuz.</p>
                     </div>
                     
-                    <div class="next-steps">
-                        <h3>📋 Sonraki Adımlar</h3>
-                        <ul>
-                            <li><strong>Değerlendirme:</strong> Başvurunuz 3-5 iş günü içinde değerlendirilecek</li>
-                            <li><strong>İletişim:</strong> Size telefon ile ulaşarak kısa bir görüşme yapacağız</li>
-                            <li><strong>Oryantasyon:</strong> Derneğimiz hakkında detaylı bilgi vereceğiz</li>
-                            <li><strong>Görev Atama:</strong> İlgi alanlarınıza uygun gönüllülük fırsatları sunacağız</li>
-                        </ul>
+                    <div style="background: #f9f9f9; padding: 20px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #eee;">
+                        <h3 style="color: #4ea674; margin-top: 0; font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #4ea674; padding-bottom: 8px;">📋 Sonraki Adımlarımız</h3>
+                        <div style="margin-bottom: 15px; padding: 12px; background: white; border-radius: 6px; border-left: 4px solid #4ea674;">
+                            <div style="font-weight: bold; color: #2d5016; margin-bottom: 5px; display: flex; align-items: center;">
+                                <span style="background: #4ea674; color: white; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; margin-right: 10px;">1</span>
+                                Değerlendirme Süreci
+                            </div>
+                            <div style="color: #555; font-size: 14px; margin-left: 30px;">Başvurunuz 3-5 iş günü içinde ekibimiz tarafından titizlikle değerlendirilecektir.</div>
+                        </div>
+                        <div style="margin-bottom: 15px; padding: 12px; background: white; border-radius: 6px; border-left: 4px solid #4ea674;">
+                            <div style="font-weight: bold; color: #2d5016; margin-bottom: 5px; display: flex; align-items: center;">
+                                <span style="background: #4ea674; color: white; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; margin-right: 10px;">2</span>
+                                İletişim ve Tanışma
+                            </div>
+                            <div style="color: #555; font-size: 14px; margin-left: 30px;">Değerlendirme sonrası size telefon veya e-posta yoluyla ulaşarak kısa bir tanışma görüşmesi yapacağız.</div>
+                        </div>
+                        <div style="margin-bottom: 15px; padding: 12px; background: white; border-radius: 6px; border-left: 4px solid #4ea674;">
+                            <div style="font-weight: bold; color: #2d5016; margin-bottom: 5px; display: flex; align-items: center;">
+                                <span style="background: #4ea674; color: white; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; margin-right: 10px;">3</span>
+                                Oryantasyon Programı
+                            </div>
+                            <div style="color: #555; font-size: 14px; margin-left: 30px;">Derneğimizin çalışmaları, projeleri ve gönüllülük fırsatları hakkında detaylı bilgi vereceğiz.</div>
+                        </div>
+                        <div style="padding: 12px; background: white; border-radius: 6px; border-left: 4px solid #4ea674;">
+                            <div style="font-weight: bold; color: #2d5016; margin-bottom: 5px; display: flex; align-items: center;">
+                                <span style="background: #4ea674; color: white; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; margin-right: 10px;">4</span>
+                                Görev Atama
+                            </div>
+                            <div style="color: #555; font-size: 14px; margin-left: 30px;">İlgi alanlarınıza ve müsaitlik durumunuza en uygun gönüllülük görevlerini sizinle birlikte belirleyeceğiz.</div>
+                        </div>
                     </div>
                     
-                    <div class="welcome-box">
-                        <h3>🤝 Neden Gönüllü Olmak Önemli?</h3>
-                        <p>Gönüllülük sayesinde:</p>
-                        <ul>
-                            <li>Toplumda gerçek bir fark yaratacaksınız</li>
-                            <li>Yeni insanlarla tanışıp kalıcı dostluklar kuracaksınız</li>
-                            <li>Kişisel gelişiminizi destekleyeceksiniz</li>
-                            <li>Anlamlı deneyimler edineceksiniz</li>
-                        </ul>
+                    <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                        <h3 style="color: #4ea674; margin-bottom: 15px;">📞 İletişim Bilgileri</h3>
+                        <p style="margin: 5px 0; font-size: 14px; color: #555;"><strong>Gönüllü Koordinasyon:</strong> <a href="mailto:gonullu@necatdernegi.org" style="color: #4ea674; text-decoration: none;">gonullu@necatdernegi.org</a></p>
+                        <p style="margin: 5px 0; font-size: 14px; color: #555;"><strong>Telefon:</strong> +90 312 311 65 25</p>
                     </div>
                     
-                    <div class="contact-info">
-                        <h3>📞 İletişim Bilgileri</h3>
-                        <p><strong>Gönüllü Koordinasyon:</strong> gonullu@necatdernegi.org</p>
-                        <p><strong>Telefon:</strong> +90 312 311 65 25</p>
-                        <p><strong>Adres:</strong> Fevzipaşa Mahallesi Rüzgarlı Caddesi Plevne Sokak No:14/1 Ulus Altındağ Ankara</p>
-                    </div>
-                    
-                    <div class="welcome-box">
-                        <p><em>"Bir mum, diğer mumu tutuşturmakla ışığından bir şey kaybetmez."</em></p>
-                        <p>Bu güzel yolculukta bizimle birlikte olduğunuz için tekrar teşekkür ederiz. Birlikte daha güçlü olacağız! 💪</p>
-                    </div>
+                    <p style="font-style: italic; color: #666; text-align: center; margin-top: 30px; font-size: 15px;">"Bir mum, diğer mumu tutuşturmakla ışığından bir şey kaybetmez."</p>
+                    <p style="text-align: center; font-size: 16px; color: #555; margin-top: 25px;">Bu güzel yolculukta bizimle birlikte olduğunuz için tekrar teşekkür ederiz. Birlikte daha güçlü olacağız! 💪</p>
                 </div>
-                <div class="footer">
-                    Bu e-posta Necat Derneği tarafından otomatik olarak gönderilmiştir.<br>
-                    Gönüllü Departmanı: gonullu@necatdernegi.org<br>
-                    <strong>Elinizi İyiliğe Uzatın</strong>
+                
+                <!-- Footer -->
+                <div style="padding: 20px; text-align: center; color: #666; font-size: 12px; background: #f8f8f8; border-top: 1px solid #eee;">
+                    <p style="margin: 0;">Bu e-posta Necat Derneği tarafından otomatik olarak gönderilmiştir.</p>
+                    <p style="margin: 5px 0 0 0;"><strong>Elinizi İyiliğe Uzatın</strong></p>
                 </div>
             </div>
         </body>
@@ -533,14 +693,79 @@ class EmailService {
         <html>
         <head>
             <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Yeni Bağış Alındı</title>
             <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #2c5aa0; color: white; padding: 20px; text-align: center; }
-                .content { padding: 20px; background: #f9f9f9; }
-                .footer { padding: 10px; text-align: center; color: #666; font-size: 12px; }
-                .info-box { background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #2c5aa0; }
-                .amount { font-size: 24px; color: #2c5aa0; font-weight: bold; }
+                body {
+                    font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f4f4f4;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 20px auto;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+                }
+                .header {
+                    background-color: #2c5aa0; /* Primary Blue */
+                    color: white;
+                    padding: 30px 20px;
+                    text-align: center;
+                    border-top-left-radius: 8px;
+                    border-top-right-radius: 8px;
+                }
+                .header h1 {
+                    margin: 0;
+                    font-size: 28px;
+                    font-weight: bold;
+                }
+                .content {
+                    padding: 30px;
+                    background-color: #ffffff;
+                }
+                .info-box {
+                    background-color: #f9f9f9;
+                    padding: 20px;
+                    margin-bottom: 20px;
+                    border-left: 5px solid #2c5aa0; /* Primary Blue */
+                    border-radius: 5px;
+                    font-size: 15px;
+                }
+                .info-box strong {
+                    color: #2c5aa0;
+                }
+                .info-box p {
+                    margin: 5px 0;
+                }
+                .amount-display {
+                    font-size: 32px;
+                    color: #2c5aa0;
+                    font-weight: bold;
+                    text-align: center;
+                    margin: 25px 0;
+                    padding: 15px;
+                    background-color: #e6f0fa; /* Light Blue */
+                    border-radius: 8px;
+                }
+                .footer {
+                    padding: 20px;
+                    text-align: center;
+                    color: #777;
+                    font-size: 12px;
+                    background-color: #f0f0f0;
+                    border-bottom-left-radius: 8px;
+                    border-bottom-right-radius: 8px;
+                }
+                .footer a {
+                    color: #2c5aa0;
+                    text-decoration: none;
+                }
             </style>
         </head>
         <body>
@@ -549,18 +774,21 @@ class EmailService {
                     <h1>Yeni Bağış Alındı</h1>
                 </div>
                 <div class="content">
+                    <p style="font-size: 16px; color: #555; text-align: center;">Necat Derneği\'ne yeni bir bağış yapıldı!</p>
+                    <div class="amount-display">
+                        ' . number_format($data['amount'], 2) . ' TL
+                    </div>
                     <div class="info-box">
-                        <div class="amount">' . number_format($data['amount'], 2) . ' TL</div>
-                        <strong>Bağışçı:</strong> ' . htmlspecialchars($data['donor_name']) . '<br>
-                        <strong>E-posta:</strong> ' . htmlspecialchars($data['email'] ?? 'Belirtilmemiş') . '<br>
-                        <strong>Telefon:</strong> ' . htmlspecialchars($data['phone'] ?? 'Belirtilmemiş') . '<br>
-                        <strong>Proje:</strong> ' . htmlspecialchars($data['project_name'] ?? 'Genel Bağış') . '<br>
-                        <strong>Ödeme Yöntemi:</strong> ' . htmlspecialchars($data['payment_method'] ?? 'Belirtilmemiş') . '<br>
-                        <strong>Tarih:</strong> ' . date('d.m.Y H:i:s') . '
+                        <p><strong>Bağışçı:</strong> ' . htmlspecialchars($data['donor_name']) . '</p>
+                        <p><strong>E-posta:</strong> <a href="mailto:' . htmlspecialchars($data['email'] ?? 'Belirtilmemiş') . '" style="color: #2c5aa0; text-decoration: none;">' . htmlspecialchars($data['email'] ?? 'Belirtilmemiş') . '</a></p>
+                        <p><strong>Telefon:</strong> ' . htmlspecialchars($data['phone'] ?? 'Belirtilmemiş') . '</p>
+                        <p><strong>Proje:</strong> ' . htmlspecialchars($data['project_name'] ?? 'Genel Bağış') . '</p>
+                        <p><strong>Ödeme Yöntemi:</strong> ' . htmlspecialchars($data['payment_method'] ?? 'Belirtilmemiş') . '</p>
+                        <p><strong>Tarih:</strong> ' . date('d.m.Y H:i:s') . '</p>
                     </div>
                 </div>
                 <div class="footer">
-                    Bu bağış Necat Derneği web sitesi aracılığıyla yapılmıştır.
+                    <p>Bu bağış Necat Derneği web sitesi aracılığıyla yapılmıştır.</p>
                 </div>
             </div>
         </body>
@@ -573,31 +801,103 @@ class EmailService {
         <html>
         <head>
             <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Bağışınız için Teşekkürler - Necat Derneği</title>
             <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #2c5aa0; color: white; padding: 20px; text-align: center; }
-                .content { padding: 20px; background: #f9f9f9; }
-                .footer { padding: 10px; text-align: center; color: #666; font-size: 12px; }
-                .amount { font-size: 24px; color: #2c5aa0; font-weight: bold; text-align: center; margin: 20px 0; }
+                body {
+                    font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f4f4f4;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 20px auto;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+                }
+                .header {
+                    background-color: #2c5aa0; /* Primary Blue */
+                    color: white;
+                    padding: 30px 20px;
+                    text-align: center;
+                    border-top-left-radius: 8px;
+                    border-top-right-radius: 8px;
+                }
+                .header h1 {
+                    margin: 0;
+                    font-size: 28px;
+                    font-weight: bold;
+                }
+                .content {
+                    padding: 30px;
+                    background-color: #ffffff;
+                }
+                .content p {
+                    font-size: 16px;
+                    color: #555;
+                    margin-bottom: 15px;
+                }
+                .thank-you-message {
+                    background-color: #e6f0fa; /* Light Blue */
+                    padding: 25px;
+                    margin-bottom: 20px;
+                    border-radius: 8px;
+                    border-left: 5px solid #2c5aa0;
+                    text-align: center;
+                }
+                .thank-you-message h2 {
+                    color: #2c5aa0;
+                    margin-top: 0;
+                    font-size: 24px;
+                }
+                .amount-display {
+                    font-size: 32px;
+                    color: #2c5aa0;
+                    font-weight: bold;
+                    text-align: center;
+                    margin: 25px 0;
+                }
+                .footer {
+                    padding: 20px;
+                    text-align: center;
+                    color: #777;
+                    font-size: 12px;
+                    background-color: #f0f0f0;
+                    border-bottom-left-radius: 8px;
+                    border-bottom-right-radius: 8px;
+                }
+                .footer a {
+                    color: #2c5aa0;
+                    text-decoration: none;
+                }
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Bağışınız için Teşekkürler</h1>
+                    <h1>Bağışınız İçin Teşekkürler</h1>
                 </div>
                 <div class="content">
-                    <p>Sayın ' . htmlspecialchars($data['donor_name']) . ',</p>
-                    <div class="amount">' . number_format($data['amount'], 2) . ' TL</div>
-                    <p>Derneğimize yapmış olduğunuz değerli bağış için çok teşekkür ederiz. Bu bağış, yardıma muhtaç insanlara ulaşmamızda büyük bir katkı sağlayacaktır.</p>
+                    <p>Sayın <strong>' . htmlspecialchars($data['donor_name']) . '</strong>,</p>
+                    <div class="thank-you-message">
+                        <h2>Değerli Bağışınız için Minnettarız!</h2>
+                        <p style="font-size: 18px; margin-top: 15px;">Bağışladığınız</p>
+                        <div class="amount-display">
+                            ' . number_format($data['amount'], 2) . ' TL
+                        </div>
+                        <p style="font-size: 16px;">yardıma muhtaç insanlara ulaşmamızda büyük bir katkı sağlayacaktır.</p>
+                    </div>
                     <p>Bağışınız güvenle alınmış ve kayıtlarımıza geçmiştir. Gerekirse vergi indirimi için kullanabileceğiniz bağış belgesi en kısa sürede tarafınıza iletilecektir.</p>
-                    <br>
-                    <p>Bir kez daha teşekkür eder, saygılarımızı sunarız.</p>
-                    <p><strong>Necat Derneği</strong></p>
+                    <p style="margin-top: 30px;">Desteğiniz için bir kez daha içtenlikle teşekkür eder, saygılarımızı sunarız.</p>
+                    <p><strong>Necat Derneği Ekibi</strong></p>
                 </div>
                 <div class="footer">
-                    Bu otomatik bir mesajdır. Sorularınız için info@necatdernegi.org adresine yazabilirsiniz.
+                    <p>Bu otomatik bir mesajdır. Sorularınız için <a href="mailto:info@necatdernegi.org" style="color: #2c5aa0;">info@necatdernegi.org</a> adresine yazabilirsiniz.</p>
                 </div>
             </div>
         </body>
@@ -610,12 +910,81 @@ class EmailService {
         <html>
         <head>
             <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Necat Derneği Bülteni</title>
             <style>
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: #2c5aa0; color: white; padding: 20px; text-align: center; }
-                .content { padding: 20px; background: #f9f9f9; }
-                .footer { padding: 10px; text-align: center; color: #666; font-size: 12px; }
+                body {
+                    font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f4f4f4;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 20px auto;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+                }
+                .header {
+                    background-color: #2c5aa0; /* Primary Blue */
+                    color: white;
+                    padding: 30px 20px;
+                    text-align: center;
+                    border-top-left-radius: 8px;
+                    border-top-right-radius: 8px;
+                }
+                .header h1 {
+                    margin: 0;
+                    font-size: 32px;
+                    font-weight: bold;
+                }
+                .header p {
+                    margin-top: 5px;
+                    font-size: 18px;
+                    opacity: 0.9;
+                }
+                .content {
+                    padding: 30px;
+                    background-color: #ffffff;
+                    font-size: 16px;
+                    color: #444;
+                }
+                .content h2 {
+                    color: #2c5aa0;
+                    font-size: 24px;
+                    margin-top: 25px;
+                    margin-bottom: 15px;
+                }
+                .content p {
+                    margin-bottom: 15px;
+                }
+                .button {
+                    display: inline-block;
+                    background-color: #4ea674; /* Volunteer Green for CTA */
+                    color: white;
+                    padding: 12px 25px;
+                    border-radius: 5px;
+                    text-decoration: none;
+                    font-weight: bold;
+                    margin-top: 20px;
+                }
+                .footer {
+                    padding: 20px;
+                    text-align: center;
+                    color: #777;
+                    font-size: 12px;
+                    background-color: #f0f0f0;
+                    border-bottom-left-radius: 8px;
+                    border-bottom-right-radius: 8px;
+                }
+                .footer a {
+                    color: #2c5aa0;
+                    text-decoration: none;
+                }
             </style>
         </head>
         <body>
@@ -626,10 +995,13 @@ class EmailService {
                 </div>
                 <div class="content">
                     ' . $content . '
+                    <p style="text-align: center; margin-top: 30px;">
+                        <a href="https://yourwebsite.com" class="button">Web Sitemizi Ziyaret Edin</a>
+                    </p>
                 </div>
                 <div class="footer">
                     <p>Bu e-postayı almak istemiyorsanız <a href="#">abonelikten çıkabilirsiniz</a>.</p>
-                    <p>© ' . date('Y') . ' Necat Derneği. Tüm hakları saklıdır.</p>
+                    <p>&copy; ' . date('Y') . ' Necat Derneği. Tüm hakları saklıdır.</p>
                 </div>
             </div>
         </body>
@@ -648,20 +1020,105 @@ class EmailService {
             $mail->Subject = $subject;
             
             $body = '
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-                <div style="background: #e74c3c; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
-                    <h2>🧪 Test Email - Necat Derneği</h2>
-                </div>
-                <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px;">
-                    <p style="font-size: 16px; color: #333; margin-bottom: 20px;">' . $message . '</p>
-                    <p style="color: #666; margin-bottom: 10px;"><strong>Time:</strong> ' . date('Y-m-d H:i:s') . '</p>
-                    <p style="color: #666; margin-bottom: 10px;"><strong>SMTP Host:</strong> ' . ($this->settings['smtp_host'] ?? 'N/A') . '</p>
-                    <p style="color: #666; margin-bottom: 10px;"><strong>From:</strong> ' . ($this->settings['smtp_username'] ?? 'N/A') . '</p>
-                    <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-top: 20px;">
-                        <strong>✅ Email configuration is working correctly!</strong>
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Test E-postası - Necat Derneği</title>
+                <style>
+                    body {
+                        font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
+                        line-height: 1.6;
+                        color: #333;
+                        margin: 0;
+                        padding: 0;
+                        background-color: #f4f4f4;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 20px auto;
+                        background-color: #ffffff;
+                        border-radius: 8px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+                    }
+                    .header {
+                        background-color: #e74c3c; /* Red for Test */
+                        color: white;
+                        padding: 30px 20px;
+                        text-align: center;
+                        border-top-left-radius: 8px;
+                        border-top-right-radius: 8px;
+                    }
+                    .header h2 {
+                        margin: 0;
+                        font-size: 28px;
+                        font-weight: bold;
+                    }
+                    .content {
+                        padding: 30px;
+                        background-color: #ffffff;
+                    }
+                    .content p {
+                        font-size: 16px;
+                        color: #555;
+                        margin-bottom: 15px;
+                    }
+                    .info-detail {
+                        background-color: #f9f9f9;
+                        padding: 15px;
+                        border-radius: 5px;
+                        margin-bottom: 10px;
+                        font-size: 14px;
+                    }
+                    .info-detail strong {
+                        color: #e74c3c;
+                    }
+                    .success-box {
+                        background-color: #d4edda; /* Light Green */
+                        color: #155724; /* Dark Green */
+                        padding: 20px;
+                        border-radius: 8px;
+                        margin-top: 25px;
+                        text-align: center;
+                        font-size: 18px;
+                        font-weight: bold;
+                        border: 1px solid #c3e6cb;
+                    }
+                    .footer {
+                        padding: 20px;
+                        text-align: center;
+                        color: #777;
+                        font-size: 12px;
+                        background-color: #f0f0f0;
+                        border-bottom-left-radius: 8px;
+                        border-bottom-right-radius: 8px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h2>🧪 Test E-postası - Necat Derneği</h2>
+                    </div>
+                    <div class="content">
+                        <p>' . $message . '</p>
+                        <div class="info-detail">
+                            <p><strong>Test Zamanı:</strong> ' . date('Y-m-d H:i:s') . '</p>
+                            <p><strong>SMTP Sunucusu:</strong> ' . ($this->settings['smtp_host'] ?? 'N/A') . '</p>
+                            <p><strong>Gönderen:</strong> ' . ($this->settings['smtp_username'] ?? 'N/A') . '</p>
+                        </div>
+                        <div class="success-box">
+                            ✅ E-posta yapılandırmanız doğru çalışıyor!
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <p>Bu otomatik bir test mesajıdır.</p>
                     </div>
                 </div>
-            </div>';
+            </body>
+            </html>';
             
             $mail->Body = $body;
             $mail->AltBody = strip_tags($message) . "\n\nTime: " . date('Y-m-d H:i:s') . "\nSMTP Host: " . ($this->settings['smtp_host'] ?? 'N/A');
