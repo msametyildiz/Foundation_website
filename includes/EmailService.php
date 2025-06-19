@@ -1132,6 +1132,7 @@ class EmailService {
                                                                     </td>
                                                                 </tr>
                                                             </table>
+                                                            
                                                         </td>
                                                     </tr>
                                                 </table>

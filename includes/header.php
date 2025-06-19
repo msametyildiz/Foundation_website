@@ -1,3 +1,7 @@
+<?php
+// Include logo base64 helper
+require_once __DIR__ . '/logo-base64-helper.php';
+?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -560,6 +564,9 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
     
+    <!-- Base64 Logo JavaScript -->
+    <script src="assets/js/logo-base64.js"></script>
+    
     <!-- Favicon -->
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
     
@@ -577,12 +584,20 @@
             <!-- Brand -->
             <a href="index.php" class="navbar-brand-modern">
                 <div class="logo-container" id="logoContainer">
-                    <!-- Farklı format seçenekleri ile logo -->
-                    <img src="assets/images/favicon.ico?v=<?php echo time(); ?>" 
-                         alt="Necat Derneği Logo" 
-                         id="logoImage"
-                         onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex';"
-                         onload="console.log('Logo loaded successfully');">
+                    <!-- Base64 Logo -->
+                    <?php 
+                    if (LogoBase64Helper::isLogoAvailable()) {
+                        echo LogoBase64Helper::getLogoForNavbar([
+                            'id' => 'logoImage',
+                            'style' => 'height: 40px; width: auto;',
+                            'onload' => "console.log('Base64 logo loaded successfully'); this.classList.add('loaded');",
+                            'onerror' => "console.log('Base64 logo failed, showing fallback'); this.style.display='none'; document.getElementById('logoFallback').style.display='flex';"
+                        ]);
+                    } else {
+                        // Fallback to regular logo file
+                        echo '<img src="assets/images/logo.png?v=' . time() . '" alt="Necat Derneği Logo" id="logoImage" style="height: 40px; width: auto;" onload="console.log(\'Logo loaded successfully\'); this.classList.add(\'loaded\');" onerror="this.style.display=\'none\'; document.getElementById(\'logoFallback\').style.display=\'flex\';">';
+                    }
+                    ?>
                     <!-- Fallback logo -->
                     <div class="logo-fallback" id="logoFallback" style="display: none;">
                         <i class="fas fa-heart"></i>
