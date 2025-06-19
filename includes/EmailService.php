@@ -880,7 +880,7 @@ class EmailService {
                                                     Bu e-posta Necat Derneği gönüllü başvuru sistemi tarafından otomatik olarak gönderilmiştir.
                                                 </p>
                                                 <p style="margin: 0; font-size: 11px; color: rgba(255,255,255,0.5);">
-                                                    Test Ortamı: samet.saray.06@gmail.com • ' . date('Y') . ' © Tüm hakları saklıdır.
+                                                     • ' . date('Y') . ' © Tüm hakları saklıdır.
                                                 </p>
                                             </td>
                                         </tr>

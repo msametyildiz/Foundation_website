@@ -116,6 +116,11 @@ function handleVolunteerForm() {
             return;
         }
         
+        if (strlen($message) < 50) {
+            $response['message'] = 'Gönüllü olmak isteme nedeninizi en az 50 karakter olacak şekilde detaylı bir şekilde yazın.';
+            return;
+        }
+        
         if ($age > 0 && ($age < 16 || $age > 80)) {
             $response['message'] = 'Yaş 16-80 arasında olmalıdır.';
             return;

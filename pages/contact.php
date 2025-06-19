@@ -73,7 +73,7 @@ try {
                     Bize ulaşın, size yardımcı olmaktan mutluluk duyarız. Sorularınız, önerileriniz ve desteğiniz bizim için çok değerli.
                 </p>
                 
-                <!-- Quick Stats -->
+                <!-- Quick Stats 
                 <div class="row text-center mt-4">
                     <div class="col-md-3 col-6 mb-3">
                         <div class="stat-simple">
@@ -99,7 +99,7 @@ try {
                             <small class="stat-label-muted">İletişim Kanalı</small>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>

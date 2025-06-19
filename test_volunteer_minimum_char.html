@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gönüllü Form Minimum Karakter Testi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="text-center mb-4">Gönüllü Form - Minimum Karakter Testi</h3>
+                        
+                        <!-- Alert Messages -->
+                        <div id="alertContainer" style="display: none;"></div>
+                        
+                        <form id="volunteerForm" novalidate>
+                            <input type="hidden" name="action" value="volunteer">
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">Ad Soyad *</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                    <div class="invalid-feedback">Lütfen adınızı ve soyadınızı girin.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">E-posta *</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                    <div class="invalid-feedback">Lütfen geçerli bir e-posta adresi girin.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row g-3 mt-1">
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Telefon *</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" required>
+                                    <div class="invalid-feedback">Lütfen telefon numaranızı girin.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="availability" class="form-label">Müsaitlik Durumu *</label>
+                                    <select class="form-select" id="availability" name="availability" required>
+                                        <option value="">Seçiniz</option>
+                                        <option value="flexible">Esnek</option>
+                                        <option value="weekdays">Hafta içi</option>
+                                        <option value="weekends">Hafta sonu</option>
+                                    </select>
+                                    <div class="invalid-feedback">Lütfen müsaitlik durumunuzu belirtin.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <label for="message" class="form-label">Neden Gönüllü Olmak İstiyorsunuz? *</label>
+                                <textarea class="form-control" id="message" name="message" rows="4" 
+                                          placeholder="Motivasyonunuzu, hedeflerinizi ve beklentilerinizi paylaşın..." 
+                                          minlength="50" required></textarea>
+                                <div class="invalid-feedback">
+                                    Lütfen motivasyonunuzu en az 50 karakter olacak şekilde detaylı bir şekilde paylaşın.
+                                </div>
+                                <small class="form-text text-muted">Bu bilgi, size en uygun gönüllülük fırsatını sunmamızda yardımcı olacaktır (En az 50 karakter) 
+                                    <span id="charCount" class="badge bg-secondary">0/50</span>
+                                </small>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                                    <i class="fas fa-paper-plane me-2"></i>
+                                    Test Başvuru
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const volunteerForm = document.getElementById('volunteerForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const alertContainer = document.getElementById('alertContainer');
+            const messageTextarea = document.getElementById('message');
+            const charCount = document.getElementById('charCount');
+
+            // Character count functionality
+            if (messageTextarea && charCount) {
+                messageTextarea.addEventListener('input', function() {
+                    const currentLength = this.value.length;
+                    const minLength = 50;
+                    
+                    charCount.textContent = `${currentLength}/${minLength}`;
+                    
+                    if (currentLength >= minLength) {
+                        charCount.className = 'badge bg-success';
+                    } else {
+                        charCount.className = 'badge bg-warning';
+                    }
+                });
+            }
+
+            if (volunteerForm) {
+                volunteerForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Custom validation for message length
+                    const messageField = document.getElementById('message');
+                    if (messageField && messageField.value.length < 50) {
+                        messageField.setCustomValidity('Lütfen motivasyonunuzu en az 50 karakter olacak şekilde detaylı bir şekilde paylaşın.');
+                    } else {
+                        messageField.setCustomValidity('');
+                    }
+                    
+                    if (!volunteerForm.checkValidity()) {
+                        e.stopPropagation();
+                        volunteerForm.classList.add('was-validated');
+                        showAlert('Lütfen tüm zorunlu alanları doğru şekilde doldurun.', 'danger');
+                        return;
+                    }
+
+                    // If validation passes
+                    showAlert('Form validasyonu başarılı! Minimum 50 karakter şartı sağlandı.', 'success');
+                });
+            }
+
+            function showAlert(message, type) {
+                const alertHtml = `
+                    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
+                alertContainer.innerHTML = alertHtml;
+                alertContainer.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

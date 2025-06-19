@@ -93,27 +93,7 @@ $volunteer_questions = [
                     İyiliğin yayılmasında bize katılın. Her el, her kalp değerlidir.
                 </p>
                 
-                <!-- İstatistikler -->
-                <div class="row text-center mt-4">
-                    <div class="col-md-4 col-4 mb-3">
-                        <div class="stat-simple">
-                            <h3 class="stat-number-consistent"><?= number_format($volunteer_stats['total_volunteers']) ?></h3>
-                            <small class="stat-label-muted">Toplam Gönüllü</small>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-4 mb-3">
-                        <div class="stat-simple">
-                            <h3 class="stat-number-consistent"><?= number_format($volunteer_stats['active_volunteers']) ?></h3>
-                            <small class="stat-label-muted">Aktif Gönüllü</small>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-4 mb-3">
-                        <div class="stat-simple">
-                            <h3 class="stat-number-consistent"><?= number_format($volunteer_stats['pending_applications']) ?></h3>
-                            <small class="stat-label-muted">Bekleyen Başvuru</small>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -346,11 +326,14 @@ $volunteer_questions = [
                             <div class="mt-3">
                                 <label for="message" class="form-label">Neden Gönüllü Olmak İstiyorsunuz? *</label>
                                 <textarea class="form-control" id="message" name="message" rows="4" 
-                                          placeholder="Motivasyonunuzu, hedeflerinizi ve beklentilerinizi paylaşın..." required></textarea>
+                                          placeholder="Motivasyonunuzu, hedeflerinizi ve beklentilerinizi paylaşın..." 
+                                          minlength="50" required></textarea>
                                 <div class="invalid-feedback">
-                                    Lütfen motivasyonunuzu paylaşın.
+                                    Lütfen motivasyonunuzu en az 50 karakter olacak şekilde detaylı bir şekilde paylaşın.
                                 </div>
-                                <small class="form-text text-muted">Bu bilgi, size en uygun gönüllülük fırsatını sunmamızda yardımcı olacaktır</small>
+                                <small class="form-text text-muted">Bu bilgi, size en uygun gönüllülük fırsatını sunmamızda yardımcı olacaktır (En az 50 karakter) 
+                                    <span id="charCount" class="badge bg-secondary">0/50</span>
+                                </small>
                             </div>
 
                             <div class="text-center mt-4">
@@ -684,10 +667,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const volunteerForm = document.getElementById('volunteerForm');
     const submitBtn = document.getElementById('submitBtn');
     const alertContainer = document.getElementById('alertContainer');
+    const messageTextarea = document.getElementById('message');
+    const charCount = document.getElementById('charCount');
+
+    // Character count functionality
+    if (messageTextarea && charCount) {
+        messageTextarea.addEventListener('input', function() {
+            const currentLength = this.value.length;
+            const minLength = 50;
+            
+            charCount.textContent = `${currentLength}/${minLength}`;
+            
+            if (currentLength >= minLength) {
+                charCount.className = 'badge bg-success';
+            } else {
+                charCount.className = 'badge bg-warning';
+            }
+        });
+    }
 
     if (volunteerForm) {
         volunteerForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // Custom validation for message length
+            const messageField = document.getElementById('message');
+            if (messageField && messageField.value.length < 50) {
+                messageField.setCustomValidity('Lütfen motivasyonunuzu en az 50 karakter olacak şekilde detaylı bir şekilde paylaşın.');
+            } else {
+                messageField.setCustomValidity('');
+            }
             
             if (!volunteerForm.checkValidity()) {
                 e.stopPropagation();

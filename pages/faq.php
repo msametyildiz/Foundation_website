@@ -118,7 +118,7 @@ $faq_questions = [
                     Size de sorularımız var!
                 </p>
                 
-                <!-- Simple stats like other pages -->
+                <!-- Simple stats like other pages 
                 <div class="row text-center mt-4">
                     <div class="col-md-4 col-6 mb-3">
                         <div class="stat-simple">
@@ -138,7 +138,7 @@ $faq_questions = [
                             <small class="stat-label-muted">Destek</small>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>
@@ -319,10 +319,6 @@ $faq_questions = [
                             <i class="fas fa-envelope me-2"></i>
                             İletişime Geç
                         </a>
-                        <a href="tel:+90555123456" class="btn btn-outline-primary">
-                            <i class="fas fa-phone me-2"></i>
-                            Ara
-                        </a>
                     </div>
                 </div>
             </div>
@@ -330,7 +326,7 @@ $faq_questions = [
     </div>
 </section>
 
-<!-- Popüler Konular - Simplified -->
+<!-- Popüler Konular - Simplified
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-5">
@@ -377,7 +373,7 @@ $faq_questions = [
             </div>
         </div>
     </div>
-</section>
+</section> -->
 
 <style>
 /* ========================================

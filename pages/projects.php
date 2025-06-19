@@ -94,56 +94,11 @@ $categoryColors = [
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8">
-                <h1 class="display-4 mb-3"><?= htmlspecialchars($heroSettings['hero_title']) ?></h1>
+                <h1 class="display-4 mb-3">Projelerimiz</h1>
                 <p class="lead mb-4">
-                    <?= htmlspecialchars($heroSettings['hero_subtitle']) ?>
+                    Toplumsal kalkınma ve sosyal sorumluluk alanında yürüttüğümüz projelerimizi keşfedin.
+                    Birlikte değişim yaratıyoruz!
                 </p>
-                
-                <?php if ($heroSettings['show_stats']): ?>
-                <!-- İstatistikler - Dinamik -->
-                <div class="row text-center mt-4">
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="stat-simple">
-                            <h3 class="stat-number-consistent">
-                                <?= number_format($heroSettings['use_custom_stats'] ? 
-                                    ($stats['custom_stat_1'] ?? $stats['active_count']) : 
-                                    $stats['active_count']) ?>
-                            </h3>
-                            <small class="stat-label-muted"><?= htmlspecialchars($heroSettings['stats_title_1']) ?></small>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="stat-simple">
-                            <h3 class="stat-number-consistent">
-                                <?= number_format($heroSettings['use_custom_stats'] ? 
-                                    ($stats['custom_stat_2'] ?? $stats['completed_count']) : 
-                                    $stats['completed_count']) ?>
-                            </h3>
-                            <small class="stat-label-muted"><?= htmlspecialchars($heroSettings['stats_title_2']) ?></small>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="stat-simple">
-                            <h3 class="stat-number-consistent">
-                                <?= number_format($heroSettings['use_custom_stats'] ? 
-                                    ($stats['custom_stat_3'] ?? $stats['total_beneficiaries']) : 
-                                    $stats['total_beneficiaries']) ?>
-                            </h3>
-                            <small class="stat-label-muted"><?= htmlspecialchars($heroSettings['stats_title_3']) ?></small>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="stat-simple">
-                            <h3 class="stat-number-consistent">
-                                <?= number_format($heroSettings['use_custom_stats'] ? 
-                                    ($stats['custom_stat_4'] ?? $stats['total_projects']) : 
-                                    $stats['total_projects']) ?>
-                            </h3>
-                            <small class="stat-label-muted"><?= htmlspecialchars($heroSettings['stats_title_4']) ?></small>
-                        </div>
-                    </div>
-                </div>
-                <?php endif; ?>
             </div>
         </div>
     </div>
