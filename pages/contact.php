@@ -34,9 +34,9 @@ try {
     // İletişim bilgilerini ayarlardan çek
     $contact_info = [
         'address' => $site_settings['contact_address'] ?? 'Adres bilgisi güncelleniyor...',
-        'phone' => $site_settings['contact_phone'] ?? '+90 312 444 56 78',
-        'emergency' => $site_settings['emergency_phone'] ?? '+90 555 123 4567',
-        'fax' => $site_settings['contact_fax'] ?? '',
+        'phone' => $site_settings['contact_phone'] ?? '+90 312 311 65 25',
+        'emergency' => $site_settings['emergency_phone'] ?? '+90 312 311 65 25',
+        'fax' => $site_settings['contact_fax'] ?? '+90 312 311 65 25',
         'email' => $site_settings['contact_email'] ?? 'info@necatdernegi.org',
         'working_hours' => [
             'weekdays' => 'Pazartesi - Cuma: 09:00 - 18:00',
@@ -55,8 +55,8 @@ try {
 
 } catch (PDOException $e) {
     $contact_info = [
-        'address' => 'Kızılay Mahallesi, Atatürk Bulvarı No: 125/7, Çankaya/ANKARA',
-        'phone' => '+90 312 444 56 78',
+        'address' => 'Fevzipaşa Mahallesi Rüzgarlı Caddesi Plevne Sokak No:14/1 Ulus Altındağ Ankara',
+        'phone' => '+90 312 311 65 25',
         'email' => 'info@necatdernegi.org'
     ];
     $social_media = [];
@@ -292,7 +292,7 @@ try {
                     
                     <!-- Google Harita -->
                     <div class="map-container mb-4">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.9147730845!2d28.68271917253096!3d41.00543077985568!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa7040068086b%3A0xe1ccfe98bc01b0d0!2zxLBzdGFuYnVs!5e0!3m2!1str!2str!4v1703856000000!5m2!1str!2str" 
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1529.437783974911!2d32.85331632131815!3d39.9441729145225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d34e8a083230ad%3A0xcf795f2af41e0aec!2zRG_En2FuYmV5LCBQbGV2bmUgU2suIE5vOjE0LCAwNjA1MCBBbHTEsW5kYcSfL0Fua2FyYQ!5e0!3m2!1str!2str!4v1750274248068!5m2!1str!2str" 
                                 width="100%" height="350" style="border:0; border-radius: 15px;" allowfullscreen="" 
                                 loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
@@ -306,15 +306,16 @@ try {
                         <div class="transport-options">
                             <div class="transport-option">
                                 <i class="fas fa-subway text-success me-2"></i>
-                                <strong>Metro:</strong> Vezneciler istasyonundan 5 dakika yürüyüş
+                                <strong>Metro:</strong> Ulus istasyonundan 5 dakika yürüyüş
                             </div>
                             <div class="transport-option">
                                 <i class="fas fa-bus text-info me-2"></i>
-                                <strong>Otobüs:</strong> 28, 61C, 399A hatları (Beyazıt durağı)
+                                <strong>Otobüs:</strong> Ulus ve Sıhhiye yönünden gelen birçok EGO hattı ile ulaşabilirsiniz
                             </div>
                             <div class="transport-option">
                                 <i class="fas fa-car text-warning me-2"></i>
-                                <strong>Araç:</strong> Eminönü yönünden 10 dakika
+                                <strong>Araç:</strong> Sıhhiye tarafından geliyorsanız: Atatürk Bulvarı üzerinden Ulus'a doğru ilerleyin, Anafartalar Çarşısı'nın olduğu sapaktan Rüzgarlı Cadde'ye dönün.
+Samsun Yolu veya Çankırı Caddesi üzerinden geliyorsanız: Ulus heykeli kavşağından Anafartalar
                             </div>
                             <div class="transport-option">
                                 <i class="fas fa-parking text-secondary me-2"></i>
