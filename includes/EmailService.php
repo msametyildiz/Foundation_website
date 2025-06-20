@@ -269,105 +269,263 @@ class EmailService {
         }
     }
     
-    // Email Templates
+    // Email Templates - Modern & Clean Design
     private function getContactEmailTemplate($data) {
         return '
         <!DOCTYPE html>
-        <html>
+        <html lang="tr">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Yeni İletişim Mesajı</title>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <title>Yeni İletişim Mesajı - Necat Derneği</title>
+            <!--[if mso]>
+                <noscript>
+                    <xml>
+                        <o:OfficeDocumentSettings>
+                            <o:PixelsPerInch>96</o:PixelsPerInch>
+                        </o:OfficeDocumentSettings>
+                    </xml>
+                </noscript>
+            <![endif]-->
             <style>
-                body {
-                    font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
-                    line-height: 1.6;
-                    color: #333;
-                    margin: 0;
-                    padding: 0;
-                    background-color: #f4f4f4;
+                /* Modern Email Reset */
+                body, table, td, p, a, li, blockquote { 
+                    -webkit-text-size-adjust: 100%; 
+                    -ms-text-size-adjust: 100%; 
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
                 }
-                .container {
-                    max-width: 600px;
-                    margin: 20px auto;
-                    background-color: #ffffff;
-                    border-radius: 8px;
-                    overflow: hidden;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-                }
-                .header {
-                    background-color: #2c5aa0; /* Primary Blue */
-                    color: white;
-                    padding: 30px 20px;
-                    text-align: center;
-                    border-top-left-radius: 8px;
-                    border-top-right-radius: 8px;
-                }
-                .header h1 {
-                    margin: 0;
-                    font-size: 28px;
-                    font-weight: bold;
-                }
-                .content {
-                    padding: 30px;
-                    background-color: #ffffff;
-                }
-                .info-box {
-                    background-color: #f9f9f9;
-                    padding: 20px;
-                    margin-bottom: 20px;
-                    border-left: 5px solid #2c5aa0; /* Primary Blue */
-                    border-radius: 5px;
-                    font-size: 15px;
-                }
-                .info-box strong {
-                    color: #2c5aa0;
-                }
-                .message-box {
-                    background-color: #f9f9f9;
-                    padding: 20px;
-                    border-left: 5px solid #2c5aa0;
-                    border-radius: 5px;
-                    font-size: 15px;
-                }
-                .footer {
-                    padding: 20px;
-                    text-align: center;
-                    color: #777;
-                    font-size: 12px;
-                    background-color: #f0f0f0;
-                    border-bottom-left-radius: 8px;
-                    border-bottom-right-radius: 8px;
-                }
-                .footer a {
-                    color: #2c5aa0;
-                    text-decoration: none;
+                table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+                img { -ms-interpolation-mode: bicubic; border: 0; }
+                
+                /* Responsive Design */
+                @media only screen and (max-width: 640px) {
+                    .mobile-center { text-align: center !important; }
+                    .mobile-padding { padding: 20px !important; }
+                    .mobile-stack { display: block !important; width: 100% !important; }
+                    .mobile-button { padding: 10px 16px !important; font-size: 13px !important; }
                 }
             </style>
         </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <h1>Yeni İletişim Mesajı</h1>
-                </div>
-                <div class="content">
-                    <p style="font-size: 16px; color: #555;">Web siteniz üzerinden yeni bir iletişim formu gönderildi.</p>
-                    <div class="info-box">
-                        <p><strong>Gönderen:</strong> ' . htmlspecialchars($data['name']) . '</p>
-                        <p><strong>E-posta:</strong> <a href="mailto:' . htmlspecialchars($data['email']) . '" style="color: #2c5aa0; text-decoration: none;">' . htmlspecialchars($data['email']) . '</a></p>
-                        <p><strong>Telefon:</strong> ' . htmlspecialchars($data['phone'] ?? 'Belirtilmemiş') . '</p>
-                        <p><strong>Konu:</strong> ' . htmlspecialchars($data['subject'] ?? 'Genel') . '</p>
-                        <p><strong>Tarih:</strong> ' . date('d.m.Y H:i:s') . '</p>
-                    </div>
-                    <div class="message-box">
-                        <p style="margin-top: 0;"><strong>Mesaj:</strong></p>
-                        <p style="white-space: pre-wrap;">' . htmlspecialchars($data['message']) . '</p>
-                    </div>
-                </div>
-                <div class="footer">
-                    <p>Bu mesaj Necat Derneği web sitesi iletişim formu aracılığıyla gönderilmiştir.</p>
-                </div>
-            </div>
+        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, \'Helvetica Neue\', Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f8fafc;">
+            
+            <!-- Main Container -->
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; padding: 20px 0;">
+                <tr>
+                    <td align="center">
+                        <!-- Email Content -->
+                        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); overflow: hidden;">
+                            
+                            <!-- Elegant Header -->
+                            <tr>
+                                <td style="background: linear-gradient(135deg, #2d5a27 0%, #4ea674 100%); padding: 40px 30px; text-align: center; color: #ffffff; position: relative;">
+                                    
+                                    <!-- Logo Section -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td style="text-align: center; padding-bottom: 16px;">
+                                                <div style="background: rgba(255,255,255,0.15); display: inline-block; padding: 8px 20px; border-radius: 25px; backdrop-filter: blur(10px);">
+                                                    <span style="font-size: 16px; font-weight: 700; color: #ffffff; letter-spacing: 2px;">NECAT DERNEĞİ</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center;">
+                                                <h1 style="margin: 0; font-size: 24px; font-weight: 600; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">Yeni İletişim Mesajı</h1>
+                                                <p style="margin: 8px 0 0 0; font-size: 14px; color: rgba(255,255,255,0.85); font-weight: 400;">Web sitenizden mesaj alındı</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+            
+                            <!-- Main Content -->
+                            <tr>
+                                <td style="padding: 36px 30px;" class="mobile-padding">
+                                    
+                                    <!-- Welcome Banner -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 28px;">
+                                        <tr>
+                                            <td style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); padding: 24px; border-radius: 12px; border-left: 4px solid #4ea674; text-align: center;">
+                                                
+                                                <h2 style="margin: 0 0 8px 0; color: #065f46; font-size: 18px; font-weight: 600;">Yeni Mesaj Bildirimi</h2>
+                                                <p style="margin: 0; color: #059669; font-size: 15px; font-weight: 500;">
+                                                    <strong>' . htmlspecialchars($data['name']) . '</strong> tarafından gönderildi
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                    <!-- Contact Information Card -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 28px;">
+                                        <tr>
+                                            <td style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                                                
+                                                <!-- Card Header -->
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td style="background: #f8fafc; padding: 16px 20px; border-bottom: 1px solid #e5e7eb;">
+                                                            <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #374151;">📋 İletişim Bilgileri</h3>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                
+                                                <!-- Card Content -->
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td style="padding: 20px;">
+                                                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                                <tr>
+                                                                    <td style="padding: 6px 0;">
+                                                                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                                            <tr>
+                                                                                <td width="30%" style="font-weight: 600; color: #6b7280; font-size: 13px; vertical-align: top; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                                                    Ad Soyad
+                                                                                </td>
+                                                                                <td style="color: #1f2937; font-size: 14px; font-weight: 500;">
+                                                                                    ' . htmlspecialchars($data['name']) . '
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding: 6px 0;">
+                                                                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                                            <tr>
+                                                                                <td width="30%" style="font-weight: 600; color: #6b7280; font-size: 13px; vertical-align: top; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                                                    E-posta
+                                                                                </td>
+                                                                                <td style="color: #1f2937; font-size: 14px;">
+                                                                                    <a href="mailto:' . htmlspecialchars($data['email']) . '" style="color: #2563eb; text-decoration: none; font-weight: 500;">' . htmlspecialchars($data['email']) . '</a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding: 6px 0;">
+                                                                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                                            <tr>
+                                                                                <td width="30%" style="font-weight: 600; color: #6b7280; font-size: 13px; vertical-align: top; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                                                    Telefon
+                                                                                </td>
+                                                                                <td style="color: #1f2937; font-size: 14px; font-weight: 500;">
+                                                                                    ' . (empty($data['phone']) ? '<span style="color: #9ca3af; font-style: italic;">Belirtilmemiş</span>' : '<a href="tel:' . htmlspecialchars($data['phone']) . '" style="color: #2563eb; text-decoration: none;">' . htmlspecialchars($data['phone']) . '</a>') . '
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding: 6px 0;">
+                                                                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                                            <tr>
+                                                                                <td width="30%" style="font-weight: 600; color: #6b7280; font-size: 13px; vertical-align: top; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                                                    Konu
+                                                                                </td>
+                                                                                <td style="color: #1f2937; font-size: 14px; font-weight: 500;">
+                                                                                    ' . htmlspecialchars($data['subject'] ?? 'Genel İletişim') . '
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding: 6px 0;">
+                                                                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                                            <tr>
+                                                                                <td width="30%" style="font-weight: 600; color: #6b7280; font-size: 13px; vertical-align: top; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                                                    Tarih
+                                                                                </td>
+                                                                                <td style="color: #1f2937; font-size: 14px; font-weight: 500;">
+                                                                                    ' . date('d.m.Y H:i:s') . '
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                    <!-- Message Content -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 28px;">
+                                        <tr>
+                                            <td style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                                                
+                                                <!-- Section Header -->
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td style="background: #f8fafc; padding: 16px 20px; border-bottom: 1px solid #e5e7eb;">
+                                                            <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #374151;">💬 Mesaj İçeriği</h3>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                
+                                                <!-- Message Text -->
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td style="padding: 24px 20px;">
+                                                            <div style="background: #f9fafb; padding: 20px; border-radius: 8px; border-left: 3px solid #4ea674; font-size: 15px; line-height: 1.7; color: #374151; font-weight: 400;">
+                                                                ' . nl2br(htmlspecialchars($data['message'])) . '
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                    <!-- Action Buttons -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td style="text-align: center; padding: 24px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 12px; border: 1px solid #e2e8f0;">
+                                                <h3 style="margin: 0 0 16px 0; color: #374151; font-size: 16px; font-weight: 600;">Hızlı İşlemler</h3>
+                                                <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
+                                                    <tr>
+                                                        <td style="padding: 0 8px;" class="mobile-stack">
+                                                            <a href="mailto:' . htmlspecialchars($data['email']) . '" style="display: inline-block; background: linear-gradient(135deg, #4ea674 0%, #48bb78 100%); color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; box-shadow: 0 2px 8px rgba(78, 166, 116, 0.25); transition: all 0.2s ease;" class="mobile-button">
+                                                                📧 E-posta Yanıtla
+                                                            </a>
+                                                        </td>' . 
+                                                        (!empty($data['phone']) ? 
+                                                        '<td style="padding: 0 8px;" class="mobile-stack">
+                                                            <a href="tel:' . htmlspecialchars($data['phone']) . '" style="display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25); transition: all 0.2s ease;" class="mobile-button">
+                                                                📱 Hemen Ara
+                                                            </a>
+                                                        </td>' : '') . '
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            
+                            <!-- Modern Footer -->
+                            <tr>
+                                <td style="background: #1f2937; padding: 24px; text-align: center; color: #ffffff;">
+                                    <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #ffffff;">Necat Derneği</h3>
+                                    <p style="margin: 0 0 16px 0; font-size: 14px; color: #d1d5db;">Elinizi İyiliğe Uzatın</p>
+                                    <div style="border-top: 1px solid #374151; padding-top: 16px;">
+                                        <p style="margin: 0; font-size: 12px; color: #9ca3af;">
+                                            Bu mesaj Necat Derneği web sitesi iletişim formu aracılığıyla gönderilmiştir.
+                                        </p>
+                                        <p style="margin: 8px 0 0 0; font-size: 11px; color: #6b7280;">
+                                            © ' . date('Y') . ' Tüm hakları saklıdır.
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
         </body>
         </html>';
     }
@@ -375,81 +533,149 @@ class EmailService {
     private function getAutoReplyTemplate($data) {
         return '
         <!DOCTYPE html>
-        <html>
+        <html lang="tr">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <title>Mesajınız Alındı - Necat Derneği</title>
             <style>
-                body {
-                    font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
-                    line-height: 1.6;
-                    color: #333;
-                    margin: 0;
-                    padding: 0;
-                    background-color: #f4f4f4;
-                }
-                .container {
-                    max-width: 600px;
-                    margin: 20px auto;
-                    background-color: #ffffff;
-                    border-radius: 8px;
-                    overflow: hidden;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-                }
-                .header {
-                    background-color: #2c5aa0; /* Primary Blue */
-                    color: white;
-                    padding: 30px 20px;
-                    text-align: center;
-                    border-top-left-radius: 8px;
-                    border-top-right-radius: 8px;
-                }
-                .header h1 {
-                    margin: 0;
-                    font-size: 28px;
-                    font-weight: bold;
-                }
-                .content {
-                    padding: 30px;
-                    background-color: #ffffff;
-                }
-                .content p {
-                    font-size: 16px;
-                    color: #555;
-                    margin-bottom: 15px;
-                }
-                .footer {
-                    padding: 20px;
-                    text-align: center;
-                    color: #777;
-                    font-size: 12px;
-                    background-color: #f0f0f0;
-                    border-bottom-left-radius: 8px;
-                    border-bottom-right-radius: 8px;
-                }
-                .footer a {
-                    color: #2c5aa0;
-                    text-decoration: none;
+                body, table, td, p, a, li, blockquote { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+                table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+                img { -ms-interpolation-mode: bicubic; border: 0; }
+                
+                @media only screen and (max-width: 640px) {
+                    .mobile-center { text-align: center !important; }
+                    .mobile-padding { padding: 20px !important; }
                 }
             </style>
         </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <h1>Mesajınız Alındı</h1>
-                </div>
-                <div class="content">
-                    <p>Sayın <strong>' . htmlspecialchars($data['name']) . '</strong>,</p>
-                    <p>Necat Derneği\'ne göndermiş olduğunuz mesajınız tarafımıza başarıyla ulaşmıştır. En kısa sürede sizinle iletişime geçeceğiz.</p>
-                    <p>İlginiz ve anlayışınız için teşekkür ederiz.</p>
-                    <p style="margin-top: 30px;">Saygılarımızla,<br>
-                    <strong>Necat Derneği Ekibi</strong></p>
-                </div>
-                <div class="footer">
-                    <p>Bu otomatik bir yanıttır, lütfen bu e-postayı doğrudan yanıtlamayınız.</p>
-                </div>
-            </div>
+        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Arial, sans-serif; line-height: 1.6; color: #374151; background-color: #f9fafb;">
+            
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f9fafb; padding: 40px 20px;">
+                <tr>
+                    <td align="center">
+                        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;">
+                            
+                            <!-- Header -->
+                            <tr>
+                                <td style="background: #059669; padding: 32px 24px; text-align: center; color: #ffffff;">
+                                    <h1 style="margin: 0 0 8px 0; font-size: 24px; font-weight: 600; color: #ffffff;">NECAT DERNEĞİ</h1>
+                                    <p style="margin: 0; font-size: 16px; color: #d1fae5;">Mesajınız Alındı!</p>
+                                </td>
+                            </tr>
+                            
+                            <!-- Content -->
+                            <tr>
+                                <td style="padding: 32px 24px;" class="mobile-padding">
+                                    
+                                    <!-- Welcome Message -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
+                                        <tr>
+                                            <td style="background: #ecfdf5; padding: 20px; border-radius: 6px; border-left: 4px solid #10b981; text-align: center;">
+                                                <h2 style="margin: 0 0 12px 0; color: #047857; font-size: 20px; font-weight: 600;">Sayın ' . htmlspecialchars($data['name']) . ',</h2>
+                                                <p style="margin: 0 0 12px 0; color: #047857; font-size: 16px; font-weight: 500;">
+                                                    Necat Derneği\'ne göndermiş olduğunuz mesajınız başarıyla alınmıştır!
+                                                </p>
+                                                <p style="margin: 0; color: #374151; font-size: 15px;">
+                                                    İlginiz ve güveniniz için teşekkür ederiz. Deneyimli ekibimiz mesajınızı inceleyerek size en uygun şekilde yanıt verecektir.
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                    <!-- Next Steps -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
+                                        <tr>
+                                            <td style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 20px;">
+                                                <h3 style="margin: 0 0 16px 0; color: #1f2937; font-size: 18px; font-weight: 600;">Sonraki Adımlar</h3>
+                                                
+                                                <div style="margin-bottom: 16px;">
+                                                    <p style="margin: 0 0 4px 0; color: #047857; font-weight: 600; font-size: 15px;">1. Mesaj İnceleme</p>
+                                                    <p style="margin: 0; color: #374151; font-size: 14px;">Mesajınız 24 saat içinde uzman ekibimiz tarafından incelenecektir.</p>
+                                                </div>
+                                                
+                                                <div style="margin-bottom: 16px;">
+                                                    <p style="margin: 0 0 4px 0; color: #047857; font-weight: 600; font-size: 15px;">2. Kişisel İletişim</p>
+                                                    <p style="margin: 0; color: #374151; font-size: 14px;">Size en uygun zaman diliminde e-posta veya telefon yoluyla geri dönüş yapacağız.</p>
+                                                </div>
+                                                
+                                                <div>
+                                                    <p style="margin: 0 0 4px 0; color: #047857; font-weight: 600; font-size: 15px;">3. Çözüm Odaklı Yaklaşım</p>
+                                                    <p style="margin: 0; color: #374151; font-size: 14px;">İhtiyacınıza yönelik en uygun çözümü birlikte belirleyeceğiz.</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                    <!-- Contact Information -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
+                                        <tr>
+                                            <td style="background: #f9fafb; padding: 20px; border-radius: 6px; border: 1px solid #e5e7eb; text-align: center;">
+                                                <h3 style="margin: 0 0 16px 0; color: #047857; font-size: 18px; font-weight: 600;">Acil İletişim</h3>
+                                                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td style="text-align: center; padding: 8px;">
+                                                            <p style="margin: 0; font-size: 14px; color: #374151;">
+                                                                <strong style="color: #047857;">E-posta:</strong><br>
+                                                                <a href="mailto:info@necatdernegi.org" style="color: #2563eb; text-decoration: none; font-weight: 500;">info@necatdernegi.org</a>
+                                                            </p>
+                                                        </td>
+                                                        <td style="text-align: center; padding: 8px;">
+                                                            <p style="margin: 0; font-size: 14px; color: #374151;">
+                                                                <strong style="color: #047857;">Telefon:</strong><br>
+                                                                <a href="tel:+903123116525" style="color: #2563eb; text-decoration: none; font-weight: 500;">+90 312 311 65 25</a>
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <div style="margin-top: 12px;">
+                                                    <p style="margin: 0; font-size: 13px; color: #6b7280;">
+                                                        <strong>Çalışma Saatleri:</strong> Pazartesi - Cuma: 09:00 - 17:00
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                    <!-- Thank You Message -->
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td style="background: #059669; padding: 24px; border-radius: 6px; text-align: center; color: #ffffff;">
+                                                <h3 style="margin: 0 0 12px 0; font-size: 20px; font-weight: 600;">Teşekkürler!</h3>
+                                                <p style="margin: 0 0 16px 0; font-size: 15px; color: #d1fae5;">
+                                                    Bize güvendiğiniz ve iletişime geçtiğiniz için teşekkür ederiz. 
+                                                    Birlikte daha güzel bir dünya inşa etmeye devam edeceğiz.
+                                                </p>
+                                                <p style="margin: 0; font-size: 14px; font-weight: 500;">
+                                                    Saygılarımızla,<br>
+                                                    <strong>Necat Derneği Ekibi</strong>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            
+                            <!-- Footer -->
+                            <tr>
+                                <td style="background: #1f2937; padding: 24px; text-align: center; color: #ffffff;">
+                                    <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #ffffff;">Necat Derneği</h3>
+                                    <p style="margin: 0 0 16px 0; font-size: 14px; color: #d1d5db;">Elinizi İyiliğe Uzatın</p>
+                                    <div style="border-top: 1px solid #374151; padding-top: 16px;">
+                                        <p style="margin: 0 0 8px 0; font-size: 12px; color: #9ca3af;">
+                                            Bu otomatik bir yanıttır, lütfen bu e-postayı doğrudan yanıtlamayınız.
+                                        </p>
+                                        <p style="margin: 0; font-size: 11px; color: #6b7280;">
+                                            © ' . date('Y') . ' Necat Derneği. Tüm hakları saklıdır.
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
         </body>
         </html>';
     }
@@ -532,7 +758,7 @@ class EmailService {
                                         <tr>
                                             <td style="text-align: center; padding-bottom: 20px;">
                                                 <div style="background: rgba(255,255,255,0.15); display: inline-block; padding: 12px 24px; border-radius: 50px; backdrop-filter: blur(10px);">
-                                                    <span style="font-size: 24px; font-weight: 700; color: #ffffff; letter-spacing: 1px;">🏛️ NECAT DERNEĞİ</span>
+                                                    <span style="font-size: 24px; font-weight: 700; color: #ffffff; letter-spacing: 1px;"> NECAT DERNEĞİ</span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -880,7 +1106,7 @@ class EmailService {
                                                     Bu e-posta Necat Derneği gönüllü başvuru sistemi tarafından otomatik olarak gönderilmiştir.
                                                 </p>
                                                 <p style="margin: 0; font-size: 11px; color: rgba(255,255,255,0.5);">
-                                                     • ' . date('Y') . ' © Tüm hakları saklıdır.
+                                                     © ' . date('Y') . ' Tüm hakları saklıdır.
                                                 </p>
                                             </td>
                                         </tr>
@@ -953,7 +1179,7 @@ class EmailService {
                                         <tr>
                                             <td style="text-align: center; padding-bottom: 25px;">
                                                 <div style="background: rgba(255,255,255,0.2); display: inline-block; padding: 15px 30px; border-radius: 50px; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.3);">
-                                                    <span style="font-size: 26px; font-weight: 800; color: #ffffff; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">🏛️ NECAT DERNEĞİ</span>
+                                                    <span style="font-size: 26px; font-weight: 800; color: #ffffff; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);"> NECAT DERNEĞİ</span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -1204,7 +1430,7 @@ class EmailService {
                                                     Bu e-posta Necat Derneği gönüllü başvuru sistemi tarafından otomatik olarak gönderilmiştir.
                                                 </p>
                                                 <p style="margin: 0; font-size: 11px; color: rgba(255,255,255,0.5);">
-                                                     • ' . date('Y') . ' © Tüm hakları saklıdır.
+                                                     © ' . date('Y') . ' Tüm hakları saklıdır.
                                                 </p>
                                             </td>
                                         </tr>

@@ -4,7 +4,7 @@
 // Footer için site ayarlarını çek
 try {
     if (!isset($site_settings)) {
-        $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM site_settings");
+        $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings");
         $stmt->execute();
         $site_settings = [];
         while ($row = $stmt->fetch()) {
@@ -18,11 +18,10 @@ try {
         'contact_email' => 'info@necatdernegi.org',
         'contact_phone' => '+90 312 444 56 78',
         'contact_address' => 'Kızılay Mahallesi, Atatürk Bulvarı No: 125/7, Çankaya/ANKARA',
-        'facebook_url' => '#',
-        'twitter_url' => '#',
-        'instagram_url' => '#',
-        'linkedin_url' => '#',
-        'youtube_url' => '#'
+        'social_facebook' => '#',
+        'social_twitter' => '#',
+        'social_instagram' => '#',
+        'social_linkedin' => '#'
     ];
 }
 ?>
@@ -446,18 +445,31 @@ try {
                         <?= htmlspecialchars($site_settings['site_description'] ?? 'Yardım eli uzatan, umut dağıtan bir toplum için birlikte çalışıyoruz. İhtiyaç sahiplerine ulaşan her elinde, gönüllerin birleştiği bir dünya inşa ediyoruz.') ?>
                     </p>
                     <div class="footer-social">
-                        <a href="<?= htmlspecialchars($site_settings['facebook_url'] ?? '#') ?>" class="social-link" aria-label="Facebook">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="<?= htmlspecialchars($site_settings['twitter_url'] ?? '#') ?>" class="social-link" aria-label="Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="<?= htmlspecialchars($site_settings['instagram_url'] ?? '#') ?>" class="social-link" aria-label="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="<?= htmlspecialchars($site_settings['linkedin_url'] ?? '#') ?>" class="social-link" aria-label="LinkedIn">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
+                        <?php
+                        // Sosyal medya linklerini formatla
+                        $social_links = [
+                            'Facebook' => ['key' => 'social_facebook', 'icon' => 'fab fa-facebook-f', 'base_url' => 'https://facebook.com/', 'label' => 'Facebook'],
+                            'Twitter' => ['key' => 'social_twitter', 'icon' => 'fab fa-twitter', 'base_url' => 'https://twitter.com/', 'label' => 'Twitter'],
+                            'Instagram' => ['key' => 'social_instagram', 'icon' => 'fab fa-instagram', 'base_url' => '', 'label' => 'Instagram'],
+                            'LinkedIn' => ['key' => 'social_linkedin', 'icon' => 'fab fa-linkedin-in', 'base_url' => 'https://linkedin.com/in/', 'label' => 'LinkedIn'],
+                            'YouTube' => ['key' => 'social_youtube', 'icon' => 'fab fa-youtube', 'base_url' => 'https://youtube.com/@', 'label' => 'YouTube']
+                        ];
+                        
+                        foreach ($social_links as $platform => $data) {
+                            $url = $site_settings[$data['key']] ?? '';
+                            
+                            if (!empty($url) && $url !== '#') {
+                                // URL formatını düzenle
+                                if (!str_starts_with($url, 'http') && !empty($data['base_url'])) {
+                                    $url = $data['base_url'] . ltrim($url, '@');
+                                }
+                                
+                                echo '<a href="' . htmlspecialchars($url) . '" class="social-link" aria-label="' . $data['label'] . '" target="_blank">';
+                                echo '<i class="' . $data['icon'] . '"></i>';
+                                echo '</a>';
+                            }
+                        }
+                        ?>
                     </div>
                 </div>
 

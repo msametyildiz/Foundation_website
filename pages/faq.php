@@ -291,6 +291,22 @@ $faq_questions = [
                     <p class="text-muted" id="search-results-count"></p>
                 </div>
             </div>
+            
+            <!-- Arama kutusu - Sonuçlar bölümünde -->
+            <div class="row mb-4">
+                <div class="col-lg-6 mx-auto">
+                    <div class="search-box">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-lg" id="faqSearchResults" 
+                                   placeholder="Soru ara...">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="row">
                 <div class="col-lg-10 mx-auto">
                     <div id="search-results-content"></div>
@@ -650,6 +666,19 @@ $faq_questions = [
     line-height: 1.6;
 }
 
+/* Button Icon Colors - Specific Override */
+.btn-primary .fas.fa-hand-holding-heart {
+    color: #ffffff !important;
+}
+
+.btn-outline-primary .fas.fa-heart {
+    color: #4ea674 !important;
+}
+
+.btn-outline-primary:hover .fas.fa-heart {
+    color: #ffffff !important;
+}
+
 /* All icons throughout the page */
 i.fas, i.fab, i.far {
     color: #4ea674 !important;
@@ -810,23 +839,47 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Arama fonksiyonu
     const searchInput = document.getElementById('faqSearch');
+    const searchInputResults = document.getElementById('faqSearchResults');
     let searchTimeout;
     
+    // Ana arama kutusu
     searchInput.addEventListener('input', function() {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(() => {
             performSearch(this.value.trim());
+            // Sonuçlar sayfasındaki arama kutusunu senkronize et
+            if (searchInputResults) {
+                searchInputResults.value = this.value;
+            }
         }, 300);
     });
+    
+    // Sonuçlar sayfasındaki arama kutusu
+    if (searchInputResults) {
+        searchInputResults.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                performSearch(this.value.trim());
+                // Ana arama kutusunu senkronize et
+                searchInput.value = this.value;
+            }, 300);
+        });
+    }
     
     function performSearch(query) {
         if (query.length < 2) {
             // Arama iptal - ilk kategoriyi göster
             categoryContents.forEach(content => content.classList.add('d-none'));
-            document.getElementById('category-general').classList.remove('d-none');
+            const firstCategory = document.querySelector('.faq-category:not(#search-results)');
+            if (firstCategory) {
+                firstCategory.classList.remove('d-none');
+            }
             
             categoryButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector('[data-category="general"]').classList.add('active');
+            const firstButton = document.querySelector('[data-category]');
+            if (firstButton) {
+                firstButton.classList.add('active');
+            }
             return;
         }
         
@@ -904,6 +957,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         searchResultsSection.classList.remove('d-none');
+        
+        // Arama sonuçlarına otomatik scroll - geliştirilmiş
+        setTimeout(() => {
+            const searchResultsHeader = searchResultsSection.querySelector('.section-title');
+            if (searchResultsHeader) {
+                searchResultsHeader.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            } else {
+                searchResultsSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+        }, 150);
     }
     
     function highlightText(text, query) {

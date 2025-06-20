@@ -66,11 +66,11 @@ function handleContactForm() {
         
         // Insert into database
         $stmt = $pdo->prepare("
-            INSERT INTO contact_messages (name, email, phone, subject, message, status, created_at) 
-            VALUES (?, ?, ?, ?, ?, 'pending', NOW())
+            INSERT INTO contact_messages (name, email, phone, subject, message, status, ip_address, created_at) 
+            VALUES (?, ?, ?, ?, ?, 'new', ?, NOW())
         ");
         
-        $stmt->execute([$name, $email, $phone, $subject, $message]);
+        $stmt->execute([$name, $email, $phone, $subject, $message, $_SERVER['REMOTE_ADDR'] ?? '']);
         
         // Send notification email
         $emailService = new EmailService($pdo);
@@ -79,9 +79,15 @@ function handleContactForm() {
             'email' => $email,
             'phone' => $phone,
             'subject' => $subject,
-            'message' => $message
+            'message' => $message,
+            'admin_email' => 'samet.saray.06@gmail.com'
         ];
-        $emailService->sendContactNotification($contactData);
+        
+        $emailSent = $emailService->sendContactNotification($contactData);
+        
+        if (!$emailSent) {
+            error_log("Contact form email failed to send for: " . $email);
+        }
         
         $response['success'] = true;
         $response['message'] = 'Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.';

@@ -60,6 +60,12 @@
                     </a>
                 </li>
                 
+                <li class="<?php echo $page === 'contact_cards' ? 'active' : ''; ?>">
+                    <a href="?page=contact_cards">
+                        <i class="fas fa-address-card"></i> İletişim Kartları
+                    </a>
+                </li>
+                
                 <li class="<?php echo $page === 'users' ? 'active' : ''; ?>">
                     <a href="?page=users">
                         <i class="fas fa-user-cog"></i> Kullanıcılar

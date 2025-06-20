@@ -10,7 +10,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 }
 
 $page = isset($_GET['page']) ? sanitizeInput($_GET['page']) : 'dashboard';
-$allowed_pages = ['dashboard', 'donations', 'volunteers', 'projects', 'projects_hero', 'news', 'messages', 'users', 'file_manager', 'logs', 'security', 'settings', 'logout'];
+$allowed_pages = ['dashboard', 'donations', 'volunteers', 'projects', 'projects_hero', 'news', 'messages', 'contact_cards', 'users', 'file_manager', 'logs', 'security', 'settings', 'logout'];
 
 if (!in_array($page, $allowed_pages)) {
     $page = 'dashboard';

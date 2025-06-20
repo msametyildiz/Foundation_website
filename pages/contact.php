@@ -2,7 +2,7 @@
 // Veritabanından iletişim bilgilerini çek
 try {
     // Site ayarlarını çek
-    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM site_settings");
+    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings");
     $stmt->execute();
     $site_settings = [];
     while ($row = $stmt->fetch()) {
@@ -19,11 +19,35 @@ try {
         
         if (!empty($name) && !empty($email) && !empty($message) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
             try {
+                // Veritabanına kaydet
                 $stmt = $pdo->prepare("INSERT INTO contact_messages (name, email, phone, subject, message, created_at, status, ip_address) VALUES (?, ?, ?, ?, ?, NOW(), 'new', ?)");
                 $stmt->execute([$name, $email, $phone, $subject, $message, $_SERVER['REMOTE_ADDR'] ?? '']);
                 
-                $success_message = "Mesajınız başarıyla gönderilmiştir. En kısa sürede size dönüş yapacağız.";
+                // E-posta gönder
+                require_once __DIR__ . '/../includes/EmailService.php';
+                $emailService = new EmailService($pdo);
+                
+                // Admin'e bildirim e-postası gönder
+                $emailSent = $emailService->sendContactNotification([
+                    'name' => $name,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'subject' => $subject,
+                    'message' => $message,
+                    'admin_email' => 'samet.saray.06@gmail.com'
+                ]);
+                
+                if ($emailSent) {
+                    $success_message = "Mesajınız başarıyla gönderilmiştir. En kısa sürede size dönüş yapacağız.";
+                } else {
+                    $success_message = "Mesajınız kaydedildi ancak e-posta gönderiminde sorun yaşandı. Telefon ile de iletişime geçebilirsiniz.";
+                }
+                
             } catch (PDOException $e) {
+                error_log("Contact form database error: " . $e->getMessage());
+                $error_message = "Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.";
+            } catch (Exception $e) {
+                error_log("Contact form email error: " . $e->getMessage());
                 $error_message = "Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.";
             }
         } else {
@@ -31,7 +55,7 @@ try {
         }
     }
 
-    // İletişim bilgilerini ayarlardan çek
+    // İletişim bilgilerini ayarlardan çek (geri uyumluluk için)
     $contact_info = [
         'address' => $site_settings['contact_address'] ?? 'Adres bilgisi güncelleniyor...',
         'phone' => $site_settings['contact_phone'] ?? '+90 312 311 65 25',
@@ -45,13 +69,39 @@ try {
         ]
     ];
 
+    // İletişim kartları bilgilerini veritabanından çek
+    $stmt = $pdo->prepare("SELECT * FROM contact_info_cards WHERE is_active = 1 ORDER BY sort_order ASC");
+    $stmt->execute();
+    $contact_cards = $stmt->fetchAll();
+
     // Sosyal medya hesaplarını ayarlardan çek
-    $social_media = [
-        ['platform' => 'Facebook', 'icon' => 'fab fa-facebook-f', 'url' => $site_settings['facebook_url'] ?? '#', 'color' => '#1877f2'],
-        ['platform' => 'Instagram', 'icon' => 'fab fa-instagram', 'url' => $site_settings['instagram_url'] ?? '#', 'color' => '#e4405f'],
-        ['platform' => 'Twitter', 'icon' => 'fab fa-twitter', 'url' => $site_settings['twitter_url'] ?? '#', 'color' => '#1da1f2'],
-        ['platform' => 'LinkedIn', 'icon' => 'fab fa-linkedin-in', 'url' => $site_settings['linkedin_url'] ?? '#', 'color' => '#0077b5']
+    $social_media = [];
+    $social_platforms = [
+        'Facebook' => ['key' => 'social_facebook', 'icon' => 'fab fa-facebook-f', 'color' => '#1877f2', 'base_url' => 'https://facebook.com/'],
+        'Instagram' => ['key' => 'social_instagram', 'icon' => 'fab fa-instagram', 'color' => '#e4405f', 'base_url' => ''],
+        'Twitter' => ['key' => 'social_twitter', 'icon' => 'fab fa-twitter', 'color' => '#1da1f2', 'base_url' => 'https://twitter.com/'],
+        'LinkedIn' => ['key' => 'social_linkedin', 'icon' => 'fab fa-linkedin-in', 'color' => '#0077b5', 'base_url' => 'https://linkedin.com/in/'],
+        'YouTube' => ['key' => 'social_youtube', 'icon' => 'fab fa-youtube', 'color' => '#ff0000', 'base_url' => 'https://youtube.com/@']
     ];
+    
+    foreach ($social_platforms as $platform => $data) {
+        $url = $site_settings[$data['key']] ?? '';
+        
+        // URL formatını düzenle
+        if (!empty($url) && $url !== '#') {
+            // Eğer tam URL değilse base_url ile birleştir
+            if (!str_starts_with($url, 'http') && !empty($data['base_url'])) {
+                $url = $data['base_url'] . ltrim($url, '@');
+            }
+            
+            $social_media[] = [
+                'platform' => $platform,
+                'icon' => $data['icon'],
+                'url' => $url,
+                'color' => $data['color']
+            ];
+        }
+    }
 
 } catch (PDOException $e) {
     $contact_info = [
@@ -60,6 +110,42 @@ try {
         'email' => 'info@necatdernegi.org'
     ];
     $social_media = [];
+    
+    // Fallback iletişim kartları
+    $contact_cards = [
+        [
+            'title' => 'Adresimiz',
+            'content' => 'Fevzipaşa Mahallesi Rüzgarlı Caddesi Plevne Sokak No:14/1 Ulus Altındağ Ankara',
+            'icon' => 'fas fa-map-marker-alt',
+            'button_text' => 'Yol Tarifi',
+            'button_url' => 'https://maps.google.com/?q=Fevzipaşa+Mahallesi+Rüzgarlı+Caddesi+Plevne+Sokak+No:14/1+Ulus+Altındağ+Ankara',
+            'button_type' => 'external'
+        ],
+        [
+            'title' => 'Telefon',
+            'content' => '+90 312 311 65 25',
+            'icon' => 'fas fa-phone',
+            'button_text' => 'Ara',
+            'button_url' => 'tel:+903123116525',
+            'button_type' => 'tel'
+        ],
+        [
+            'title' => 'E-posta',
+            'content' => 'info@necatdernegi.org',
+            'icon' => 'fas fa-envelope',
+            'button_text' => 'Mail Gönder',
+            'button_url' => 'mailto:info@necatdernegi.org',
+            'button_type' => 'email'
+        ],
+        [
+            'title' => 'Çalışma Saatleri',
+            'content' => 'Pazartesi - Cuma: 09:00 - 18:00<br>Cumartesi: 09:00 - 14:00<br>Pazar: Kapalı',
+            'icon' => 'fas fa-clock',
+            'button_text' => null,
+            'button_url' => null,
+            'button_type' => 'link'
+        ]
+    ];
 }
 ?>
 
@@ -115,71 +201,38 @@ try {
         </div>
         
         <div class="row g-4">
+            <?php foreach ($contact_cards as $card): ?>
             <div class="col-lg-3 col-md-6">
                 <div class="contact-info-card text-center">
                     <div class="contact-icon-wrapper mb-4">
                         <div class="contact-icon bg-primary">
-                            <i class="fas fa-map-marker-alt"></i>
+                            <i class="<?= htmlspecialchars($card['icon']) ?>"></i>
                         </div>
                     </div>
-                    <h5 class="contact-card-title">Adresimiz</h5>
-                    <p class="contact-card-text"><?= $contact_info['address'] ?></p>
-                    <a href="https://maps.google.com/?q=<?= urlencode($contact_info['address']) ?>" 
-                       target="_blank" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-directions me-1"></i> Yol Tarifi
-                    </a>
+                    <h5 class="contact-card-title"><?= htmlspecialchars($card['title']) ?></h5>
+                    <p class="contact-card-text"><?= $card['content'] ?></p>
+                    <?php if ($card['button_text'] && $card['button_url']): ?>
+                        <?php 
+                        $button_url = $card['button_url'];
+                        $target = '';
+                        
+                        // URL formatını kontrol et
+                        if ($card['button_type'] === 'external') {
+                            $target = 'target="_blank"';
+                        } elseif ($card['button_type'] === 'tel') {
+                            // Telefon numarasını temizle ve tel: prefix'i ekle
+                            $button_url = 'tel:' . str_replace([' ', '(', ')', '-', '+'], '', $card['button_url']);
+                        }
+                        ?>
+                        <a href="<?= htmlspecialchars($button_url) ?>" 
+                           class="btn btn-outline-primary btn-sm" <?= $target ?>>
+                            <i class="<?= htmlspecialchars($card['icon']) ?> me-1"></i> 
+                            <?= htmlspecialchars($card['button_text']) ?>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
-            
-            <div class="col-lg-3 col-md-6">
-                <div class="contact-info-card text-center">
-                    <div class="contact-icon-wrapper mb-4">
-                        <div class="contact-icon bg-primary">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                    </div>
-                    <h5 class="contact-card-title">Telefon</h5>
-                    <p class="contact-card-text">
-                        <strong>Genel:</strong> <?= $contact_info['phone'] ?><br>
-                        <strong>Acil:</strong> <?= $contact_info['emergency'] ?>
-                    </p>
-                    <a href="tel:<?= str_replace([' ', '(', ')', '-'], '', $contact_info['phone']) ?>" 
-                       class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-phone me-1"></i> Ara
-                    </a>
-                </div>
-            </div>
-            
-            <div class="col-lg-3 col-md-6">
-                <div class="contact-info-card text-center">
-                    <div class="contact-icon-wrapper mb-4">
-                        <div class="contact-icon bg-primary">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                    </div>
-                    <h5 class="contact-card-title">E-posta</h5>
-                    <p class="contact-card-text"><?= $contact_info['email'] ?></p>
-                    <a href="mailto:<?= $contact_info['email'] ?>" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-envelope me-1"></i> Mail Gönder
-                    </a>
-                </div>
-            </div>
-            
-            <div class="col-lg-3 col-md-6">
-                <div class="contact-info-card text-center">
-                    <div class="contact-icon-wrapper mb-4">
-                        <div class="contact-icon bg-primary">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                    </div>
-                    <h5 class="contact-card-title">Çalışma Saatleri</h5>
-                    <p class="contact-card-text">
-                        <?= $contact_info['working_hours']['weekdays'] ?><br>
-                        <?= $contact_info['working_hours']['saturday'] ?><br>
-                        <?= $contact_info['working_hours']['sunday'] ?>
-                    </p>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>
@@ -197,26 +250,26 @@ try {
                         <p class="text-muted">Sorularınızı, önerilerinizi ve görüşlerinizi bizimle paylaşın</p>
                     </div>
                     
-                    <?php if (isset($success_message)): ?>
-                        <div class="alert alert-success alert-dismissible fade show">
-                            <i class="fas fa-check-circle me-2"></i>
-                            <?= $success_message ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if (isset($error_message)): ?>
-                        <div class="alert alert-danger alert-dismissible fade show">
-                            <i class="fas fa-exclamation-circle me-2"></i>
-                            <?= $error_message ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    <?php endif; ?>
-
                     <div class="contact-form-card">
+                        <div id="form-messages">
+                            <?php if (isset($success_message)): ?>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    <?= htmlspecialchars($success_message) ?>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <?php if (isset($error_message)): ?>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <?= htmlspecialchars($error_message) ?>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            <?php endif; ?>
+                        </div>
                         <form method="POST" id="contactForm" novalidate>
                             <input type="hidden" name="action" value="contact">
-                            <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
 
                             <div class="row g-3">
                                 <div class="col-md-6">
@@ -234,20 +287,20 @@ try {
                             <div class="row g-3 mt-1">
                                 <div class="col-md-6">
                                     <label for="phone" class="form-label">Telefon</label>
-                                    <input type="tel" class="form-control" id="phone" name="phone">
+                                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="0555 123 45 67">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="subject" class="form-label">Konu *</label>
                                     <select class="form-select" id="subject" name="subject" required>
                                         <option value="">Konu seçiniz</option>
-                                        <option value="general">Genel Bilgi</option>
-                                        <option value="donation">Bağış Konuları</option>
-                                        <option value="volunteer">Gönüllülük</option>
-                                        <option value="project">Proje Önerisi</option>
-                                        <option value="complaint">Şikayet</option>
-                                        <option value="media">Basın ve Medya</option>
-                                        <option value="partnership">İş Birliği</option>
-                                        <option value="other">Diğer</option>
+                                        <option value="Genel Bilgi">Genel Bilgi</option>
+                                        <option value="Bağış Konuları">Bağış Konuları</option>
+                                        <option value="Gönüllülük">Gönüllülük</option>
+                                        <option value="Proje Önerisi">Proje Önerisi</option>
+                                        <option value="Şikayet">Şikayet</option>
+                                        <option value="Basın ve Medya">Basın ve Medya</option>
+                                        <option value="İş Birliği">İş Birliği</option>
+                                        <option value="Diğer">Diğer</option>
                                     </select>
                                     <div class="invalid-feedback">Lütfen bir konu seçiniz.</div>
                                 </div>
@@ -256,8 +309,8 @@ try {
                             <div class="mt-3">
                                 <label for="message" class="form-label">Mesajınız *</label>
                                 <textarea class="form-control" id="message" name="message" rows="5" 
-                                          placeholder="Mesajınızı buraya yazınız..." required></textarea>
-                                <div class="invalid-feedback">Lütfen mesajınızı yazınız.</div>
+                                          placeholder="Mesajınızı buraya yazınız..." required minlength="10"></textarea>
+                                <div class="invalid-feedback">Lütfen mesajınızı yazınız (en az 10 karakter).</div>
                             </div>
 
                             <div class="mt-4">
@@ -271,7 +324,7 @@ try {
                             </div>
 
                             <div class="mt-4 text-center">
-                                <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
                                     <i class="fas fa-paper-plane me-2"></i>
                                     Mesaj Gönder
                                 </button>
@@ -314,8 +367,7 @@ try {
                             </div>
                             <div class="transport-option">
                                 <i class="fas fa-car text-warning me-2"></i>
-                                <strong>Araç:</strong> Sıhhiye tarafından geliyorsanız: Atatürk Bulvarı üzerinden Ulus'a doğru ilerleyin, Anafartalar Çarşısı'nın olduğu sapaktan Rüzgarlı Cadde'ye dönün.
-Samsun Yolu veya Çankırı Caddesi üzerinden geliyorsanız: Ulus heykeli kavşağından Anafartalar
+                                <strong>Araç:</strong> Sıhhiye tarafından geliyorsanız: Atatürk Bulvarı üzerinden Ulus'a doğru ilerleyin, Anafartalar Çarşısı'nın olduğu sapaktan Rüzgarlı Cadde'ye dönün.Samsun Yolu veya Çankırı Caddesi üzerinden geliyorsanız: Ulus heykeli kavşağından Anafartalar
                             </div>
                             <div class="transport-option">
                                 <i class="fas fa-parking text-secondary me-2"></i>
@@ -524,6 +576,93 @@ Samsun Yolu veya Çankırı Caddesi üzerinden geliyorsanız: Ulus heykeli kavş
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const formMessages = document.getElementById('form-messages');
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Form validation
+            if (!contactForm.checkValidity()) {
+                e.stopPropagation();
+                contactForm.classList.add('was-validated');
+                showMessage('Lütfen tüm zorunlu alanları doğru şekilde doldurun.', 'danger');
+                return;
+            }
+
+            // Disable submit button and show loading
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Gönderiliyor...';
+
+            // Create FormData
+            const formData = new FormData(contactForm);
+
+            // Send AJAX request
+            fetch('ajax/forms.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    contactForm.reset();
+                    contactForm.classList.remove('was-validated');
+                    
+                    // Scroll to success message
+                    formMessages.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    showMessage(data.message, 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('Bir hata oluştu. Lütfen tekrar deneyin.', 'danger');
+            })
+            .finally(() => {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            });
+        });
+    }
+
+    function showMessage(message, type) {
+        const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+        const iconClass = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+        
+        formMessages.innerHTML = `
+            <div class="alert ${alertClass} alert-dismissible fade show">
+                <i class="${iconClass} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+    }
+
+    // Privacy checkbox click handler - önce KVKK modalını aç
+    const privacyCheckbox = document.getElementById('privacy');
+    if (privacyCheckbox) {
+        privacyCheckbox.addEventListener('click', function(e) {
+            // Checkbox'ın işaretlenmesini engelle
+            e.preventDefault();
+            // KVKK modalını aç
+            showKVKKModal();
+        });
+    }
+
+    // Tarih input'unu bugünden sonrası için sınırla
+    const dateInput = document.getElementById('appointment_date');
+    if (dateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+    }
+});
+
 function showAppointmentModal() {
     new bootstrap.Modal(document.getElementById('appointmentModal')).show();
 }
@@ -539,7 +678,7 @@ function submitAppointment() {
     }
     
     // AJAX ile randevu talebi gönder
-    fetch('/ajax/appointment.php', {
+    fetch('ajax/appointment.php', {
         method: 'POST',
         body: formData
     })
@@ -558,22 +697,6 @@ function submitAppointment() {
         alert('Bir hata oluştu.');
     });
 }
-
-// Tarih input'unu bugünden sonrası için sınırla
-document.addEventListener('DOMContentLoaded', function() {
-    const dateInput = document.getElementById('appointment_date');
-    const today = new Date().toISOString().split('T')[0];
-    dateInput.setAttribute('min', today);
-    
-    // Privacy checkbox click handler - önce KVKK modalını aç
-    const privacyCheckbox = document.getElementById('privacy');
-    privacyCheckbox.addEventListener('click', function(e) {
-        // Checkbox'ın işaretlenmesini engelle
-        e.preventDefault();
-        // KVKK modalını aç
-        showKVKKModal();
-    });
-});
 
 function showKVKKModal() {
     new bootstrap.Modal(document.getElementById('kvkkModal')).show();

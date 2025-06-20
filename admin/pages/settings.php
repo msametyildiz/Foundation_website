@@ -307,7 +307,7 @@ $security_settings = [
                                         <span class="input-group-text"><i class="fab fa-facebook-f"></i></span>
                                         <input type="url" name="social_facebook" class="form-control" 
                                                value="<?php echo htmlspecialchars($site_settings['social_facebook']); ?>" 
-                                               placeholder="https://facebook.com/...">
+                                               placeholder="https://facebook.com/... veya sayfa adı">
                                     </div>
                                 </div>
                                 
@@ -317,7 +317,7 @@ $security_settings = [
                                         <span class="input-group-text"><i class="fab fa-twitter"></i></span>
                                         <input type="url" name="social_twitter" class="form-control" 
                                                value="<?php echo htmlspecialchars($site_settings['social_twitter']); ?>" 
-                                               placeholder="https://twitter.com/...">
+                                               placeholder="https://twitter.com/... veya kullanıcı adı">
                                     </div>
                                 </div>
                                 
@@ -327,7 +327,7 @@ $security_settings = [
                                         <span class="input-group-text"><i class="fab fa-instagram"></i></span>
                                         <input type="url" name="social_instagram" class="form-control" 
                                                value="<?php echo htmlspecialchars($site_settings['social_instagram']); ?>" 
-                                               placeholder="https://instagram.com/...">
+                                               placeholder="https://instagram.com/... veya kullanıcı adı">
                                     </div>
                                 </div>
                                 
@@ -337,7 +337,17 @@ $security_settings = [
                                         <span class="input-group-text"><i class="fab fa-linkedin-in"></i></span>
                                         <input type="url" name="social_linkedin" class="form-control" 
                                                value="<?php echo htmlspecialchars($site_settings['social_linkedin']); ?>" 
-                                               placeholder="https://linkedin.com/company/...">
+                                               placeholder="https://linkedin.com/company/... veya kullanıcı adı">
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label">YouTube</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fab fa-youtube"></i></span>
+                                        <input type="url" name="social_youtube" class="form-control" 
+                                               value="<?php echo htmlspecialchars($site_settings['social_youtube']); ?>" 
+                                               placeholder="https://youtube.com/@... veya kanal adı">
                                     </div>
                                 </div>
                                 
