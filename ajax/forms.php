@@ -90,7 +90,7 @@ function handleContactForm() {
         }
         
         $response['success'] = true;
-        $response['message'] = 'Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.';
+        $response['message'] = 'Mesajınız başarıyla iletildi! Kısa süre içinde tarafınıza dönüş yapılacaktır.';
         
     } catch (PDOException $e) {
         $response['message'] = 'Veritabanı hatası: ' . $e->getMessage();

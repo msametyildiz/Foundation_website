@@ -561,7 +561,7 @@ class EmailService {
                             <tr>
                                 <td style="background: #059669; padding: 32px 24px; text-align: center; color: #ffffff;">
                                     <h1 style="margin: 0 0 8px 0; font-size: 24px; font-weight: 600; color: #ffffff;">NECAT DERNEĞİ</h1>
-                                    <p style="margin: 0; font-size: 16px; color: #d1fae5;">Mesajınız Alındı!</p>
+                                    <p style="margin: 0; font-size: 16px; color: #d1fae5;">İletişim Talebiniz Alındı</p>
                                 </td>
                             </tr>
                             
@@ -629,11 +629,6 @@ class EmailService {
                                                         </td>
                                                     </tr>
                                                 </table>
-                                                <div style="margin-top: 12px;">
-                                                    <p style="margin: 0; font-size: 13px; color: #6b7280;">
-                                                        <strong>Çalışma Saatleri:</strong> Pazartesi - Cuma: 09:00 - 17:00
-                                                    </p>
-                                                </div>
                                             </td>
                                         </tr>
                                     </table>

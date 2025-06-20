@@ -136,14 +136,6 @@ try {
             'button_text' => 'Mail Gönder',
             'button_url' => 'mailto:info@necatdernegi.org',
             'button_type' => 'email'
-        ],
-        [
-            'title' => 'Çalışma Saatleri',
-            'content' => 'Pazartesi - Cuma: 09:00 - 18:00<br>Cumartesi: 09:00 - 14:00<br>Pazar: Kapalı',
-            'icon' => 'fas fa-clock',
-            'button_text' => null,
-            'button_url' => null,
-            'button_type' => 'link'
         ]
     ];
 }
@@ -581,6 +573,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submitBtn');
     const formMessages = document.getElementById('form-messages');
 
+    // Add slide animation styles
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideInFromTop {
+            0% {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert {
+            transition: all 0.3s ease;
+        }
+    `;
+    document.head.appendChild(style);
+
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -635,13 +647,81 @@ document.addEventListener('DOMContentLoaded', function() {
         const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
         const iconClass = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
         
-        formMessages.innerHTML = `
-            <div class="alert ${alertClass} alert-dismissible fade show">
-                <i class="${iconClass} me-2"></i>
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        `;
+        // Create professional success message with elegant styling
+        if (type === 'success') {
+            formMessages.innerHTML = `
+                <div class="alert alert-success border-0 shadow-sm" style="
+                    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); 
+                    border-left: 4px solid #059669 !important;
+                    border-radius: 12px;
+                    animation: slideInFromTop 0.5s ease-out;
+                ">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <div style="
+                                background: #059669; 
+                                width: 48px; 
+                                height: 48px; 
+                                border-radius: 50%; 
+                                display: flex; 
+                                align-items: center; 
+                                justify-content: center;
+                                box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+                            ">
+                                <i class="fas fa-check text-white" style="font-size: 20px;"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1 fw-bold" style="color: #065f46;">Mesajınız Başarıyla Alındı!</h5>
+                            <p class="mb-0" style="color: #047857; font-size: 14px;">${message}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Auto-hide success message after 6 seconds with fade out animation
+            setTimeout(() => {
+                const alertElement = formMessages.querySelector('.alert');
+                if (alertElement) {
+                    alertElement.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                    alertElement.style.opacity = '0';
+                    alertElement.style.transform = 'translateY(-20px)';
+                    
+                    setTimeout(() => {
+                        formMessages.innerHTML = '';
+                    }, 500);
+                }
+            }, 6000);
+        } else {
+            formMessages.innerHTML = `
+                <div class="alert alert-danger border-0 shadow-sm" style="
+                    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); 
+                    border-left: 4px solid #dc2626 !important;
+                    border-radius: 12px;
+                ">
+                    <div class="d-flex align-items-center">
+                        <div class="me-3">
+                            <div style="
+                                background: #dc2626; 
+                                width: 48px; 
+                                height: 48px; 
+                                border-radius: 50%; 
+                                display: flex; 
+                                align-items: center; 
+                                justify-content: center;
+                            ">
+                                <i class="fas fa-exclamation text-white" style="font-size: 20px;"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1 fw-bold" style="color: #991b1b;">Bir Hata Oluştu</h5>
+                            <p class="mb-0" style="color: #dc2626; font-size: 14px;">${message}</p>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" style="opacity: 0.8;"></button>
+                    </div>
+                </div>
+            `;
+        }
     }
 
     // Privacy checkbox click handler - önce KVKK modalını aç

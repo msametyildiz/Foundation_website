@@ -517,7 +517,7 @@ try {
                             </div>
                             <div class="contact-text">
                                 <?= htmlspecialchars($site_settings['contact_phone'] ?? '+90 312 444 56 78') ?><br>
-                                <small>Pazartesi - Cuma: 09:00 - 18:00</small>
+                                <small>Destek ve bilgi hattı</small>
                             </div>
                         </div>
                         <div class="contact-item">
