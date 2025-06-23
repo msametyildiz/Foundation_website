@@ -485,58 +485,12 @@ try {
                         <li><a href="#"><i class="fas fa-heart"></i> Bağış Yap</a></li>
                     </ul>
                 </div>
-
-                <!-- Corporate -->
-                <div class="footer-section">
-                    <h4>Kurumsal</h4>
-                    <ul class="footer-links">
-                        <li><a href="#"><i class="fas fa-newspaper"></i> Basında Biz</a></li>
-                        <li><a href="#"><i class="fas fa-file-alt"></i> Belgelerimiz</a></li>
-                        <li><a href="#"><i class="fas fa-users"></i> Yönetim Kurulu</a></li>
-                        <li><a href="#"><i class="fas fa-balance-scale"></i> Gizlilik Politikası</a></li>
-                        <li><a href="#"><i class="fas fa-handshake"></i> İş Ortaklıkları</a></li>
-                        <li><a href="#"><i class="fas fa-award"></i> Başarılarımız</a></li>
-                    </ul>
-                </div>
-
-                <!-- Contact -->
-                <div class="footer-section">
-                    <h4>İletişim</h4>
-                    <div class="footer-contact">
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </div>
-                            <div class="contact-text">
-                                <?= nl2br(htmlspecialchars($site_settings['contact_address'] ?? 'Kızılay Mahallesi, Atatürk Bulvarı No: 125/7<br>Çankaya/ANKARA')) ?>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <i class="fas fa-phone"></i>
-                            </div>
-                            <div class="contact-text">
-                                <?= htmlspecialchars($site_settings['contact_phone'] ?? '+90 312 444 56 78') ?><br>
-                                <small>Destek ve bilgi hattı</small>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                            <div class="contact-text">
-                                <?= htmlspecialchars($site_settings['contact_email'] ?? 'info@necatdernegi.org') ?><br>
-                                <small>24 saat içinde yanıtlanır</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Footer Bottom -->
             <div class="footer-bottom">
                 <div class="footer-copyright">
-                    &copy; <span id="currentYear">2024</span> Necat Derneği. Tüm hakları saklıdır.
+                    &copy; <span id="currentYear">2025</span> Necat Derneği. Tüm hakları saklıdır.
                 </div>
             </div>
         </div>
