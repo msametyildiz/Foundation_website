@@ -170,10 +170,17 @@ class EmailService {
             $adminEmail = $this->settings['admin_email'] ?? 'admin@necatdernegi.org';
             $mail->addAddress($adminEmail);
             
+            // Eğer dekont dosyası varsa ekle
+            if (!empty($donationData['receipt_file'])) {
+                $receiptPath = dirname(__DIR__) . '/uploads/receipts/' . $donationData['receipt_file'];
+                if (file_exists($receiptPath)) {
+                    $mail->addAttachment($receiptPath, $donationData['receipt_file']);
+                }
+            }
             $mail->isHTML(true);
             $mail->Subject = 'Yeni Bağış - ' . number_format($donationData['amount'], 2) . ' TL';
             
-            $body = $this->getDonationEmailTemplate($donationData);
+            $body = $this->getDonationEmailTemplate($donationData, true); // true: ekli gönderim
             $mail->Body = $body;
             $mail->AltBody = strip_tags($body);
             
@@ -574,11 +581,8 @@ class EmailService {
                                         <tr>
                                             <td style="background: #ecfdf5; padding: 20px; border-radius: 6px; border-left: 4px solid #10b981; text-align: center;">
                                                 <h2 style="margin: 0 0 12px 0; color: #047857; font-size: 20px; font-weight: 600;">Sayın ' . htmlspecialchars($data['name']) . ',</h2>
-                                                <p style="margin: 0 0 12px 0; color: #047857; font-size: 16px; font-weight: 500;">
-                                                    Necat Derneği\'ne göndermiş olduğunuz mesajınız başarıyla alınmıştır!
-                                                </p>
                                                 <p style="margin: 0; color: #374151; font-size: 15px;">
-                                                    İlginiz ve güveniniz için teşekkür ederiz. Deneyimli ekibimiz mesajınızı inceleyerek size en uygun şekilde yanıt verecektir.
+                                                    Necat Derneği\'ne göndermiş olduğunuz mesajınız başarıyla alınmıştır! İlginiz ve güveniniz için teşekkür ederiz.
                                                 </p>
                                             </td>
                                         </tr>
@@ -752,15 +756,15 @@ class EmailService {
                                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                         <tr>
                                             <td style="text-align: center; padding-bottom: 20px;">
-                                                <div style="background: rgba(255,255,255,0.15); display: inline-block; padding: 12px 24px; border-radius: 50px; backdrop-filter: blur(10px);">
-                                                    <span style="font-size: 24px; font-weight: 700; color: #ffffff; letter-spacing: 1px;"> NECAT DERNEĞİ</span>
+                                                <div style="background: rgba(255,255,255,0.2); display: inline-block; padding: 12px 24px; border-radius: 50px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);">
+                                                    <span style="font-size: 26px; font-weight: 800; color: #ffffff; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);"> NECAT DERNEĞİ</span>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="text-align: center;">
                                                 <h1 style="margin: 0; font-size: 32px; font-weight: 700; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Yeni Gönüllü Başvurusu</h1>
-                                                <p style="margin: 12px 0 0 0; font-size: 16px; color: rgba(255,255,255,0.9); font-weight: 500;">Birlikte güçlüyüz, birlikte değişiyoruz</p>
+                                                <p style="margin: 12px 0 0 0; font-size: 16px; color: rgba(255,255,255,0.9); font-weight: 600;">Birlikte güçlüyüz, birlikte değişiyoruz</p>
                                             </td>
                                         </tr>
                                     </table>
@@ -918,10 +922,7 @@ class EmailService {
                                                             </table>
                                                         </td>
                                                     </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>';
+                                                </table>';
             
         if (!empty($data['experience'])) {
             $emailContent .= '
@@ -1189,9 +1190,7 @@ class EmailService {
                                     </table>
                                 </td>
                             </tr>
-                            
-                            
-                            
+            
                             <!-- Main Content -->
                             <tr>
                                 <td style="padding: 40px 30px;" class="mobile-padding">
@@ -1439,7 +1438,18 @@ class EmailService {
         </body>
         </html>';
     }
-    private function getDonationEmailTemplate($data) {
+    
+    private function getDonationEmailTemplate($data, $asAttachment = false) {
+        // Mesaj (varsa)
+        $messageHtml = '';
+        if (!empty($data['message'])) {
+            $messageHtml = '<p><strong>Mesaj:</strong> ' . nl2br(htmlspecialchars($data['message'])) . '</p>';
+        }
+        // Dekont bilgisini sadece ekli gönderimde göster
+        $receiptHtml = '';
+        if (!empty($data['receipt_file']) && $asAttachment) {
+            $receiptHtml = '<p><strong>Dekont:</strong> Ekteki dosyada</p>';
+        }
         return '
         <!DOCTYPE html>
         <html>
@@ -1531,11 +1541,12 @@ class EmailService {
                         ' . number_format($data['amount'], 2) . ' TL
                     </div>
                     <div class="info-box">
-                        <p><strong>Bağışçı:</strong> ' . htmlspecialchars($data['donor_name']) . '</p>
+                        <p><strong>Ad Soyad:</strong> ' . htmlspecialchars($data['donor_name']) . '</p>
                         <p><strong>E-posta:</strong> <a href="mailto:' . htmlspecialchars($data['email'] ?? 'Belirtilmemiş') . '" style="color: #2c5aa0; text-decoration: none;">' . htmlspecialchars($data['email'] ?? 'Belirtilmemiş') . '</a></p>
                         <p><strong>Telefon:</strong> ' . htmlspecialchars($data['phone'] ?? 'Belirtilmemiş') . '</p>
-                        <p><strong>Proje:</strong> ' . htmlspecialchars($data['project_name'] ?? 'Genel Bağış') . '</p>
-                        <p><strong>Ödeme Yöntemi:</strong> ' . htmlspecialchars($data['payment_method'] ?? 'Belirtilmemiş') . '</p>
+                        <p><strong>Bağış Türü:</strong> ' . htmlspecialchars($data['donation_type'] ?? 'Genel Bağış') . '</p>
+                        ' . $messageHtml . '
+                        ' . $receiptHtml . '
                         <p><strong>Tarih:</strong> ' . date('d.m.Y H:i:s') . '</p>
                     </div>
                 </div>
@@ -1632,7 +1643,7 @@ class EmailService {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Bağışınız İçin Teşekkürler</h1>
+                    <h1>Bağışınız için Teşekkürler</h1>
                 </div>
                 <div class="content">
                     <p>Sayın <strong>' . htmlspecialchars($data['donor_name']) . '</strong>,</p>

@@ -243,14 +243,25 @@ function handleDonationForm() {
         ]);
         // E-posta bildirimi (isteğe bağlı)
         if ($donor_email) {
+            // Bağış türü adını çek
+            $donation_type_name = null;
+            $type_stmt = $pdo->prepare("SELECT name FROM donation_types WHERE id = ? LIMIT 1");
+            $type_stmt->execute([$donation_type_id]);
+            $type_row = $type_stmt->fetch(PDO::FETCH_ASSOC);
+            if ($type_row) {
+                $donation_type_name = $type_row['name'];
+            } else {
+                $donation_type_name = 'Bilinmiyor';
+            }
             $emailService = new EmailService($pdo);
             $donationData = [
                 'amount' => $amount,
                 'donor_name' => $donor_name,
                 'email' => $donor_email,
                 'phone' => $donor_phone,
-                'project_name' => $donation_type_id,
-                'payment_method' => 'Banka Havalesi/EFT'
+                'donation_type' => $donation_type_name,
+                'message' => $message,
+                'receipt_file' => $receipt_file
             ];
             $emailService->sendDonationNotification($donationData);
         }
