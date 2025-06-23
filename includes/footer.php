@@ -18,10 +18,10 @@ try {
         'contact_email' => 'info@necatdernegi.org',
         'contact_phone' => '+90 312 444 56 78',
         'contact_address' => 'Kızılay Mahallesi, Atatürk Bulvarı No: 125/7, Çankaya/ANKARA',
-        'social_facebook' => '#',
-        'social_twitter' => '#',
         'social_instagram' => '#',
-        'social_linkedin' => '#'
+        'social_twitter' => '#',
+        'social_linkedin' => '#',
+        'social_youtube' => '#'
     ];
 }
 ?>
@@ -58,11 +58,12 @@ try {
         /* Modern Footer */
         .footer-modern {
             position: relative;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            color: var(--gray-800);
+            background: #f8f9fa;
+            color: var(--gray-700);
             overflow: hidden;
             margin-top: auto;
-            border-top: 1px solid var(--gray-200);
+            border-top: 1px solid #e9ecef;
+            padding: 4rem 0 2rem 0;
         }
 
         .footer-modern::before {
@@ -72,10 +73,7 @@ try {
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: 
-                radial-gradient(circle at 20% 20%, rgba(78, 166, 116, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(211, 217, 43, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 40% 60%, rgba(242, 229, 41, 0.03) 0%, transparent 50%);
+            background: linear-gradient(45deg, rgba(78, 166, 116, 0.02) 0%, rgba(211, 217, 43, 0.02) 100%);
             z-index: 1;
         }
 
@@ -273,6 +271,43 @@ try {
         }
 
         /* Contact Section */
+        .footer-contact-section .contact-info {
+            background: transparent;
+        }
+
+        .footer-contact-section .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            border-radius: var(--radius-lg);
+            transition: var(--transition-base);
+        }
+
+        .footer-contact-section .contact-item:hover {
+            background: rgba(78, 166, 116, 0.03);
+        }
+
+        .footer-contact-section .contact-item i {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .footer-contact-section .contact-item span,
+        .footer-contact-section .contact-item .contact-label {
+            font-size: 0.95rem;
+            color: var(--gray-600);
+            line-height: 1.4;
+        }
+
         .footer-contact {
             background: rgba(78, 166, 116, 0.03);
             backdrop-filter: blur(10px);
@@ -438,19 +473,17 @@ try {
                         </div>
                         <div class="footer-brand-text">
                             <h3>Necat Derneği</h3>
-                            <span class="footer-brand-tagline">Yardım & Dayanışma</span>
                         </div>
                     </div>
                     <p class="footer-description">
-                        <?= htmlspecialchars($site_settings['site_description'] ?? 'Yardım eli uzatan, umut dağıtan bir toplum için birlikte çalışıyoruz. İhtiyaç sahiplerine ulaşan her elinde, gönüllerin birleştiği bir dünya inşa ediyoruz.') ?>
+                        <?= htmlspecialchars($site_settings['site_description'] ?? 'Yardım & Dayanışma ruhuyla elinizi iyilik için uzatın. Topluma faydalı projelerle daha iyi bir gelecek inşa ediyoruz.') ?>
                     </p>
                     <div class="footer-social">
                         <?php
                         // Sosyal medya linklerini formatla
                         $social_links = [
-                            'Facebook' => ['key' => 'social_facebook', 'icon' => 'fab fa-facebook-f', 'base_url' => 'https://facebook.com/', 'label' => 'Facebook'],
+                            'Instagram' => ['key' => 'social_instagram', 'icon' => 'fab fa-instagram', 'base_url' => 'https://instagram.com/', 'label' => 'Instagram'],
                             'Twitter' => ['key' => 'social_twitter', 'icon' => 'fab fa-twitter', 'base_url' => 'https://twitter.com/', 'label' => 'Twitter'],
-                            'Instagram' => ['key' => 'social_instagram', 'icon' => 'fab fa-instagram', 'base_url' => '', 'label' => 'Instagram'],
                             'LinkedIn' => ['key' => 'social_linkedin', 'icon' => 'fab fa-linkedin-in', 'base_url' => 'https://linkedin.com/in/', 'label' => 'LinkedIn'],
                             'YouTube' => ['key' => 'social_youtube', 'icon' => 'fab fa-youtube', 'base_url' => 'https://youtube.com/@', 'label' => 'YouTube']
                         ];
@@ -473,17 +506,44 @@ try {
                     </div>
                 </div>
 
-                <!-- Quick Links -->
+                <!-- Hızlı Bağlantılar -->
                 <div class="footer-section">
-                    <h4>Hızlı Linkler</h4>
+                    <h4>Hızlı Bağlantılar</h4>
                     <ul class="footer-links">
-                        <li><a href="#"><i class="fas fa-home"></i> Ana Sayfa</a></li>
-                        <li><a href="#"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
-                        <li><a href="#"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
-                        <li><a href="#"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
-                        <li><a href="#"><i class="fas fa-question-circle"></i> SSS</a></li>
-                        <li><a href="#"><i class="fas fa-heart"></i> Bağış Yap</a></li>
+                        <li><a href="index.php"><i class="fas fa-home"></i> Ana Sayfa</a></li>
+                        <li><a href="index.php?page=about"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
+                        <li><a href="index.php?page=projects"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
+                        <li><a href="index.php?page=volunteer"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
                     </ul>
+                </div>
+
+                <!-- Daha Fazla -->
+                <div class="footer-section">
+                    <h4>Daha Fazla</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.php?page=faq"><i class="fas fa-question-circle"></i> SSS</a></li>
+                        <li><a href="index.php?page=contact"><i class="fas fa-envelope"></i> İletişim</a></li>
+                        <li><a href="index.php?page=donate"><i class="fas fa-heart"></i> Bağış Yap</a></li>
+                    </ul>
+                </div>
+
+                <!-- Bize Ulaşın -->
+                <div class="footer-section footer-contact-section">
+                    <h4>Bize Ulaşın</h4>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span><?= htmlspecialchars($site_settings['contact_address'] ?? 'Kızılay Mahallesi, Atatürk Bulvarı No: 125/7, Çankaya/ANKARA') ?></span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span><?= htmlspecialchars($site_settings['contact_phone'] ?? '+90 312 444 56 78') ?></span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span><?= htmlspecialchars($site_settings['contact_email'] ?? 'info@necatdernegi.org') ?></span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
