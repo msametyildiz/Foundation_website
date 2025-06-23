@@ -490,7 +490,7 @@ try {
             <!-- Footer Bottom -->
             <div class="footer-bottom">
                 <div class="footer-copyright">
-                    &copy; <span id="currentYear">2025</span> Necat Derneği. Tüm hakları saklıdır.
+                    &copy; <span id="currentYear">2024</span> Necat Derneği. Tüm hakları saklıdır.
                 </div>
             </div>
         </div>
