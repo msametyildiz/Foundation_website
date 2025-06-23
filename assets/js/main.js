@@ -174,7 +174,11 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showAlert('success', 'Dekontunuz başarıyla yüklendi. En kısa zamanda sizinle iletişime geçilecektir!');
+                    // Form verilerinden ad soyad bilgisini al
+                    const donorName = document.getElementById('donor_name')?.value || 'Değerli Bağışçımız';
+                    const personalizedMessage = `Sayın ${donorName}, bağışınız başarıyla kaydedilmiştir. İhtiyaç sahiplerine yapmış olduğunuz bu değerli bağış için içtenlikle teşekkür ederiz. Dekont bilgileriniz güvenle alınmış olup, değerlendirme sürecinden sonra tarafınızla iletişime geçilecektir.`;
+                    
+                    showAlert('success', personalizedMessage);
                     donationForm.reset();
                     // Bootstrap validasyon class'larını temizle
                     donationForm.classList.remove('was-validated');
@@ -195,28 +199,147 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Show alert function
+    // Show alert function - Popup Style
     function showAlert(type, message) {
-        const alertContainer = document.getElementById('alert-container') || createAlertContainer();
-        
-        const alert = document.createElement('div');
-        alert.className = `alert alert-${type} alert-dismissible fade show`;
-        alert.innerHTML = `
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        // Overlay oluştur
+        const overlay = document.createElement('div');
+        overlay.className = 'alert-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         `;
         
-        alertContainer.appendChild(alert);
+        // Alert popup oluştur
+        const alertPopup = document.createElement('div');
+        alertPopup.className = `alert-popup alert-popup-${type}`;
         
-        // Auto remove alert after 5 seconds
-        setTimeout(() => {
-            if (alert.parentNode) {
-                alert.remove();
+        // Type'a göre icon ve renk belirleme
+        const alertConfig = {
+            'success': { icon: 'fas fa-check-circle', color: '#4ea674', bgColor: '#f0fdf4' },
+            'danger': { icon: 'fas fa-exclamation-triangle', color: '#dc3545', bgColor: '#fef2f2' },
+            'warning': { icon: 'fas fa-exclamation-circle', color: '#f59e0b', bgColor: '#fffbeb' },
+            'info': { icon: 'fas fa-info-circle', color: '#3b82f6', bgColor: '#eff6ff' }
+        };
+        
+        const config = alertConfig[type] || alertConfig.info;
+        
+        alertPopup.style.cssText = `
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transform: scale(0.8) translateY(-20px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid ${config.color};
+            position: relative;
+        `;
+        
+        alertPopup.innerHTML = `
+            <div style="
+                width: 60px;
+                height: 60px;
+                background: ${config.bgColor};
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1.5rem auto;
+                border: 3px solid ${config.color};
+            ">
+                <i class="${config.icon}" style="font-size: 24px; color: ${config.color};"></i>
+            </div>
+            <div style="
+                font-size: 16px;
+                line-height: 1.6;
+                color: #374151;
+                margin-bottom: 1.5rem;
+                max-height: 200px;
+                overflow-y: auto;
+            ">${message}</div>
+            <button type="button" class="alert-close-btn" style="
+                background: ${config.color};
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 14px;
+            ">
+                Tamam
+            </button>
+        `;
+        
+        overlay.appendChild(alertPopup);
+        document.body.appendChild(overlay);
+        
+        // Animasyon başlat
+        requestAnimationFrame(() => {
+            overlay.style.opacity = '1';
+            alertPopup.style.transform = 'scale(1) translateY(0)';
+        });
+        
+        // Kapatma fonksiyonu
+        const closeAlert = () => {
+            overlay.style.opacity = '0';
+            alertPopup.style.transform = 'scale(0.8) translateY(-20px)';
+            setTimeout(() => {
+                if (overlay.parentNode) {
+                    overlay.remove();
+                }
+            }, 300);
+        };
+        
+        // Event listeners
+        const closeBtn = alertPopup.querySelector('.alert-close-btn');
+        closeBtn.addEventListener('click', closeAlert);
+        
+        // Hover effect for button
+        closeBtn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = `0 4px 15px ${config.color}40`;
+        });
+        
+        closeBtn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+        
+        // Overlay'e tıklayınca kapat
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeAlert();
             }
-        }, 5000);
+        });
+        
+        // ESC tuşu ile kapat
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                closeAlert();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+        
+        // 7 saniye sonra otomatik kapat
+        setTimeout(closeAlert, 7000);
     }
 
-    // Create alert container if it doesn't exist
+    // Create alert container if it doesn't exist (eski fonksiyon - artık kullanılmıyor)
     function createAlertContainer() {
         const container = document.createElement('div');
         container.id = 'alert-container';

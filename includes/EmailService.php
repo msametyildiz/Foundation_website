@@ -1581,7 +1581,7 @@ class EmailService {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>🎉 Yeni Bağış Alındı</h1>
+                    <h1>Yeni Bağış Alındı</h1>
                     <p>Necat Derneği</p>
                 </div>
                 
@@ -1621,9 +1621,42 @@ class EmailService {
                     ' . $messageHtml . '
                     ' . $receiptHtml . '
                     
-                    <div style="text-align: center; margin-top: 32px;">
-                        <a href="mailto:' . htmlspecialchars($data['email'] ?? '') . '" class="button">📧 Bağışçıya Yanıt Gönder</a>
-                    </div>
+                    <!-- Professional Action Button -->
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 32px;">
+                        <tr>
+                            <td align="center" style="padding: 20px;">
+                                <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
+                                    <tr>
+                                        <td style="background: linear-gradient(135deg, #4ea674 0%, #3d8760 100%); border-radius: 12px; box-shadow: 0 4px 20px rgba(78, 166, 116, 0.3); transition: all 0.3s ease;">
+                                            <a href="mailto:' . htmlspecialchars($data['email'] ?? '') . '" style="
+                                                display: inline-block;
+                                                padding: 16px 32px;
+                                                color: #ffffff;
+                                                font-size: 16px;
+                                                font-weight: 600;
+                                                text-decoration: none;
+                                                border-radius: 12px;
+                                                letter-spacing: 0.5px;
+                                                text-align: center;
+                                                min-width: 200px;
+                                                border: 2px solid transparent;
+                                                position: relative;
+                                                background: linear-gradient(135deg, #4ea674 0%, #3d8760 100%);
+                                                box-shadow: 0 4px 15px rgba(78, 166, 116, 0.2);
+                                                transition: all 0.3s ease;
+                                            " onmouseover="this.style.transform=\'translateY(-2px)\'; this.style.boxShadow=\'0 8px 25px rgba(78, 166, 116, 0.4)\';" onmouseout="this.style.transform=\'translateY(0)\'; this.style.boxShadow=\'0 4px 15px rgba(78, 166, 116, 0.2)\';">
+                                                <span style="display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                                                    <span>Bağışçıya Yanıt Gönder</span>
+                                                </span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                                
+                            </td>
+                        </tr>
+                    </table>
                 </div>
                  <div class="footer">
                     <p style="margin: 0 0 8px 0;">Bu e-posta otomatik olarak gönderilmiştir.</p>
@@ -1757,7 +1790,7 @@ class EmailService {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>🙏 Teşekkürler!</h1>
+                    <h1>Bağışınız İçin Teşekkürler!</h1>
                     <p>Necat Derneği</p>
                 </div>
                 
