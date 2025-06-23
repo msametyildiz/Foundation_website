@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Contact form submission
-    const contactForm = document.getElementById('contact-form');
+    const contactForm = document.getElementById('contactForm');
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -90,19 +90,31 @@ document.addEventListener('DOMContentLoaded', function() {
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             
+            // Form validation
+            if (!contactForm.checkValidity()) {
+                e.stopPropagation();
+                contactForm.classList.add('was-validated');
+                showAlert('danger', 'Lütfen tüm zorunlu alanları doğru şekilde doldurun.');
+                return;
+            }
+            
             // Show loading state
             submitBtn.innerHTML = '<span class="loading"></span> Gönderiliyor...';
             submitBtn.disabled = true;
             
-            fetch('ajax/contact.php', {
+            fetch('ajax/forms.php', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showAlert('success', 'Mesajınız başarıyla gönderildi!');
+                    // Extract name for personalized message
+                    const contactName = formData.get('name') || 'Değerli ziyaretçimiz';
+                    const personalizedMessage = `Sayın ${contactName}, mesajınız başarıyla iletildi! Kısa süre içinde tarafınıza dönüş yapılacaktır. Bizimle iletişime geçtiğiniz için teşekkür ederiz.`;
+                    showAlert('success', personalizedMessage);
                     contactForm.reset();
+                    contactForm.classList.remove('was-validated');
                 } else {
                     showAlert('danger', data.message || 'Bir hata oluştu!');
                 }
@@ -118,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Volunteer form submission
-    const volunteerForm = document.getElementById('volunteer-form');
+    const volunteerForm = document.getElementById('volunteerForm');
     if (volunteerForm) {
         volunteerForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -127,18 +139,37 @@ document.addEventListener('DOMContentLoaded', function() {
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             
+            // Custom validation for volunteer form
+            const messageField = document.getElementById('message');
+            if (messageField && messageField.value.length < 50) {
+                messageField.setCustomValidity('Lütfen motivasyonunuzu en az 50 karakter olacak şekilde detaylı bir şekilde paylaşın.');
+            } else if (messageField) {
+                messageField.setCustomValidity('');
+            }
+            
+            if (!volunteerForm.checkValidity()) {
+                e.stopPropagation();
+                volunteerForm.classList.add('was-validated');
+                showAlert('danger', 'Lütfen tüm zorunlu alanları doğru şekilde doldurun.');
+                return;
+            }
+            
             submitBtn.innerHTML = '<span class="loading"></span> Gönderiliyor...';
             submitBtn.disabled = true;
             
-            fetch('ajax/volunteer.php', {
+            fetch('ajax/forms.php', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showAlert('success', 'Gönüllü başvurunuz alındı!');
+                    // Extract name for personalized message
+                    const volunteerName = formData.get('name') || 'Değerli gönüllümüz';
+                    const personalizedMessage = `Sayın ${volunteerName}, gönüllü başvurunuz başarıyla alındı! Başvurunuz değerlendirilecek ve en kısa sürede size dönüş yapacağız. Bu anlamlı yolculuğa katılmak istediğiniz için teşekkür ederiz.`;
+                    showAlert('success', personalizedMessage);
                     volunteerForm.reset();
+                    volunteerForm.classList.remove('was-validated');
                 } else {
                     showAlert('danger', data.message || 'Bir hata oluştu!');
                 }

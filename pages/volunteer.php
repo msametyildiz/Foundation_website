@@ -244,9 +244,6 @@ $volunteer_questions = [
                             <p class="text-muted">Bizimle birlikte iyiliği yaymaya hazır mısınız?</p>
                         </div>
 
-                        <!-- Alert Messages -->
-                        <div id="alertContainer" style="display: none;"></div>
-
                         <form id="volunteerForm" novalidate>
                             <input type="hidden" name="action" value="volunteer">
 
@@ -686,63 +683,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    if (volunteerForm) {
-        volunteerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Custom validation for message length
-            const messageField = document.getElementById('message');
-            if (messageField && messageField.value.length < 50) {
-                messageField.setCustomValidity('Lütfen motivasyonunuzu en az 50 karakter olacak şekilde detaylı bir şekilde paylaşın.');
-            } else {
-                messageField.setCustomValidity('');
-            }
-            
-            if (!volunteerForm.checkValidity()) {
-                e.stopPropagation();
-                volunteerForm.classList.add('was-validated');
-                showAlert('Lütfen tüm zorunlu alanları doğru şekilde doldurun.', 'danger');
-                return;
-            }
-
-            // Disable submit button and show loading
-            const originalText = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Gönderiliyor...';
-
-            // Create FormData
-            const formData = new FormData(volunteerForm);
-
-            // Send AJAX request
-            fetch('ajax/forms.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showAlert(data.message, 'success');
-                    volunteerForm.reset();
-                    volunteerForm.classList.remove('was-validated');
-                    
-                    // Scroll to success message
-                    alertContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                } else {
-                    showAlert(data.message, 'danger');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showAlert('Bir hata oluştu. Lütfen tekrar deneyin.', 'danger');
-            })
-            .finally(() => {
-                // Re-enable submit button
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-            });
-        });
-    }
-
     // Phone number formatting
     const phoneInput = document.getElementById('phone');
     if (phoneInput) {
@@ -774,48 +714,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Real-time validation feedback
-    const inputs = volunteerForm.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => {
-        input.addEventListener('blur', function() {
-            if (volunteerForm.classList.contains('was-validated')) {
-                this.checkValidity();
+    // Message field validation for minimum 50 characters
+    const messageInput = document.getElementById('message');
+    if (messageInput) {
+        messageInput.addEventListener('input', function(e) {
+            if (e.target.value.length < 50) {
+                e.target.setCustomValidity('Lütfen motivasyonunuzu en az 50 karakter olacak şekilde detaylı bir şekilde paylaşın.');
+            } else {
+                e.target.setCustomValidity('');
             }
         });
-
-        input.addEventListener('input', function() {
-            if (this.classList.contains('is-invalid')) {
-                this.classList.remove('is-invalid');
-                if (this.checkValidity()) {
-                    this.classList.add('is-valid');
-                }
-            }
-        });
-    });
-
-    function showAlert(message, type) {
-        const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
-        const iconClass = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
-        
-        alertContainer.innerHTML = `
-            <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
-                <i class="${iconClass} me-2"></i>
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        `;
-        alertContainer.style.display = 'block';
-        
-        // Auto-hide success messages after 5 seconds
-        if (type === 'success') {
-            setTimeout(() => {
-                const alert = alertContainer.querySelector('.alert');
-                if (alert) {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                }
-            }, 5000);
-        }
     }
 });
 </script>
