@@ -663,7 +663,6 @@ i.text-success {
 document.addEventListener('DOMContentLoaded', function() {
     const volunteerForm = document.getElementById('volunteerForm');
     const submitBtn = document.getElementById('submitBtn');
-    const alertContainer = document.getElementById('alertContainer');
     const messageTextarea = document.getElementById('message');
     const charCount = document.getElementById('charCount');
 
