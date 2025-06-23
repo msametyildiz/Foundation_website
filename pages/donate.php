@@ -121,9 +121,8 @@ try {
                                                     onclick="copyToClipboard('<?php echo clean_output($account['iban']); ?>')"
                                                     title="Kopyala">
                                                 <i class="fas fa-copy"></i>
-                                            </button>
-                                        </div>
-                                    </p>
+                                            </div>
+                                        </p>
                                     <?php if (!empty($account['swift'])): ?>
                                         <p class="mb-0">
                                             <strong>SWIFT:</strong> 
@@ -1015,15 +1014,17 @@ function handlePrivacyClick(checkbox) {
 }
 
 function acceptKVKK() {
-    // Check the privacy consent checkbox
     document.getElementById('privacy_consent').checked = true;
-    
-    // Close the modal
     const modal = bootstrap.Modal.getInstance(document.getElementById('privacyModal'));
     if (modal) {
         modal.hide();
     }
-    
+    setTimeout(removeModalBackdrop, 350);
+    // Modal kapandıktan sonra karartıyı temizle
+    setTimeout(function() {
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        document.body.classList.remove('modal-open');
+    }, 300);
     // Show success message
     const toast = document.createElement('div');
     toast.className = 'toast-message';
@@ -1040,18 +1041,29 @@ function acceptKVKK() {
         opacity: 0;
         transition: opacity 0.3s ease;
     `;
-    
     document.body.appendChild(toast);
-    
     setTimeout(() => {
         toast.style.opacity = '1';
     }, 100);
-    
     setTimeout(() => {
         toast.style.opacity = '0';
         setTimeout(() => {
             document.body.removeChild(toast);
         }, 300);
     }, 2000);
+}
+
+// Modal kapatıldığında da karartıyı temizle
+function removeModalBackdrop() {
+    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+}
+
+// Modal kapatıldığında otomatik temizlik
+const privacyModalEl = document.getElementById('privacyModal');
+if (privacyModalEl) {
+    privacyModalEl.addEventListener('hidden.bs.modal', removeModalBackdrop);
 }
 </script>
