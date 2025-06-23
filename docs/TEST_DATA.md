@@ -25,30 +25,49 @@ Aşağıdaki sitelerden ücretsiz resimler indirebilirsiniz:
 - Community help: https://www.pexels.com/search/community-help/
 - Education: https://www.pexels.com/search/education/
 
-### Klasör Yapısı:
+### Mevcut Klasör Yapısı (Güncel):
 ```
 uploads/
+├── .htaccess (Güvenlik dosyası)
 ├── images/
-│   ├── logo.png
-│   ├── hero-banner.jpg
+│   ├── about/
+│   │   ├── about-main.jpg
+│   │   └── about-team.jpg
+│   ├── banner_sample.jpg
+│   ├── cta/
+│   │   └── cta-bg.jpg
+│   ├── events/
+│   │   └── education_event_1.jpg
+│   ├── favicon.ico
+│   ├── gallery/
+│   │   └── charity_work_1.jpg
+│   ├── hero/
+│   │   ├── hero-bg.jpg
+│   │   ├── hero-image.jpg
+│   │   └── test.jpg
+│   ├── logo_sample.png
 │   ├── projects/
 │   │   ├── project-1.jpg
 │   │   ├── project-2.jpg
-│   │   └── ...
-│   ├── news/
-│   │   ├── news-1.jpg
-│   │   ├── news-2.jpg
-│   │   └── ...
-│   ├── team/
-│   │   ├── member-1.jpg
-│   │   ├── member-2.jpg
-│   │   └── ...
-│   └── gallery/
-│       ├── gallery-1.jpg
-│       ├── gallery-2.jpg
-│       └── ...
+│   │   └── project-3.jpg
+│   ├── stats/
+│   │   └── stats-bg.jpg
+│   ├── testimonials/
+│   │   ├── avatar-1.jpg
+│   │   ├── avatar-2.jpg
+│   │   └── avatar-3.jpg
+│   └── volunteers/
+│       └── volunteer_activity_1.jpg
 ├── documents/
-│   ├── sample-report.pdf
+│   ├── dernegi_tuzugu.txt
+│   └── faaliyet_raporu_2024.txt
+└── receipts/
+    ├── bagis_makbuzu_001.txt
+    ├── bagis_makbuzu_002.txt
+    └── receipt_2025-06-22_11-14-31_6857bb67e8d58.png
+```
+
+> **NOT**: Bu yapı aktif olarak kullanılmakta ve file manager ile yönetilmektedir. Yeni dosya eklerken mevcut klasör yapısına uygun şekilde ekleme yapınız.
 │   ├── annual-report-2023.pdf
 │   └── bylaws.pdf
 └── receipts/

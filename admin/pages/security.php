@@ -1,8 +1,8 @@
 <?php
-require_once '../includes/functions.php';
-require_once '../includes/SecurityManager.php';
-require_once '../includes/PerformanceOptimizer.php';
-require_once '../includes/AdminLogger.php';
+require_once dirname(dirname(__DIR__)) . '/includes/functions.php';
+require_once dirname(dirname(__DIR__)) . '/includes/SecurityManager.php';
+require_once dirname(dirname(__DIR__)) . '/includes/PerformanceOptimizer.php';
+require_once dirname(dirname(__DIR__)) . '/includes/AdminLogger.php';
 
 secure_session_start();
 require_admin_login();
@@ -34,7 +34,7 @@ $cache_stats = $performance_optimizer->getStats();
 // Performans istatistikleri
 PerformanceMonitor::start();
 
-include '../includes/admin_header.php';
+include dirname(__DIR__) . '/includes/admin_header.php';
 ?>
 
 <div class="container-fluid">

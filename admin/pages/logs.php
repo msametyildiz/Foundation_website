@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 }
 
 $page_title = 'Admin Logları';
-include 'includes/admin_header.php';
+include '../includes/admin_header.php';
 
 $logger = new AdminLogger($pdo);
 

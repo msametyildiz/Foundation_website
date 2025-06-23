@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 }
 
 $page_title = 'Dosya Yöneticisi';
-include 'includes/admin_header.php';
+include '../includes/admin_header.php';
 
 // Handle file operations
 $message = '';
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     switch ($action) {
         case 'delete_file':
             $file = $_POST['file'] ?? '';
-            $filePath = '../uploads/' . $file;
+            $filePath = $uploadsPath . $file;
             if (file_exists($filePath) && unlink($filePath)) {
                 $message = 'Dosya başarıyla silindi.';
                 $messageType = 'success';
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'create_folder':
             $folderName = sanitizeInput($_POST['folder_name'] ?? '');
             if ($folderName) {
-                $folderPath = '../uploads/' . $folderName;
+                $folderPath = $uploadsPath . $folderName;
                 if (!file_exists($folderPath)) {
                     if (mkdir($folderPath, 0755, true)) {
                         $message = 'Klasör başarıyla oluşturuldu.';
@@ -53,8 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Get files and folders
-$uploadsPath = '../uploads/';
+// Get files and folders - Absolute path kullanarak güvenlik sağlanıyor
+$uploadsPath = dirname(dirname(dirname(__FILE__))) . '/uploads/';
 $currentPath = $_GET['path'] ?? '';
 $fullPath = $uploadsPath . $currentPath;
 

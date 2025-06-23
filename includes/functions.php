@@ -340,36 +340,60 @@ function secure_session_start() {
     }
 }
 
-// File upload with enhanced security
-function secure_file_upload($file, $upload_dir, $allowed_types = []) {
-    $errors = validate_file_upload($file);
-    if (!empty($errors)) {
-        return ['success' => false, 'errors' => $errors];
+// Dosya yükleme için absolute path döndürür
+function getUploadsPath($subFolder = '') {
+    $basePath = dirname(__DIR__) . '/uploads/';
+    
+    if ($subFolder) {
+        $subFolder = trim($subFolder, '/');
+        return $basePath . $subFolder . '/';
     }
     
-    // Additional security checks
-    if (!empty($allowed_types)) {
-        $file_extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        if (!in_array($file_extension, $allowed_types)) {
-            return ['success' => false, 'errors' => ['Dosya türü izin verilmiyor.']];
-        }
+    return $basePath;
+}
+
+/**
+ * Güvenli dosya upload işlemi
+ */
+function handleFileUpload($file, $subFolder = '', $allowedTypes = []) {
+    $result = ['success' => false, 'filename' => '', 'error' => ''];
+    
+    // Default allowed types
+    if (empty($allowedTypes)) {
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx'];
     }
     
-    // Generate secure filename
-    $safe_filename = generate_safe_filename($file['name']);
-    $upload_path = $upload_dir . '/' . $safe_filename;
-    
-    // Create directory if it doesn't exist
-    if (!is_dir($upload_dir)) {
-        mkdir($upload_dir, 0755, true);
+    // File validation
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        $result['error'] = 'Dosya yükleme hatası: ' . $file['error'];
+        return $result;
     }
     
-    // Move uploaded file
-    if (move_uploaded_file($file['tmp_name'], $upload_path)) {
-        return ['success' => true, 'filename' => $safe_filename, 'path' => $upload_path];
+    $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (!in_array($fileExtension, $allowedTypes)) {
+        $result['error'] = 'Bu dosya türü desteklenmiyor.';
+        return $result;
+    }
+    
+    // Generate unique filename
+    $filename = uniqid() . '_' . time() . '.' . $fileExtension;
+    $uploadPath = getUploadsPath($subFolder);
+    
+    // Create directory if not exists
+    if (!is_dir($uploadPath)) {
+        mkdir($uploadPath, 0755, true);
+    }
+    
+    $fullPath = $uploadPath . $filename;
+    
+    if (move_uploaded_file($file['tmp_name'], $fullPath)) {
+        $result['success'] = true;
+        $result['filename'] = $filename;
     } else {
-        return ['success' => false, 'errors' => ['Dosya yüklenemedi.']];
+        $result['error'] = 'Dosya kaydedilemedi.';
     }
+    
+    return $result;
 }
 
 // Response helpers

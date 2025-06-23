@@ -116,11 +116,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($action === 'backup_database') {
             // Backup database (basic implementation)
             $backup_file = 'backup_' . date('Y-m-d_H-i-s') . '.sql';
-            $backup_path = '../backups/' . $backup_file;
+            $backup_path = '../../backups/' . $backup_file;
             
             // Create backups directory if it doesn't exist
-            if (!file_exists('../backups')) {
-                mkdir('../backups', 0755, true);
+            if (!file_exists('../../backups')) {
+                mkdir('../../backups', 0755, true);
             }
             
             $success = "Veritabanı yedeği oluşturuldu: " . $backup_file;

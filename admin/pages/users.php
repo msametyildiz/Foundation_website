@@ -665,7 +665,7 @@ $user_stats = $stmt->fetch(PDO::FETCH_ASSOC);
 <script>
 function editUser(id) {
     // AJAX call to get user details
-    fetch(`../ajax/get_user.php?id=${id}`)
+    fetch(`../../ajax/get_user.php?id=${id}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {

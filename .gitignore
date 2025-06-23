@@ -1,0 +1,82 @@
+# Dependencies
+/vendor/
+/node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production
+config/database.php
+
+# Logs
+/logs/*.log
+/logs/test/
+*.log
+
+# Temporary files
+/temp/*
+!/temp/.gitkeep
+/temp/test/
+
+# Uploads (except test directory structure)
+/uploads/*
+!/uploads/.gitkeep
+/uploads/test/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Backup files
+*.backup
+*.bak
+*.old
+
+# Cache files
+*.cache
+
+# Test results
+/tests/results/
+/tests/coverage/
+
+# Database dumps (except schema)
+*.sql
+!database/schema.sql
+!database/migrations/*.sql
+
+# Composer
+composer.phar
+
+# NPM
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Web server logs
+access.log
+error.log
+server.log
+
+# Local configuration
+local.php
+local.json
