@@ -356,7 +356,7 @@ class EmailService {
                                             <td style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); padding: 24px; border-radius: 12px; border-left: 4px solid #4ea674; text-align: center;">
                                                 
                                                 <h2 style="margin: 0 0 8px 0; color: #065f46; font-size: 18px; font-weight: 600;">Yeni Mesaj Bildirimi</h2>
-                                                <p style="margin: 0; color: #059669; font-size: 15px; font-weight: 500;">
+                                                <p style="margin: 0; color: #4ea674; font-size: 15px; font-weight: 500;">
                                                     <strong>' . htmlspecialchars($data['name']) . '</strong> tarafından gönderildi
                                                 </p>
                                             </td>
@@ -566,7 +566,7 @@ class EmailService {
                             
                             <!-- Header -->
                             <tr>
-                                <td style="background: #059669; padding: 32px 24px; text-align: center; color: #ffffff;">
+                                <td style="background: #4ea674; padding: 32px 24px; text-align: center; color: #ffffff;">
                                     <h1 style="margin: 0 0 8px 0; font-size: 24px; font-weight: 600; color: #ffffff;">NECAT DERNEĞİ</h1>
                                     <p style="margin: 0; font-size: 16px; color: #d1fae5;">İletişim Talebiniz Alındı</p>
                                 </td>
@@ -580,7 +580,7 @@ class EmailService {
                                     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
                                         <tr>
                                             <td style="background: #ecfdf5; padding: 20px; border-radius: 6px; border-left: 4px solid #10b981; text-align: center;">
-                                                <h2 style="margin: 0 0 12px 0; color: #047857; font-size: 20px; font-weight: 600;">Sayın ' . htmlspecialchars($data['name']) . ',</h2>
+                                                <h2 style="margin: 0 0 12px 0; color: #4ea674; font-size: 20px; font-weight: 600;">Sayın ' . htmlspecialchars($data['name']) . ',</h2>
                                                 <p style="margin: 0; color: #374151; font-size: 15px;">
                                                     Necat Derneği\'ne göndermiş olduğunuz mesajınız başarıyla alınmıştır! İlginiz ve güveniniz için teşekkür ederiz.
                                                 </p>
@@ -595,17 +595,17 @@ class EmailService {
                                                 <h3 style="margin: 0 0 16px 0; color: #1f2937; font-size: 18px; font-weight: 600;">Sonraki Adımlar</h3>
                                                 
                                                 <div style="margin-bottom: 16px;">
-                                                    <p style="margin: 0 0 4px 0; color: #047857; font-weight: 600; font-size: 15px;">1. Mesaj İnceleme</p>
+                                                    <p style="margin: 0 0 4px 0; color: #4ea674; font-weight: 600; font-size: 15px;">1. Mesaj İnceleme</p>
                                                     <p style="margin: 0; color: #374151; font-size: 14px;">Mesajınız 24 saat içinde uzman ekibimiz tarafından incelenecektir.</p>
                                                 </div>
                                                 
                                                 <div style="margin-bottom: 16px;">
-                                                    <p style="margin: 0 0 4px 0; color: #047857; font-weight: 600; font-size: 15px;">2. Kişisel İletişim</p>
+                                                    <p style="margin: 0 0 4px 0; color: #4ea674; font-weight: 600; font-size: 15px;">2. Kişisel İletişim</p>
                                                     <p style="margin: 0; color: #374151; font-size: 14px;">Size en uygun zaman diliminde e-posta veya telefon yoluyla geri dönüş yapacağız.</p>
                                                 </div>
                                                 
                                                 <div>
-                                                    <p style="margin: 0 0 4px 0; color: #047857; font-weight: 600; font-size: 15px;">3. Çözüm Odaklı Yaklaşım</p>
+                                                    <p style="margin: 0 0 4px 0; color: #4ea674; font-weight: 600; font-size: 15px;">3. Çözüm Odaklı Yaklaşım</p>
                                                     <p style="margin: 0; color: #374151; font-size: 14px;">İhtiyacınıza yönelik en uygun çözümü birlikte belirleyeceğiz.</p>
                                                 </div>
                                             </td>
@@ -616,18 +616,18 @@ class EmailService {
                                     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
                                         <tr>
                                             <td style="background: #f9fafb; padding: 20px; border-radius: 6px; border: 1px solid #e5e7eb; text-align: center;">
-                                                <h3 style="margin: 0 0 16px 0; color: #047857; font-size: 18px; font-weight: 600;">Acil İletişim</h3>
+                                                <h3 style="margin: 0 0 16px 0; color: #4ea674; font-size: 18px; font-weight: 600;">Acil İletişim</h3>
                                                 <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                                     <tr>
                                                         <td style="text-align: center; padding: 8px;">
                                                             <p style="margin: 0; font-size: 14px; color: #374151;">
-                                                                <strong style="color: #047857;">E-posta:</strong><br>
+                                                                <strong style="color: #4ea674;">E-posta:</strong><br>
                                                                 <a href="mailto:info@necatdernegi.org" style="color: #2563eb; text-decoration: none; font-weight: 500;">info@necatdernegi.org</a>
                                                             </p>
                                                         </td>
                                                         <td style="text-align: center; padding: 8px;">
                                                             <p style="margin: 0; font-size: 14px; color: #374151;">
-                                                                <strong style="color: #047857;">Telefon:</strong><br>
+                                                                <strong style="color: #4ea674;">Telefon:</strong><br>
                                                                 <a href="tel:+903123116525" style="color: #2563eb; text-decoration: none; font-weight: 500;">+90 312 311 65 25</a>
                                                             </p>
                                                         </td>
@@ -640,7 +640,7 @@ class EmailService {
                                     <!-- Thank You Message -->
                                     <table width="100%" cellpadding="0" cellspacing="0" border="0">
                                         <tr>
-                                            <td style="background: #059669; padding: 24px; border-radius: 6px; text-align: center; color: #ffffff;">
+                                            <td style="background: #4ea674; padding: 24px; border-radius: 6px; text-align: center; color: #ffffff;">
                                                 <h3 style="margin: 0 0 12px 0; font-size: 20px; font-weight: 600;">Teşekkürler!</h3>
                                                 <p style="margin: 0 0 16px 0; font-size: 15px; color: #d1fae5;">
                                                     Bize güvendiğiniz ve iletişime geçtiğiniz için teşekkür ederiz. 
@@ -1486,7 +1486,7 @@ class EmailService {
                     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
                 }
                 .header {
-                    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+                    background: linear-gradient(135deg, #4ea674 0%, #3d8760 100%);
                     color: #ffffff;
                     padding: 32px 24px;
                     text-align: center;
@@ -1516,12 +1516,12 @@ class EmailService {
                 .amount {
                     font-size: 36px;
                     font-weight: 800;
-                    color: #15803d;
+                    color: #4ea674;
                     margin: 0;
                 }
                 .amount-label {
                     font-size: 14px;
-                    color: #16a34a;
+                    color: #3d8760;
                     font-weight: 600;
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
@@ -1562,7 +1562,7 @@ class EmailService {
                 }
                 .button {
                     display: inline-block;
-                    background: #3b82f6;
+                    background: #4ea674;
                     color: #ffffff;
                     text-decoration: none;
                     padding: 12px 24px;
@@ -1661,7 +1661,7 @@ class EmailService {
                     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
                 }
                 .header {
-                    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+                    background: linear-gradient(135deg, #4ea674 0%, #3d8760 100%);
                     color: #ffffff;
                     padding: 40px 24px;
                     text-align: center;
@@ -1696,12 +1696,12 @@ class EmailService {
                 .amount {
                     font-size: 48px;
                     font-weight: 900;
-                    color: #059669;
+                    color: #4ea674;
                     margin: 0 0 8px 0;
                 }
                 .amount-label {
                     font-size: 14px;
-                    color: #065f46;
+                    color: #3d8760;
                     font-weight: 600;
                 }
                 .message {
@@ -1720,12 +1720,12 @@ class EmailService {
                 .impact-title {
                     font-size: 18px;
                     font-weight: 700;
-                    color: #1e40af;
+                    color: #4ea674;
                     margin: 0 0 12px 0;
                 }
                 .impact-text {
                     font-size: 14px;
-                    color: #3730a3;
+                    color: #3d8760;
                     margin: 0;
                 }
                 .footer {
@@ -1738,7 +1738,7 @@ class EmailService {
                 }
                 .button {
                     display: inline-block;
-                    background: #059669;
+                    background: #4ea674;
                     color: #ffffff;
                     text-decoration: none;
                     padding: 14px 28px;
@@ -1749,8 +1749,8 @@ class EmailService {
                 }
                 .button-outline {
                     background: transparent;
-                    color: #059669;
-                    border: 2px solid #059669;
+                    color: #4ea674;
+                    border: 2px solid #4ea674;
                 }
             </style>
         </head>
