@@ -1443,224 +1443,354 @@ class EmailService {
         // Mesaj (varsa)
         $messageHtml = '';
         if (!empty($data['message'])) {
-            $messageHtml = '<p><strong>Mesaj:</strong> ' . nl2br(htmlspecialchars($data['message'])) . '</p>';
+            $messageHtml = '
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin: 16px 0;">
+                <h4 style="margin: 0 0 8px 0; color: #374151; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Mesaj</h4>
+                <p style="margin: 0; color: #4b5563; font-size: 14px; line-height: 1.6;">' . nl2br(htmlspecialchars($data['message'])) . '</p>
+            </div>';
         }
+        
         // Dekont bilgisini sadece ekli gönderimde göster
         $receiptHtml = '';
         if (!empty($data['receipt_file']) && $asAttachment) {
-            $receiptHtml = '<p><strong>Dekont:</strong> Ekteki dosyada</p>';
+            $receiptHtml = '
+            <div style="background: #f0f9ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 20px; margin: 16px 0;">
+                <h4 style="margin: 0 0 8px 0; color: #1e40af; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">📎 Dekont Dosyası</h4>
+                <p style="margin: 0; color: #3730a3; font-size: 14px;">Ekteki dosyada mevcut</p>
+            </div>';
         }
+        
         return '
         <!DOCTYPE html>
-        <html>
+        <html lang="tr">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Yeni Bağış Alındı</title>
+            <title>Yeni Bağış - Necat Derneği</title>
             <style>
+                * { box-sizing: border-box; }
                 body {
-                    font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
-                    line-height: 1.6;
-                    color: #333;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
                     margin: 0;
-                    padding: 0;
-                    background-color: #f4f4f4;
+                    padding: 20px;
+                    background-color: #f8fafc;
+                    color: #1f2937;
+                    line-height: 1.6;
                 }
                 .container {
                     max-width: 600px;
-                    margin: 20px auto;
-                    background-color: #ffffff;
-                    border-radius: 8px;
+                    margin: 0 auto;
+                    background: #ffffff;
+                    border-radius: 12px;
                     overflow: hidden;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
                 }
                 .header {
-                    background-color: #2c5aa0; /* Primary Blue */
-                    color: white;
-                    padding: 30px 20px;
+                    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+                    color: #ffffff;
+                    padding: 32px 24px;
                     text-align: center;
-                    border-top-left-radius: 8px;
-                    border-top-right-radius: 8px;
                 }
                 .header h1 {
                     margin: 0;
-                    font-size: 28px;
-                    font-weight: bold;
+                    font-size: 24px;
+                    font-weight: 700;
+                    letter-spacing: -0.5px;
+                }
+                .header p {
+                    margin: 8px 0 0 0;
+                    font-size: 16px;
+                    opacity: 0.9;
                 }
                 .content {
-                    padding: 30px;
-                    background-color: #ffffff;
+                    padding: 32px 24px;
                 }
-                .info-box {
-                    background-color: #f9f9f9;
-                    padding: 20px;
-                    margin-bottom: 20px;
-                    border-left: 5px solid #2c5aa0; /* Primary Blue */
-                    border-radius: 5px;
-                    font-size: 15px;
-                }
-                .info-box strong {
-                    color: #2c5aa0;
-                }
-                .info-box p {
-                    margin: 5px 0;
-                }
-                .amount-display {
-                    font-size: 32px;
-                    color: #2c5aa0;
-                    font-weight: bold;
-                    text-align: center;
-                    margin: 25px 0;
-                    padding: 15px;
-                    background-color: #e6f0fa; /* Light Blue */
+                .amount-section {
+                    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+                    border: 1px solid #bbf7d0;
                     border-radius: 8px;
+                    padding: 24px;
+                    text-align: center;
+                    margin-bottom: 24px;
+                }
+                .amount {
+                    font-size: 36px;
+                    font-weight: 800;
+                    color: #15803d;
+                    margin: 0;
+                }
+                .amount-label {
+                    font-size: 14px;
+                    color: #16a34a;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    margin-bottom: 8px;
+                }
+                .info-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 16px;
+                    margin: 24px 0;
+                }
+                .info-item {
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 8px;
+                    padding: 16px;
+                }
+                .info-label {
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #6b7280;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    margin-bottom: 4px;
+                }
+                .info-value {
+                    font-size: 14px;
+                    color: #1f2937;
+                    font-weight: 500;
                 }
                 .footer {
-                    padding: 20px;
+                    background: #f8fafc;
+                    border-top: 1px solid #e2e8f0;
+                    padding: 24px;
                     text-align: center;
-                    color: #777;
-                    font-size: 12px;
-                    background-color: #f0f0f0;
-                    border-bottom-left-radius: 8px;
-                    border-bottom-right-radius: 8px;
+                    font-size: 14px;
+                    color: #6b7280;
                 }
-                .footer a {
-                    color: #2c5aa0;
+                .button {
+                    display: inline-block;
+                    background: #3b82f6;
+                    color: #ffffff;
                     text-decoration: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    font-size: 14px;
+                    margin: 16px 0;
+                }
+                @media (max-width: 480px) {
+                    .info-grid {
+                        grid-template-columns: 1fr;
+                    }
                 }
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Yeni Bağış Alındı</h1>
+                    <h1>🎉 Yeni Bağış Alındı</h1>
+                    <p>Necat Derneği</p>
                 </div>
+                
                 <div class="content">
-                    <p style="font-size: 16px; color: #555; text-align: center;">Necat Derneği\'ne yeni bir bağış yapıldı!</p>
-                    <div class="amount-display">
-                        ' . number_format($data['amount'], 2) . ' TL
+                    <div class="amount-section">
+                        <div class="amount-label">Bağış Tutarı</div>
+                        <div class="amount">₺' . number_format($data['amount'], 2) . '</div>
                     </div>
-                    <div class="info-box">
-                        <p><strong>Ad Soyad:</strong> ' . htmlspecialchars($data['donor_name']) . '</p>
-                        <p><strong>E-posta:</strong> <a href="mailto:' . htmlspecialchars($data['email'] ?? 'Belirtilmemiş') . '" style="color: #2c5aa0; text-decoration: none;">' . htmlspecialchars($data['email'] ?? 'Belirtilmemiş') . '</a></p>
-                        <p><strong>Telefon:</strong> ' . htmlspecialchars($data['phone'] ?? 'Belirtilmemiş') . '</p>
-                        <p><strong>Bağış Türü:</strong> ' . htmlspecialchars($data['donation_type'] ?? 'Genel Bağış') . '</p>
-                        ' . $messageHtml . '
-                        ' . $receiptHtml . '
-                        <p><strong>Tarih:</strong> ' . date('d.m.Y H:i:s') . '</p>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Bağışçı</div>
+                            <div class="info-value">' . htmlspecialchars($data['donor_name']) . '</div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-label">E-posta</div>
+                            <div class="info-value">' . htmlspecialchars($data['email'] ?? '-') . '</div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-label">Telefon</div>
+                            <div class="info-value">' . htmlspecialchars($data['phone'] ?? '-') . '</div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-label">Bağış Türü</div>
+                            <div class="info-value">' . htmlspecialchars($data['donation_type'] ?? 'Genel') . '</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 24px 0;">
+                        <div style="font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Tarih</div>
+                        <div style="font-size: 14px; color: #1f2937; font-weight: 500;">' . date('d.m.Y H:i:s') . '</div>
+                    </div>
+                    
+                    ' . $messageHtml . '
+                    ' . $receiptHtml . '
+                    
+                    <div style="text-align: center; margin-top: 32px;">
+                        <a href="mailto:' . htmlspecialchars($data['email'] ?? '') . '" class="button">📧 Bağışçıya Yanıt Gönder</a>
                     </div>
                 </div>
-                <div class="footer">
-                    <p>Bu bağış Necat Derneği web sitesi aracılığıyla yapılmıştır.</p>
+                 <div class="footer">
+                    <p style="margin: 0 0 8px 0;">Bu e-posta otomatik olarak gönderilmiştir.</p>
+                    <p style="margin: 0; font-size: 12px; color: #9ca3af;">© ' . date('Y') . ' Necat Derneği</p>
                 </div>
             </div>
         </body>
         </html>';
     }
-    
+
     private function getDonationThankYouTemplate($data) {
         return '
         <!DOCTYPE html>
-        <html>
+        <html lang="tr">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Bağışınız için Teşekkürler - Necat Derneği</title>
             <style>
+                * { box-sizing: border-box; }
                 body {
-                    font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;
-                    line-height: 1.6;
-                    color: #333;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
                     margin: 0;
-                    padding: 0;
-                    background-color: #f4f4f4;
+                    padding: 20px;
+                    background-color: #f8fafc;
+                    color: #1f2937;
+                    line-height: 1.6;
                 }
                 .container {
                     max-width: 600px;
-                    margin: 20px auto;
-                    background-color: #ffffff;
-                    border-radius: 8px;
+                    margin: 0 auto;
+                    background: #ffffff;
+                    border-radius: 12px;
                     overflow: hidden;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
                 }
                 .header {
-                    background-color: #2c5aa0; /* Primary Blue */
-                    color: white;
-                    padding: 30px 20px;
+                    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+                    color: #ffffff;
+                    padding: 40px 24px;
                     text-align: center;
-                    border-top-left-radius: 8px;
-                    border-top-right-radius: 8px;
                 }
                 .header h1 {
-                    margin: 0;
+                    margin: 0 0 8px 0;
                     font-size: 28px;
-                    font-weight: bold;
+                    font-weight: 800;
+                    letter-spacing: -0.5px;
+                }
+                .header p {
+                    margin: 0;
+                    font-size: 16px;
+                    opacity: 0.9;
                 }
                 .content {
-                    padding: 30px;
-                    background-color: #ffffff;
+                    padding: 40px 24px;
+                    text-align: center;
                 }
-                .content p {
+                .greeting {
+                    font-size: 18px;
+                    color: #374151;
+                    margin-bottom: 24px;
+                }
+                .amount-section {
+                    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+                    border: 1px solid #bbf7d0;
+                    border-radius: 12px;
+                    padding: 32px 24px;
+                    margin: 32px 0;
+                }
+                .amount {
+                    font-size: 48px;
+                    font-weight: 900;
+                    color: #059669;
+                    margin: 0 0 8px 0;
+                }
+                .amount-label {
+                    font-size: 14px;
+                    color: #065f46;
+                    font-weight: 600;
+                }
+                .message {
                     font-size: 16px;
-                    color: #555;
-                    margin-bottom: 15px;
+                    color: #4b5563;
+                    margin: 32px 0;
+                    line-height: 1.7;
                 }
-                .thank-you-message {
-                    background-color: #e6f0fa; /* Light Blue */
-                    padding: 25px;
-                    margin-bottom: 20px;
+                .impact-section {
+                    background: #f0f9ff;
+                    border: 1px solid #bfdbfe;
                     border-radius: 8px;
-                    border-left: 5px solid #2c5aa0;
-                    text-align: center;
+                    padding: 24px;
+                    margin: 32px 0;
                 }
-                .thank-you-message h2 {
-                    color: #2c5aa0;
-                    margin-top: 0;
-                    font-size: 24px;
+                .impact-title {
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #1e40af;
+                    margin: 0 0 12px 0;
                 }
-                .amount-display {
-                    font-size: 32px;
-                    color: #2c5aa0;
-                    font-weight: bold;
-                    text-align: center;
-                    margin: 25px 0;
+                .impact-text {
+                    font-size: 14px;
+                    color: #3730a3;
+                    margin: 0;
                 }
                 .footer {
-                    padding: 20px;
+                    background: #f8fafc;
+                    border-top: 1px solid #e2e8f0;
+                    padding: 32px 24px;
                     text-align: center;
-                    color: #777;
-                    font-size: 12px;
-                    background-color: #f0f0f0;
-                    border-bottom-left-radius: 8px;
-                    border-bottom-right-radius: 8px;
+                    font-size: 14px;
+                    color: #6b7280;
                 }
-                .footer a {
-                    color: #2c5aa0;
+                .button {
+                    display: inline-block;
+                    background: #059669;
+                    color: #ffffff;
                     text-decoration: none;
+                    padding: 14px 28px;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    font-size: 16px;
+                    margin: 24px 8px;
+                }
+                .button-outline {
+                    background: transparent;
+                    color: #059669;
+                    border: 2px solid #059669;
                 }
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>Bağışınız için Teşekkürler</h1>
+                    <h1>🙏 Teşekkürler!</h1>
+                    <p>Necat Derneği</p>
                 </div>
+                
                 <div class="content">
-                    <p>Sayın <strong>' . htmlspecialchars($data['donor_name']) . '</strong>,</p>
-                    <div class="thank-you-message">
-                        <h2>Değerli Bağışınız için Minnettarız!</h2>
-                        <p style="font-size: 18px; margin-top: 15px;">Bağışladığınız</p>
-                        <div class="amount-display">
-                            ' . number_format($data['amount'], 2) . ' TL
-                        </div>
-                        <p style="font-size: 16px;">yardıma muhtaç insanlara ulaşmamızda büyük bir katkı sağlayacaktır.</p>
+                    <div class="greeting">
+                        Sayın <strong>' . htmlspecialchars($data['donor_name']) . '</strong>
                     </div>
-                    <p>Bağışınız güvenle alınmış ve kayıtlarımıza geçmiştir. Gerekirse vergi indirimi için kullanabileceğiniz bağış belgesi en kısa sürede tarafınıza iletilecektir.</p>
-                    <p style="margin-top: 30px;">Desteğiniz için bir kez daha içtenlikle teşekkür eder, saygılarımızı sunarız.</p>
-                    <p><strong>Necat Derneği Ekibi</strong></p>
+                    
+                    <div class="amount-section">
+                        <div class="amount">₺' . number_format($data['amount'], 2) . '</div>
+                        <div class="amount-label">değerli bağışınız için içtenlikle teşekkür ederiz</div>
+                    </div>
+                    
+                    <div class="message">
+                        Bağışınız güvenle alınmıştır ve yardıma muhtaç kardeşlerimize ulaştırılacaktır. 
+                        Sizin gibi hayırsever insanların desteğiyle toplumumuzda güzel değişimler yaratmaya devam ediyoruz.
+                    </div>
+                    
+                    <div class="impact-section">
+                        <div class="impact-title">🌟 Bağışınızın Etkisi</div>
+                        <div class="impact-text">
+                            Bu bağış ile bir aileye umut, bir çocuğa eğitim fırsatı, 
+                            yaşlı bir kardeşimize sıcak bir öğün ulaştırmış oluyorsunuz.
+                        </div>
+                    </div>
+                    
+                   
                 </div>
+                
                 <div class="footer">
-                    <p>Bu otomatik bir mesajdır. Sorularınız için <a href="mailto:info@necatdernegi.org" style="color: #2c5aa0;">info@necatdernegi.org</a> adresine yazabilirsiniz.</p>
+                    <p style="margin: 0 0 16px 0; font-weight: 600; color: #374151;">Necat Derneği</p>
+                    <p style="margin: 0 0 8px 0; font-style: italic;">"Elinizi İyiliğe Uzatın"</p>
+                    <p style="margin: 0; font-size: 12px; color: #9ca3af;">© ' . date('Y') . ' Necat Derneği. Tüm hakları saklıdır.</p>
                 </div>
             </div>
         </body>
@@ -1767,7 +1897,7 @@ class EmailService {
                     <p>&copy; ' . date('Y') . ' Necat Derneği. Tüm hakları saklıdır.</p>
                 </div>
             </div>
-        </body>
+                }
         </html>';
     }
     
