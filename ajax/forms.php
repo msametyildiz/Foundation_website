@@ -199,57 +199,49 @@ function handleDonationForm() {
     global $pdo, $response;
     
     try {
-        $donation_type = sanitizeInput($_POST['donation_type'] ?? '');
+        $donation_type_id = intval($_POST['donation_type_id'] ?? 0);
         $amount = floatval($_POST['amount'] ?? 0);
         $donor_name = sanitizeInput($_POST['donor_name'] ?? '');
         $donor_email = sanitizeInput($_POST['donor_email'] ?? '');
         $donor_phone = sanitizeInput($_POST['donor_phone'] ?? '');
-        $donor_address = sanitizeInput($_POST['donor_address'] ?? '');
         $message = sanitizeInput($_POST['message'] ?? '');
-        $is_anonymous = isset($_POST['is_anonymous']) ? 1 : 0;
+        $status = 'pending';
+        $admin_notes = null;
+        $receipt_file = null;
+        $ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
         
         // Validation
-        if (empty($donation_type) || $amount <= 0) {
+        if (empty($donation_type_id) || $amount <= 0) {
             $response['message'] = 'Lütfen bağış tipini ve miktarını belirtin.';
             return;
         }
-        
-        if (!$is_anonymous && (empty($donor_name) || empty($donor_email))) {
-            $response['message'] = 'Anonim bağış yapmıyorsanız ad soyad ve e-posta gereklidir.';
+        if (empty($donor_name)) {
+            $response['message'] = 'Ad soyad zorunludur.';
             return;
         }
-        
         if ($donor_email && !filter_var($donor_email, FILTER_VALIDATE_EMAIL)) {
             $response['message'] = 'Geçerli bir e-posta adresi girin.';
             return;
         }
-        
-        // Generate reference number
-        $reference_number = 'BGS' . date('Y') . str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT);
-        
-        // Handle file upload if exists
-        $receipt_file = null;
-        if (isset($_FILES['receipt']) && $_FILES['receipt']['error'] === UPLOAD_ERR_OK) {
-            $upload_result = handleFileUpload($_FILES['receipt'], 'receipts');
+        // Dosya yükleme
+        if (isset($_FILES['receipt_file']) && $_FILES['receipt_file']['error'] === UPLOAD_ERR_OK) {
+            $upload_result = handleFileUpload($_FILES['receipt_file'], 'receipts');
             if ($upload_result['success']) {
                 $receipt_file = $upload_result['filename'];
+            } else {
+                $response['message'] = 'Dekont yüklenemedi: ' . $upload_result['error'];
+                return;
             }
+        } else {
+            $response['message'] = 'Lütfen dekont dosyasını yükleyin.';
+            return;
         }
-        
-        // Insert into database
-        $stmt = $pdo->prepare("
-            INSERT INTO donations 
-            (donation_type, amount, donor_name, donor_email, donor_phone, donor_address, 
-             message, reference_number, receipt_file, is_anonymous, status, created_at) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
-        ");
-        
+        // Kayıt
+        $stmt = $pdo->prepare("INSERT INTO donations (donor_name, donor_email, donor_phone, donation_type_id, amount, receipt_file, message, status, admin_notes, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
         $stmt->execute([
-            $donation_type, $amount, $donor_name, $donor_email, $donor_phone, 
-            $donor_address, $message, $reference_number, $receipt_file, $is_anonymous
+            $donor_name, $donor_email, $donor_phone, $donation_type_id, $amount, $receipt_file, $message, $status, $admin_notes
         ]);
-        
-        // Send confirmation email
+        // E-posta bildirimi (isteğe bağlı)
         if ($donor_email) {
             $emailService = new EmailService($pdo);
             $donationData = [
@@ -257,16 +249,13 @@ function handleDonationForm() {
                 'donor_name' => $donor_name,
                 'email' => $donor_email,
                 'phone' => $donor_phone,
-                'project_name' => $donation_type,
+                'project_name' => $donation_type_id,
                 'payment_method' => 'Banka Havalesi/EFT'
             ];
             $emailService->sendDonationNotification($donationData);
         }
-        
         $response['success'] = true;
-        $response['message'] = 'Bağışınız kaydedildi. Referans numaranız: ' . $reference_number;
-        $response['reference'] = $reference_number;
-        
+        $response['message'] = 'Bağışınız kaydedildi. Teşekkür ederiz!';
     } catch (PDOException $e) {
         $response['message'] = 'Veritabanı hatası: ' . $e->getMessage();
     }

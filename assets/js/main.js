@@ -160,21 +160,27 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             const formData = new FormData(this);
+            formData.append('action', 'donation'); // <-- action parametresi eklendi
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             
             submitBtn.innerHTML = '<span class="loading"></span> Yükleniyor...';
             submitBtn.disabled = true;
             
-            fetch('ajax/donation.php', {
+            fetch('ajax/forms.php', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showAlert('success', 'Dekont başarıyla yüklendi!');
+                    showAlert('success', 'Dekontunuz başarıyla yüklendi. En kısa zamanda sizinle iletişime geçilecektir!');
                     donationForm.reset();
+                    // Bootstrap validasyon class'larını temizle
+                    donationForm.classList.remove('was-validated');
+                    donationForm.querySelectorAll('.is-valid, .is-invalid').forEach(function(el) {
+                        el.classList.remove('is-valid', 'is-invalid');
+                    });
                 } else {
                     showAlert('danger', data.message || 'Bir hata oluştu!');
                 }
