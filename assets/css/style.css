@@ -1999,216 +1999,88 @@ a[href*="projects"].btn-primary:hover,
     }
 }
 
-/* ========================================
-   ENHANCED PROJECTS VIEW ALL BUTTON
-   ======================================== */
+/* ======================================
+   Ultra-Professional Enhancements (Performance, A11y, UX)
+   ====================================== */
 
-.projects-view-all-btn {
-    position: relative;
-    background: linear-gradient(135deg, #4ea674 0%, #3d8760 100%);
-    border: none;
-    color: var(--white);
-    padding: var(--spacing-lg) var(--spacing-2xl);
-    border-radius: var(--radius-xl);
+/* Performance: Hinting browser about upcoming transformations */
+.navbar-modern, .navbar-modern::before, #mobileMenu, .nav-link-modern::after, 
+.logo-container, .floating-card, .project-card, .feature-card {
+    will-change: transform, opacity, box-shadow, background-color, height, filter;
+}
+
+/* Accessibility: Focus outline for better visibility */
+:focus-visible {
+    outline: 3px solid #4EA674 !important;
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Accessibility: Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto !important;
+    }
+    *, *::before, *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Responsive & UX Enhancements */
+:root {
+    --navbar-height: 80px; /* Default height for desktop */
+    --navbar-height-scrolled: 70px;
+}
+
+@media (max-width: 991.98px) {
+    :root {
+        --navbar-height: 70px; /* Height for tablet/mobile */
+        --navbar-height-scrolled: 60px;
+    }
+}
+
+body {
+    /* Smoothly transition padding when navbar height changes */
+    padding-top: var(--navbar-height);
+    transition: padding-top 0.3s ease-in-out;
+}
+
+/* Skip to content link for accessibility */
+.skip-link {
+    position: absolute;
+    top: -100px; /* Hide offscreen */
+    left: 0;
+    background: #4EA674;
+    color: white;
+    padding: 1rem;
+    z-index: 99999;
+    transition: top 0.3s ease-in-out;
+    text-decoration: none;
     font-weight: 600;
-    font-size: var(--font-size-lg);
-    text-transform: none;
-    letter-spacing: 0.5px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-    box-shadow: 
-        0 8px 25px rgba(78, 166, 116, 0.3),
-        0 4px 15px rgba(78, 166, 116, 0.2),
-        0 0 0 1px rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-sm);
 }
 
-.projects-view-all-btn::before {
-    content: '';
-    position: absolute;
+.skip-link:focus {
     top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-        transparent, 
-        rgba(255, 255, 255, 0.3), 
-        transparent);
-    transition: left 0.6s ease;
-    z-index: 1;
 }
 
-.projects-view-all-btn:hover::before {
-    left: 100%;
+/* Mobile Menu Animation Enhancement */
+#mobileMenu {
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.projects-view-all-btn:hover {
-    background: linear-gradient(135deg, #3d8760 0%, #2d6446 100%);
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 
-        0 15px 40px rgba(78, 166, 116, 0.4),
-        0 8px 25px rgba(78, 166, 116, 0.3),
-        0 0 0 1px rgba(255, 255, 255, 0.2),
-        0 0 30px rgba(78, 166, 116, 0.2);
-    color: var(--white);
-    text-decoration: none;
+/* Low performance mode adjustments */
+.low-performance-mode .parallax-element {
+    transform: none !important;
+    transition: none !important;
 }
 
-.projects-view-all-btn:active {
-    transform: translateY(-2px) scale(1.01);
-    transition: all 0.1s ease;
-}
-
-.projects-view-all-btn i {
-    position: relative;
-    z-index: 2;
-    transition: transform 0.3s ease;
-    font-size: 1.1em;
-}
-
-.projects-view-all-btn:hover i {
-    transform: translateX(4px);
-}
-
-.projects-view-all-btn:focus {
-    outline: none;
-    box-shadow: 
-        0 8px 25px rgba(78, 166, 116, 0.3),
-        0 4px 15px rgba(211, 217, 43, 0.2),
-        0 0 0 3px rgba(78, 166, 116, 0.3);
-}
-
-/* Loading state for the button */
-.projects-view-all-btn.loading {
-    pointer-events: none;
-    opacity: 0.8;
-}
-
-.projects-view-all-btn.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
-    border: 2px solid transparent;
-    border-top: 2px solid var(--white);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    z-index: 3;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .projects-view-all-btn {
-        padding: var(--spacing-md) var(--spacing-xl);
-        font-size: var(--font-size-base);
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-@media (max-width: 576px) {
-    .projects-view-all-btn {
-        padding: var(--spacing-md) var(--spacing-lg);
-        font-size: var(--font-size-sm);
-    }
-}
-
-/* Sadece "Daha Fazla Bilgi" butonu için özel renk */
-a[href="index.php?page=about"].btn-outline-primary {
-    border-color: #4ea674;
-    color: #4ea674;
-}
-
-a[href="index.php?page=about"].btn-outline-primary:hover {
-    background-color: #4ea674;
-    border-color: #4ea674;
-    color: #ffffff;
-}
-
-/* Sadece "Tüm Haberleri Gör" butonu için özel renk */
-a[href="index.php?page=press"].btn-primary {
-    background-color: #4ea674;
-    border-color: #4ea674;
-}
-
-a[href="index.php?page=press"].btn-primary:hover {
-    background-color: #3d8760;
-    border-color: #3d8760;
-}
-
-/* ========================================
-   FAQ PAGE COLOR CONSISTENCY
-   ======================================== */
-
-/* FAQ Page Icon Consistency */
-.faq-section i,
-.question-card i,
-.topic-icon i,
-.help-icon i,
-.search-box i,
-.section-title i {
-    color: #4ea674 !important;
-}
-
-/* FAQ Question Text Colors */
-.question-text,
-.topic-title,
-.help-title,
-.section-title,
-.card-title {
-    color: #4ea674 !important;
-}
-
-/* FAQ Navigation Icons */
-.nav-pills .nav-link i {
-    color: #4ea674 !important;
-}
-
-.nav-pills .nav-link.active i {
-    color: #ffffff !important;
-}
-
-/* FAQ Accordion Styling */
-.accordion-button .question-number {
-    background-color: #4ea674 !important;
-    color: #ffffff !important;
-}
-
-/* FAQ Search Icon */
-.search-box .btn i {
-    color: #ffffff !important;
-}
-
-/* Override any remaining text-primary colors in FAQ */
-.faq-section .text-primary,
-.question-card .text-primary,
-.simple-card .text-primary {
-    color: #4ea674 !important;
-}
-
-/* FAQ Badge Colors */
-.faq-section .badge.bg-primary {
-    background-color: #4ea674 !important;
-    color: #ffffff !important;
-}
-
-/* Popular Topics Button Icons */
-.popular-topic .btn i {
-    color: #4ea674 !important;
-}
-
-.popular-topic .btn:hover i {
-    color: #ffffff !important;
+.low-performance-mode .animate-fadeInUp,
+.low-performance-mode .floating-card,
+.low-performance-mode .project-card {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
 }
