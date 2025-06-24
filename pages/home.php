@@ -142,13 +142,13 @@ try {
                 <div class="hero-image">
                     <div class="floating-card card-1">
                         <i class="fas fa-heart text-danger"></i>
-                        <span>Bağışlarınız</span>
-                        <strong>₺<?= number_format($total_donations) ?></strong>
+                        <span>Projelerimiz</span>
+                        <strong><?= number_format($total_projects) ?>+</strong>
                     </div>
                     <div class="floating-card card-2">
                         <i class="fas fa-users text-primary"></i>
                         <span>Aktif Gönüllüler</span>
-                        <strong><?= $total_volunteers ?></strong>
+                        <strong><?= $total_volunteers ?>+</strong>
                     </div>
                     <div class="floating-card card-3">
                         <i class="fas fa-home text-success"></i>
