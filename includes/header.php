@@ -245,11 +245,11 @@ try {
             position: relative;
         }
 
-        /* Enhanced Brand Section */
+        /* Simplified and Professional Brand Section */
         .navbar-brand-modern {
             display: flex;
             align-items: center;
-            gap: 1.25rem;
+            gap: 1rem;
             text-decoration: none;
             transition: var(--transition-base);
             position: relative;
@@ -258,53 +258,34 @@ try {
         }
 
         .navbar-brand-modern:hover {
-            transform: scale(1.02);
+            transform: none; /* More stable */
         }
 
         .logo-container {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, rgba(78, 166, 116, 0.1), rgba(211, 217, 43, 0.1));
-            border-radius: var(--radius-2xl);
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 8px;
+            padding: 0;
             transition: var(--transition-base);
             position: relative;
             overflow: hidden;
-            border: 2px solid rgba(78, 166, 116, 0.12);
-            box-shadow: 0 4px 20px rgba(78, 166, 116, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: none;
+            box-shadow: none;
         }
-
-        .logo-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--primary-gradient);
-            opacity: 0;
-            transition: var(--transition-base);
-            border-radius: var(--radius-xl);
-        }
-
-        .logo-container:hover::before {
-            opacity: 0.15;
-        }
-
-        .logo-container:hover {
-            transform: scale(1.08) rotate(2deg);
-            box-shadow: 0 8px 32px rgba(78, 166, 116, 0.25), 0 4px 16px rgba(0, 0, 0, 0.12);
-            border-color: var(--primary-color);
+        
+        .navbar-brand-modern:hover .logo-container {
+             transform: none;
         }
 
         .logo-container img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            border-radius: calc(var(--radius-xl) - 8px);
+            border-radius: var(--radius-md);
             transition: var(--transition-fast);
             position: relative;
             z-index: 1;
@@ -312,7 +293,7 @@ try {
         }
 
         .logo-container:hover img {
-            transform: scale(1.1);
+            transform: none;
         }
 
         /* Logo states */
@@ -353,7 +334,7 @@ try {
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: heartPulse 2s ease-in-out infinite;
+            animation: none; /* Simpler, no animation */
         }
 
         @keyframes heartPulse {
@@ -361,51 +342,44 @@ try {
             50% { transform: scale(1.1); }
         }
 
-        /* Enhanced brand text */
+        /* Simplified brand text */
         .brand-text {
             display: flex;
             flex-direction: column;
-            line-height: 1.1;
+            justify-content: center;
+            line-height: 1.2;
             position: relative;
         }
 
         .brand-name {
             font-family: 'Poppins', sans-serif;
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--gray-900);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--gray-800);
             margin: 0;
-            background: linear-gradient(135deg, var(--gray-900), var(--gray-700));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            background: none;
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: unset;
+            background-clip: unset;
             letter-spacing: -0.02em;
         }
 
         .brand-tagline {
             font-size: 0.8rem;
             color: var(--gray-500);
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            opacity: 0.9;
+            font-weight: 400;
+            letter-spacing: normal;
+            text-transform: none;
+            opacity: 1;
             position: relative;
         }
 
         .brand-tagline::before {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary-gradient);
-            transition: var(--transition-base);
-            border-radius: var(--radius-full);
+            display: none;
         }
 
         .navbar-brand-modern:hover .brand-tagline::before {
-            width: 100%;
+            width: 0;
         }
 
         /* Ultra Modern Navigation Menu */
@@ -1063,7 +1037,9 @@ try {
             }
 
             .brand-text {
-                display: block;
+                display: flex; /* Changed from block to flex */
+                align-items: baseline; /* Align items */
+                gap: 0.5rem; /* Add gap between name and tagline */
             }
 
             .logo-container {
