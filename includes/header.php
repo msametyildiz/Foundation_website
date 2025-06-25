@@ -264,19 +264,16 @@ try {
         .logo-container {
             width: 50px;
             height: 50px;
-            background: transparent;
-            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0;
+            border-radius: var(--radius-md);
             transition: var(--transition-base);
             position: relative;
-            overflow: hidden;
-            border: none;
+            background-color: transparent;
             box-shadow: none;
         }
-        
+
         .navbar-brand-modern:hover .logo-container {
              transform: none;
         }
@@ -285,6 +282,7 @@ try {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            object-position: center;
             border-radius: var(--radius-md);
             transition: var(--transition-fast);
             position: relative;
@@ -591,6 +589,7 @@ try {
             border: none;
             cursor: pointer;
             letter-spacing: 0.01em;
+            white-space: nowrap;
         }
 
         .btn-cta-modern::before {
@@ -1042,11 +1041,6 @@ try {
                 gap: 0.5rem; /* Add gap between name and tagline */
             }
 
-            .logo-container {
-                width: 50px;
-                height: 50px;
-            }
-
             .brand-name {
                 font-size: 1.3rem;
             }
@@ -1068,11 +1062,6 @@ try {
             .navbar-container {
                 padding: 0 1.25rem;
                 min-height: 80px;
-            }
-
-            .logo-container {
-                width: 52px;
-                height: 52px;
             }
 
             .brand-name {
@@ -1131,11 +1120,6 @@ try {
                 min-height: 70px;
             }
 
-            .logo-container {
-                width: 44px;
-                height: 44px;
-            }
-
             .brand-name {
                 font-size: 1.1rem;
             }
@@ -1188,12 +1172,20 @@ try {
             }
 
             .brand-text {
-                display: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                margin-left: 10px;
             }
 
-            .logo-container {
-                width: 42px;
-                height: 42px;
+            .brand-name {
+                font-size: 1rem;
+                line-height: 1.2;
+            }
+
+            .brand-tagline {
+                font-size: 0.65rem;
+                line-height: 1;
             }
 
             .mobile-toggle {
