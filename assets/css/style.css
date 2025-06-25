@@ -1999,6 +1999,96 @@ a[href*="projects"].btn-primary:hover,
     }
 }
 
+/* =================================== */
+/* 10. Hero Section Responsive Styling */
+/* =================================== */
+
+/* Base for Hero Image Composition */
+.hero-image {
+  position: relative;
+  margin: 0 auto; /* Center the block */
+  width: 100%;
+  max-width: 550px; /* Define a max size for the composition on large screens */
+}
+
+.hero-main-image {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Breakpoint-specific Adjustments --- */
+
+/* Stacking Point for Tablets and Phones (Below 992px) */
+@media (max-width: 991px) {
+  .hero-modern .row.min-vh-100 {
+    min-height: auto !important;
+    padding: 100px 0 60px;
+  }
+  .hero-modern .col-lg-6 {
+    width: 100%;
+  }
+  .hero-modern .hero-content {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .hero-modern .hero-actions,
+  .hero-modern .hero-stats {
+    justify-content: center;
+  }
+  .hero-scroll-indicator {
+    display: none;
+  }
+}
+
+/* For medium tablets */
+@media (max-width: 1199px) and (min-width: 992px) {
+  .hero-image {
+    transform: scale(0.9);
+  }
+}
+
+/* For small tablets */
+@media (max-width: 991px) {
+  .hero-image {
+    max-width: 500px;
+  }
+}
+
+/* For large phones */
+@media (max-width: 767px) {
+  .hero-title { font-size: 2.5rem; }
+  .hero-subtitle { font-size: 1rem; margin: 20px 0 30px; }
+  .hero-actions { flex-direction: column; align-items: center; }
+  .hero-actions .btn { width: 90%; max-width: 320px; margin-bottom: 15px; }
+  .hero-stats { flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: space-evenly; margin-top: 40px; }
+  .hero-stats .stat-item { padding: 0 10px; }
+  .hero-image {
+    max-width: 450px; /* Adjust max-width */
+  }
+}
+
+/* For screens below 577px - The key fix */
+@media (max-width: 577px) {
+  .hero-image {
+    /* Switch from max-width to transform to scale the entire composition */
+    max-width: none; /* Unset max-width to allow transform to work correctly */
+    transform: scale(0.85);
+    transform-origin: top center;
+  }
+}
+
+/* For small phones */
+@media (max-width: 480px) {
+  .hero-modern .row.min-vh-100 { padding-top: 80px; }
+  .hero-title { font-size: 2.1rem; }
+  .hero-stats { flex-direction: column; gap: 20px; }
+  .hero-image {
+    transform: scale(0.75); /* Scale down even more */
+  }
+}
+
 /* ======================================
    Ultra-Professional Enhancements (Performance, A11y, UX)
    ====================================== */

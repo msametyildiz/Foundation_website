@@ -122,6 +122,7 @@ try {
                             Gönüllü Ol
                         </a>
                     </div>
+                    <!-- hero-static -->
                     <div class="hero-stats">
                         <div class="stat-item">
                             <span class="stat-number"><?= number_format($total_families) ?>+</span>
@@ -138,6 +139,7 @@ try {
                     </div>
                 </div>
             </div>
+            <!-- Hero-photo -->
             <div class="col-lg-6">
                 <div class="hero-image">
                     <div class="floating-card card-1">
@@ -355,73 +357,3 @@ try {
     </div>
 </section>
 
-
-<!-- Haberler ve Duyurular
-<?php if (!empty($recent_news)): ?>
-<section class="news-section py-5 bg-light">
-    <div class="container">
-        <div class="row mb-5">
-            <div class="col-12 text-center">
-                <span class="section-badge">Haberler</span>
-                <h2 class="section-title">Son Haberler ve Duyurular</h2>
-                <p class="section-subtitle">Faaliyetlerimiz ve projelerimizden güncel haberler</p>
-            </div>
-        </div>
-        <div class="row">
-            <?php foreach ($recent_news as $news): ?>
-            <div class="col-lg-4 col-md-6 mb-4">
-                <article class="news-card">
-                    <div class="news-image">
-                        <img src="<?= !empty($news['image']) ? $news['image'] : 'uploads/images/news/default-news.jpg' ?>" 
-                             alt="<?= clean_output($news['title']) ?>">
-                        <div class="news-overlay">
-                            <span class="news-category">
-                                <?= ucfirst($news['category']) ?>
-                            </span>
-                            <span class="news-date">
-                                <?= date('d.m.Y', strtotime($news['created_at'])) ?>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="news-content">
-                        <h3 class="news-title">
-                            <a href="#" class="text-decoration-none">
-                                <?= clean_output($news['title']) ?>
-                            </a>
-                        </h3>
-                        <p class="news-excerpt">
-                            <?= clean_output($news['summary'] ?: substr(strip_tags($news['content']), 0, 150) . '...') ?>
-                        </p>
-                        
-                    </div>
-                </article>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <div class="text-center mt-4">
-            <a href="index.php?page=press" class="btn btn-primary btn-lg">
-                Tüm Haberleri Gör
-                <i class="fas fa-newspaper ms-2"></i>
-            </a>
-        </div>
-    </div>
-</section>
-<?php endif; ?> -->
-
-<!-- CTA Section
-<section class="py-5 bg-gradient-primary text-white">
-    <div class="container text-center">
-        <h2 class="mb-4">Birlikte Değişim Yaratın</h2>
-        <p class="lead mb-4">
-            Her destek, bir umudun doğmasına vesile olur. 
-            Siz de bu değişimin bir parçası olun.
-        </p>
-        <a href="index.php?page=donate" class="btn btn-light btn-lg me-3">
-            <i class="fas fa-heart"></i> Hemen Bağış Yap
-        </a>
-        <a href="index.php?page=contact" class="btn btn-outline-light btn-lg">
-            <i class="fas fa-envelope"></i> İletişime Geçin
-        </a>
-    </div>
-</section>
- -->

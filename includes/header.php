@@ -1374,7 +1374,6 @@ try {
     <meta property="og:site_name" content="<?php echo SITE_NAME; ?>">
 </head>
 <body>
-    <a href="#main-content" class="skip-link">Ana İçeriğe Atla</a>
     <nav class="navbar-modern" id="navbar" role="navigation" aria-label="Ana Gezinti">
         <div class="navbar-container">
             <a href="index.php" class="navbar-brand-modern">
