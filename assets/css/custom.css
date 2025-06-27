@@ -1,11 +1,226 @@
 /* Custom styling for "Daha Fazla Bilgi" button */
 .btn-outline-primary {
-    border-color: #your-desired-color;
-    color: #your-desired-color;
+    border-color: #4EA674;
+    color: #4EA674;
 }
 
 .btn-outline-primary:hover {
-    background-color: #your-desired-color;
-    border-color: #your-desired-color;
+    background-color: #4EA674;
+    border-color: #4EA674;
     color: #ffffff;
+}
+
+/* Responsive Design Media Queries */
+
+/*
+  Ekstra Küçük Cihazlar (Küçük Telefonlar, 320px ve üstü)
+  Bu genellikle portre modundaki telefonlar için.
+*/
+@media (min-width: 320px) {
+    /* Telefonlar için genel stil ayarlamaları */
+    body {
+        font-size: 14px;
+    }
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    .hero-section .lead {
+        font-size: 1rem;
+    }
+    .section-title {
+        font-size: 1.8rem;
+    }
+}
+
+/*
+  Küçük Cihazlar (Orta Büyüklükte Telefonlar, 481px ve üstü)
+  Bu genellikle manzara modundaki telefonlar için.
+*/
+@media (min-width: 481px) {
+    body {
+        font-size: 15px;
+    }
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    .hero-section .lead {
+        font-size: 1.1rem;
+    }
+}
+
+/*
+  Orta Büyüklükteki Cihazlar (Büyük Telefonlar ve Küçük Tabletler, 768px ve üstü)
+*/
+@media (min-width: 768px) {
+    body {
+        font-size: 16px; /* Temel font boyutunu normale döndür */
+    }
+    .hero-section h1 {
+        font-size: 3rem;
+    }
+    .hero-section .lead {
+        font-size: 1.2rem;
+    }
+    .section-title {
+        font-size: 2.2rem;
+    }
+    .projects-grid-modern, .news-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/*
+  Büyük Cihazlar (Orta Büyüklükte Tabletler, 992px ve üstü)
+*/
+@media (min-width: 992px) {
+    .hero-section h1 {
+        font-size: 3.5rem;
+    }
+    .section-title {
+        font-size: 2.5rem;
+    }
+    .projects-grid-modern, .news-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/*
+  Ekstra Büyük Cihazlar (Dizüstü Bilgisayarlar, 1200px ve üstü)
+*/
+@media (min-width: 1200px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1140px; /* Standart container genişliği */
+    }
+    .hero-section h1 {
+        font-size: 4rem;
+    }
+}
+
+/*
+  XXL Cihazlar (Büyük Ekranlı Masaüstü Bilgisayarlar, 1367px ve üstü)
+*/
+@media (min-width: 1367px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: 1320px; /* Daha büyük ekranlar için daha geniş container */
+    }
+    .hero-section h1 {
+        font-size: 4.5rem;
+    }
+    body {
+        font-size: 17px;
+    }
+}
+
+/* ===================== RESPONSIVE HOME PAGE ENHANCEMENTS ===================== */
+
+/* 1. Küçük Telefonlar: 320px – 480px */
+@media (max-width: 480px) {
+  .hero-modern .row.min-vh-100 { flex-direction: column; padding-top: 60px; }
+  .hero-modern .col-lg-6 { width: 100%; max-width: 100%; }
+  .hero-content, .about-content { text-align: center; }
+  .hero-title { font-size: 2rem; }
+  .hero-subtitle { font-size: 1rem; }
+  .hero-actions { flex-direction: column; gap: 10px; }
+  .hero-actions .btn { width: 100%; }
+  .hero-stats { flex-direction: column; gap: 10px; }
+  .hero-image { max-width: 95vw; margin: 0 auto; transform: scale(0.8); }
+  .about-image-container { margin-bottom: 2rem; }
+  .about-features { flex-direction: column; gap: 10px; }
+  .project-card, .stat-card { margin-bottom: 1.5rem; }
+  .projects-section .row > div, .stats-section .row > div { width: 100%; }
+  .projects-section .row, .stats-section .row { flex-direction: column; }
+  .about-preview .row { flex-direction: column; }
+}
+
+/* 2. Orta Büyüklükte Telefonlar: 481px – 767px */
+@media (min-width: 481px) and (max-width: 767px) {
+  .hero-title { font-size: 2.3rem; }
+  .hero-subtitle { font-size: 1.1rem; }
+  .hero-actions { flex-direction: column; gap: 12px; }
+  .hero-actions .btn { width: 90%; max-width: 320px; }
+  .hero-image { max-width: 420px; margin: 0 auto; }
+  .about-image-container { margin-bottom: 2rem; }
+  .about-features { flex-direction: column; gap: 12px; }
+  .project-card, .stat-card { margin-bottom: 1.5rem; }
+}
+
+/* 3. Büyük Telefonlar & Küçük Tabletler: 768px – 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+  .hero-title { font-size: 2.7rem; }
+  .hero-subtitle { font-size: 1.2rem; }
+  .hero-modern .row.min-vh-100 { flex-direction: row; padding: 80px 0 40px; }
+  .hero-content, .about-content { text-align: left; }
+  .hero-actions { flex-direction: row; gap: 16px; }
+  .hero-actions .btn { width: auto; }
+  .hero-image { max-width: 400px; margin: 0 auto; }
+  .about-image-container { margin-bottom: 0; }
+  .about-features { flex-direction: row; gap: 16px; flex-wrap: wrap; }
+  .project-card, .stat-card { margin-bottom: 1.5rem; }
+}
+
+/* 4. Orta Büyüklükte Tabletler: 992px – 1199px */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .hero-title { font-size: 3.2rem; }
+  .hero-subtitle { font-size: 1.3rem; }
+  .hero-image { max-width: 500px; }
+  .about-image-container { margin-bottom: 0; }
+  .about-features { flex-direction: row; gap: 18px; }
+}
+
+/* 5. Dizüstü Bilgisayarlar: 1200px – 1366px */
+@media (min-width: 1200px) and (max-width: 1366px) {
+  .container { max-width: 1140px; }
+  .hero-title { font-size: 3.7rem; }
+  .hero-image { max-width: 550px; }
+}
+
+/* 6. Büyük Ekranlı Masaüstü: 1367px ve üzeri */
+@media (min-width: 1367px) {
+  .container { max-width: 1320px; }
+  .hero-title { font-size: 4.2rem; }
+  .hero-image { max-width: 600px; }
+}
+
+/* Genel responsive grid ve padding düzeltmeleri */
+@media (max-width: 991px) {
+  .projects-section .row, .stats-section .row, .about-preview .row { flex-direction: column !important; }
+  .projects-section .col-lg-4, .stats-section .col-lg-4, .about-preview .col-lg-6 { width: 100% !important; max-width: 100% !important; }
+  .project-card, .stat-card { margin-bottom: 2rem; }
+}
+
+@media (max-width: 767px) {
+  .projects-section .row, .stats-section .row, .about-preview .row { flex-direction: column !important; }
+  .projects-section .col-md-6, .stats-section .col-md-6, .about-preview .col-lg-6 { width: 100% !important; max-width: 100% !important; }
+  .project-card, .stat-card { margin-bottom: 1.5rem; }
+}
+
+/* About features responsive fix */
+.about-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* Project cards grid responsive fix */
+.projects-section .row { display: flex; flex-wrap: wrap; }
+.projects-section .col-lg-4, .projects-section .col-md-6 { display: flex; }
+.project-card { flex: 1 1 100%; }
+
+/* Stats cards grid responsive fix */
+.stats-section .row { display: flex; flex-wrap: wrap; }
+.stats-section .col-lg-4, .stats-section .col-md-6 { display: flex; }
+.stat-card { flex: 1 1 100%; }
+
+/* Hero image floating cards hide on mobile */
+@media (max-width: 576px) {
+  .floating-card { display: none !important; }
+}
+
+/* Ensure images are always responsive */
+.hero-main-image, .about-image, .project-image img, .news-image img {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  display: block;
 }

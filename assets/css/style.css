@@ -1578,6 +1578,119 @@ h1, h2, h3, h4, h5, h6 {
     font-size: var(--font-size-lg);
 }
 
+/* === Hero Section & About Preview Section Spacing Optimization === */
+.hero-modern {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: 100vh !important;
+}
+
+/* Hero scroll indicator'ı responsive olarak göster */
+.hero-scroll-indicator {
+    position: absolute !important;
+    bottom: 2rem !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 4 !important;
+    color: var(--white) !important;
+    text-align: center !important;
+    animation: bounce 2s infinite !important;
+    cursor: pointer !important;
+    text-shadow: 0 2px 8px rgba(13, 13, 13, 0.7) !important;
+    backdrop-filter: blur(10px) !important;
+    background: rgba(78, 166, 116, 0.2) !important;
+    padding: var(--spacing-sm) var(--spacing-md) !important;
+    border-radius: var(--radius-lg) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    transition: all 0.3s ease !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+}
+
+.hero-scroll-indicator:hover {
+    background: rgba(78, 166, 116, 0.3) !important;
+    transform: translateX(-50%) translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(13, 13, 13, 0.3) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.about-preview {
+    margin-top: -6rem !important; /* Çok daha agresif negatif margin */
+    padding-top: 0 !important; 
+    padding-bottom: 0 !important;
+    position: relative;
+    z-index: 10; /* Hero'nun üzerine getir */
+}
+
+/* About preview container'ının üst padding'ini sıfırla */
+.about-preview .container {
+    padding-top: 0 !important;
+}
+
+/* About preview row'unun üst margin'ini sıfırla */
+.about-preview .row {
+    margin-top: 0 !important;
+}
+
+/* Responsive optimizasyonlar - Daha agresif */
+@media (max-width: 1199px) {
+  .about-preview {
+    margin-top: -5rem !important;
+  }
+  .hero-scroll-indicator {
+    bottom: 1.5rem !important;
+    padding: 0.5rem 0.8rem !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .about-preview {
+    margin-top: -4rem !important;
+  }
+  .hero-modern {
+    min-height: 80vh !important;
+  }
+  .hero-scroll-indicator {
+    bottom: 1rem !important;
+    padding: 0.4rem 0.7rem !important;
+    font-size: 0.85rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .about-preview {
+    margin-top: -3rem !important;
+  }
+  .hero-modern {
+    min-height: 70vh !important;
+  }
+  .hero-scroll-indicator {
+    bottom: 0.8rem !important;
+    padding: 0.3rem 0.6rem !important;
+    font-size: 0.8rem !important;
+  }
+  .hero-scroll-indicator span {
+    display: none !important; /* Küçük ekranlarda sadece icon göster */
+  }
+}
+
+@media (max-width: 480px) {
+  .about-preview {
+    margin-top: -2rem !important;
+  }
+  .hero-modern {
+    min-height: 60vh !important;
+  }
+  .hero-scroll-indicator {
+    bottom: 0.5rem !important;
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.75rem !important;
+  }
+}
+
 /* ========================================
    NEWS SECTION STYLES
    ======================================== */

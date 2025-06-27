@@ -81,9 +81,31 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(el);
     });
 
-    // Hero scroll indicator
+    // Hero scroll indicator - Enhanced responsive functionality
     const scrollIndicator = document.querySelector('.hero-scroll-indicator');
     if (scrollIndicator) {
+        // Responsive text adjustment
+        function updateScrollIndicatorText() {
+            const span = scrollIndicator.querySelector('span');
+            if (span) {
+                if (window.innerWidth <= 767) {
+                    span.style.display = 'none'; // Hide text on mobile
+                } else {
+                    span.style.display = 'block';
+                    if (window.innerWidth <= 991) {
+                        span.textContent = 'Devam Et'; // Shorter text for tablets
+                    } else {
+                        span.textContent = 'Keşfetmeye devam et'; // Full text for desktop
+                    }
+                }
+            }
+        }
+        
+        // Update text on load and resize
+        updateScrollIndicatorText();
+        window.addEventListener('resize', updateScrollIndicatorText);
+        
+        // Smooth scroll functionality
         scrollIndicator.addEventListener('click', function(e) {
             e.preventDefault();
             
@@ -99,27 +121,58 @@ document.addEventListener('DOMContentLoaded', function() {
             const nextSection = possibleTargets[0];
             
             if (nextSection) {
-                const headerHeight = 80; // Account for fixed header
+                // Responsive header height calculation
+                const headerHeight = window.innerWidth <= 767 ? 60 : 80;
                 const targetPosition = nextSection.offsetTop - headerHeight;
                 
+                // Enhanced smooth scroll with easing
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
                 });
+                
+                // Add visual feedback
+                this.style.transform = 'translateX(-50%) scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'translateX(-50%) scale(1)';
+                }, 150);
             }
         });
         
-        // Add visual feedback
+        // Enhanced accessibility and visual feedback
         scrollIndicator.style.cursor = 'pointer';
         scrollIndicator.setAttribute('role', 'button');
         scrollIndicator.setAttribute('tabindex', '0');
+        scrollIndicator.setAttribute('aria-label', 'Bir sonraki bölüme git');
         
-        // Add keyboard support
+        // Enhanced keyboard support
         scrollIndicator.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 this.click();
             }
+        });
+        
+        // Auto-hide scroll indicator on scroll
+        let scrollTimeout;
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset > 100;
+            if (scrolled) {
+                scrollIndicator.style.opacity = '0.5';
+                scrollIndicator.style.pointerEvents = 'none';
+            } else {
+                scrollIndicator.style.opacity = '1';
+                scrollIndicator.style.pointerEvents = 'auto';
+            }
+            
+            // Clear timeout and reset visibility after scroll stops
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                if (!scrolled) {
+                    scrollIndicator.style.opacity = '1';
+                    scrollIndicator.style.pointerEvents = 'auto';
+                }
+            }, 150);
         });
     }
 
