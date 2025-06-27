@@ -505,7 +505,7 @@ $faq_questions = [
     border-color: rgba(78, 166, 116, 0.2);
 }
 
-/* Accordion Styling */
+/* Accordion Styling with Enhanced Responsive Behavior */
 .accordion-item {
     border: 1px solid rgba(78, 166, 116, 0.1);
     margin-bottom: 1rem;
@@ -517,6 +517,52 @@ $faq_questions = [
     background-color: rgba(78, 166, 116, 0.05);
     border: none;
     font-weight: 600;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
+/* Responsive accordion button padding and text handling */
+@media (max-width: 320px) {
+    .accordion-button {
+        padding: 0.8rem 1rem !important;
+        font-size: 0.85rem !important;
+        line-height: 1.3 !important;
+    }
+}
+
+@media (min-width: 321px) and (max-width: 480px) {
+    .accordion-button {
+        padding: 0.9rem 1.1rem !important;
+        font-size: 0.9rem !important;
+        line-height: 1.35 !important;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+    .accordion-button {
+        padding: 1rem 1.2rem !important;
+        font-size: 0.95rem !important;
+        line-height: 1.4 !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .accordion-button {
+        padding: 1.1rem 1.3rem !important;
+        font-size: 1rem !important;
+        line-height: 1.4 !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .accordion-button {
+        padding: 1.25rem 1.5rem !important;
+        font-size: 1.05rem !important;
+        line-height: 1.5 !important;
+    }
 }
 
 .accordion-button:not(.collapsed) {
@@ -660,19 +706,134 @@ i.text-primary {
     color: #ffffff !important;
 }
 
-/* Accordion question numbers */
+/* Accordion question numbers - Enhanced Responsive */
 .accordion-button .question-number {
     background-color: #4ea674;
     color: #ffffff;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     font-size: 14px;
     font-weight: 700;
     margin-right: 1rem;
+    flex-shrink: 0; /* Prevent shrinking on small screens */
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+/* Responsive question numbers for different screen sizes */
+@media (max-width: 320px) {
+    .accordion-button .question-number {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 11px !important;
+        margin-right: 0.5rem !important;
+        min-width: 24px !important;
+        min-height: 24px !important;
+    }
+}
+
+@media (min-width: 321px) and (max-width: 480px) {
+    .accordion-button .question-number {
+        width: 26px !important;
+        height: 26px !important;
+        font-size: 12px !important;
+        margin-right: 0.6rem !important;
+        min-width: 26px !important;
+        min-height: 26px !important;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+    .accordion-button .question-number {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 13px !important;
+        margin-right: 0.75rem !important;
+        min-width: 28px !important;
+        min-height: 28px !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .accordion-button .question-number {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 14px !important;
+        margin-right: 0.8rem !important;
+        min-width: 30px !important;
+        min-height: 30px !important;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .accordion-button .question-number {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 14px !important;
+        margin-right: 0.9rem !important;
+        min-width: 32px !important;
+        min-height: 32px !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .accordion-button .question-number {
+        width: 34px !important;
+        height: 34px !important;
+        font-size: 15px !important;
+        margin-right: 1rem !important;
+        min-width: 34px !important;
+        min-height: 34px !important;
+    }
+}
+
+/* Enhanced Badge-style question numbers in cards */
+.question-card .question-number.badge {
+    padding: 0.4rem 0.7rem !important;
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+    border-radius: 15px !important;
+    display: inline-block !important;
+    min-width: auto !important;
+    height: auto !important;
+    line-height: 1.2 !important;
+}
+
+@media (max-width: 320px) {
+    .question-card .question-number.badge {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.7rem !important;
+        border-radius: 12px !important;
+    }
+}
+
+@media (min-width: 321px) and (max-width: 480px) {
+    .question-card .question-number.badge {
+        padding: 0.3rem 0.55rem !important;
+        font-size: 0.75rem !important;
+        border-radius: 13px !important;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+    .question-card .question-number.badge {
+        padding: 0.35rem 0.6rem !important;
+        font-size: 0.8rem !important;
+        border-radius: 14px !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .question-card .question-number.badge {
+        padding: 0.4rem 0.7rem !important;
+        font-size: 0.85rem !important;
+        border-radius: 15px !important;
+    }
 }
 
 /* ========================================
@@ -752,39 +913,63 @@ i.text-primary {
     transition: all 0.3s ease;
 }
 
-/* Device-specific placeholder adjustments */
-@media (max-width: 480px) {
+/* Device-specific placeholder adjustments - Enhanced for maximum readability */
+@media (max-width: 320px) {
     .search-input::placeholder {
-        font-size: 0.85rem !important;
-        color: #666 !important;
+        font-size: 0.75rem !important;
+        color: #555 !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.3px !important;
+    }
+}
+
+@media (min-width: 321px) and (max-width: 480px) {
+    .search-input::placeholder {
+        font-size: 0.8rem !important;
+        color: #555 !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.2px !important;
     }
 }
 
 @media (min-width: 481px) and (max-width: 767px) {
     .search-input::placeholder {
-        font-size: 0.9rem !important;
-        color: #777 !important;
+        font-size: 0.85rem !important;
+        color: #666 !important;
+        font-weight: 400 !important;
+        letter-spacing: 0.1px !important;
     }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
     .search-input::placeholder {
-        font-size: 1rem !important;
+        font-size: 0.95rem !important;
         color: #777 !important;
+        font-weight: 400 !important;
     }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
     .search-input::placeholder {
-        font-size: 1.05rem !important;
+        font-size: 1rem !important;
         color: #777 !important;
+        font-weight: 400 !important;
     }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1200px) and (max-width: 1366px) {
+    .search-input::placeholder {
+        font-size: 1.05rem !important;
+        color: #777 !important;
+        font-weight: 400 !important;
+    }
+}
+
+@media (min-width: 1367px) {
     .search-input::placeholder {
         font-size: 1.1rem !important;
         color: #777 !important;
+        font-weight: 400 !important;
     }
 }
 
@@ -961,8 +1146,21 @@ i.text-primary {
     }
     
     .search-input {
-        padding: 0.8rem 1rem;
-        font-size: 0.95rem;
+        padding: 0.9rem 1rem !important;
+        font-size: 0.85rem !important;
+        min-height: 48px !important;
+        /* Ensure placeholder text is fully visible and readable */
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    
+    /* Enhanced placeholder readability for very small screens */
+    .search-input::placeholder {
+        opacity: 1 !important;
+        -webkit-text-fill-color: #555 !important;
+        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+        font-weight: 500 !important;
     }
     
     .search-btn {
@@ -1358,8 +1556,60 @@ i.text-primary {
     }
 }
 
-/* Arama Sonuçları İçeriği Responsive */
-        @media (max-width: 767px) {
+/* Arama Sonuçları İçeriği Responsive - Enhanced Question Numbers */
+        @media (max-width: 320px) {
+            #search-results-content .accordion-item {
+                margin-bottom: 0.5rem !important;
+            }
+            
+            #search-results-content .accordion-button {
+                padding: 0.6rem 0.8rem !important;
+                font-size: 0.8rem !important;
+            }
+            
+            #search-results-content .question-number {
+                font-size: 0.7rem !important;
+                margin-right: 0.4rem !important;
+                width: 20px !important;
+                height: 20px !important;
+                min-width: 20px !important;
+                min-height: 20px !important;
+            }
+            
+            #search-results-content .accordion-body {
+                padding: 0.8rem !important;
+                font-size: 0.8rem !important;
+                line-height: 1.4 !important;
+            }
+        }
+        
+        @media (min-width: 321px) and (max-width: 480px) {
+            #search-results-content .accordion-item {
+                margin-bottom: 0.6rem !important;
+            }
+            
+            #search-results-content .accordion-button {
+                padding: 0.65rem 0.9rem !important;
+                font-size: 0.85rem !important;
+            }
+            
+            #search-results-content .question-number {
+                font-size: 0.75rem !important;
+                margin-right: 0.45rem !important;
+                width: 22px !important;
+                height: 22px !important;
+                min-width: 22px !important;
+                min-height: 22px !important;
+            }
+            
+            #search-results-content .accordion-body {
+                padding: 0.9rem !important;
+                font-size: 0.82rem !important;
+                line-height: 1.45 !important;
+            }
+        }
+        
+        @media (min-width: 481px) and (max-width: 767px) {
             #search-results-content .accordion-item {
                 margin-bottom: 0.75rem !important;
             }
@@ -1372,6 +1622,10 @@ i.text-primary {
             #search-results-content .question-number {
                 font-size: 0.8rem !important;
                 margin-right: 0.5rem !important;
+                width: 24px !important;
+                height: 24px !important;
+                min-width: 24px !important;
+                min-height: 24px !important;
             }
             
             #search-results-content .accordion-body {
@@ -1394,12 +1648,68 @@ i.text-primary {
             #search-results-content .question-number {
                 font-size: 0.85rem !important;
                 margin-right: 0.75rem !important;
+                width: 26px !important;
+                height: 26px !important;
+                min-width: 26px !important;
+                min-height: 26px !important;
             }
             
             #search-results-content .accordion-body {
                 padding: 1.25rem !important;
                 font-size: 0.9rem !important;
                 line-height: 1.6 !important;
+            }
+        }
+        
+        @media (min-width: 992px) and (max-width: 1199px) {
+            #search-results-content .accordion-item {
+                margin-bottom: 1.2rem !important;
+            }
+            
+            #search-results-content .accordion-button {
+                padding: 1.1rem 1.4rem !important;
+                font-size: 1rem !important;
+            }
+            
+            #search-results-content .question-number {
+                font-size: 0.9rem !important;
+                margin-right: 0.8rem !important;
+                width: 28px !important;
+                height: 28px !important;
+                min-width: 28px !important;
+                min-height: 28px !important;
+            }
+            
+            #search-results-content .accordion-body {
+                padding: 1.4rem !important;
+                font-size: 0.95rem !important;
+                line-height: 1.65 !important;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            #search-results-content .accordion-item {
+                margin-bottom: 1.5rem !important;
+            }
+            
+            #search-results-content .accordion-button {
+                padding: 1.25rem 1.5rem !important;
+                font-size: 1.05rem !important;
+            }
+            
+            #search-results-content .question-number {
+                font-size: 1rem !important;
+                margin-right: 1rem !important;
+                width: 30px !important;
+                height: 30px !important;
+                min-width: 30px !important;
+                min-height: 30px !important;
+            }
+            
+            #search-results-content .accordion-body {
+                padding: 1.5rem !important;
+                font-size: 1rem !important;
+                line-height: 1.7 !important;
             }
         }
 
@@ -1582,37 +1892,45 @@ i.text-primary {
    RESPONSIVE PLACEHOLDER TEXT MANAGEMENT
    ======================================== */
     
-    // Dynamic placeholder text based on screen size
-    function updatePlaceholderText() {
+    // Keep the full placeholder text but adjust styling for readability
+    function updatePlaceholderStyling() {
         const screenWidth = window.innerWidth;
         const searchInput = document.getElementById('faqSearch');
         
-        if (screenWidth <= 480) {
-            searchInput.placeholder = "Nasıl yardım edebiliriz?";
-        } else if (screenWidth <= 767) {
-            searchInput.placeholder = "Hangi konuda yardım istiyorsunuz?";
-        } else if (screenWidth <= 991) {
-            searchInput.placeholder = "Hangi konuda yardıma ihtiyacınız var?";
+        // Always keep the full text
+        searchInput.placeholder = "Hangi konuda yardıma ihtiyacınız var?";
+        
+        // Add dynamic styling adjustments for very small screens
+        if (screenWidth <= 320) {
+            searchInput.style.setProperty('text-overflow', 'ellipsis');
+            searchInput.style.setProperty('white-space', 'nowrap');
+            searchInput.style.setProperty('overflow', 'hidden');
+        } else if (screenWidth <= 480) {
+            searchInput.style.setProperty('text-overflow', 'ellipsis');
+            searchInput.style.setProperty('white-space', 'nowrap');
+            searchInput.style.setProperty('overflow', 'hidden');
         } else {
-            searchInput.placeholder = "Hangi konuda yardıma ihtiyacınız var?";
+            searchInput.style.removeProperty('text-overflow');
+            searchInput.style.removeProperty('white-space');
+            searchInput.style.removeProperty('overflow');
         }
     }
     
-    // Initialize placeholder text
-    updatePlaceholderText();
+    // Initialize placeholder styling
+    updatePlaceholderStyling();
     
-    // Update placeholder on window resize
+    // Update styling on window resize
     let resizeTimeout;
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-            updatePlaceholderText();
+            updatePlaceholderStyling();
         }, 100);
     });
     
     // Enhanced placeholder visibility for better contrast
     searchInput.addEventListener('focus', function() {
-        this.style.setProperty('--placeholder-opacity', '0.6');
+        this.style.setProperty('--placeholder-opacity', '0.8');
     });
     
     searchInput.addEventListener('blur', function() {
