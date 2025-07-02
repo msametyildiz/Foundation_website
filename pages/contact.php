@@ -262,7 +262,7 @@ try {
                             <div class="row g-3 mt-1">
                                 <div class="col-md-6">
                                     <label for="phone" class="form-label">Telefon</label>
-                                    <input type="tel" class="form-control" id="phone" name="phone" >
+                                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="0555 123 45 67">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="subject" class="form-label">Konu *</label>
@@ -314,8 +314,8 @@ try {
                 <div class="map-section-wrapper">
                     <div class="text-center mb-4">
                         <span class="badge bg-primary px-3 py-2 mb-3">Konum</span>
-                        <h2>Derneğimizi Ziyaret Edin</h2>
-                        <p class="text-muted">Randevu alarak derneğimize gelebilirsiniz</p>
+                        <h2>Ofisimizi Ziyaret Edin</h2>
+                        <p class="text-muted">Randevu alarak ofisimize gelebilirsiniz</p>
                     </div>
                     
                     <!-- Google Harita -->
