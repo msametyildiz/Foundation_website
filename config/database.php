@@ -7,15 +7,16 @@ if (php_sapi_name() === 'cli') {
     // CLI ortamında development olarak kabul et
     $environment = 'development';
 } else {
-    // Web ortamında sunucu adına göre tespit et
-    $environment = (isset($_SERVER['SERVER_NAME']) && 
-                  ($_SERVER['SERVER_NAME'] == 'localhost' || 
-                   $_SERVER['SERVER_NAME'] == '127.0.0.1' || 
-                   strpos($_SERVER['SERVER_NAME'] ?? '', '.local') !== false)) 
+    // Server name değerini al ve ekstra log ekle
+    $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'undefined';
+    error_log("Server name detection: " . $serverName);
+    
+    // Web ortamında sunucu adına göre tespit et - cPanel uyumluluğu için sadeleştirildi
+    $environment = ($serverName == 'localhost' || $serverName == '127.0.0.1') 
                   ? 'development' : 'production';
     
     // Ortam bilgisini logla
-    error_log("Detected environment: " . $environment . " (SERVER_NAME: " . ($_SERVER['SERVER_NAME'] ?? 'undefined') . ")");
+    error_log("Detected environment: " . $environment . " (SERVER_NAME: " . $serverName . ")");
 }
 
 // Ortama göre bağlantı ayarları
@@ -80,7 +81,14 @@ try {
     if ($environment == 'development') {
         die("Veritabanı bağlantı hatası: " . $e->getMessage());
     } else {
-        die("Veritabanına bağlanırken bir sorun oluştu. Lütfen daha sonra tekrar deneyin veya site yöneticisiyle iletişime geçin.");
+        // Üretim ortamında daha güvenli hata mesajı ve hata sayfasına yönlendirme
+        error_log("Veritabanı bağlantı hatası (cPanel): " . $e->getMessage());
+        if (file_exists('pages/500.php')) {
+            include 'pages/500.php';
+            exit;
+        } else {
+            die("Veritabanına bağlanırken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.");
+        }
     }
 }
 ?>

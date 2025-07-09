@@ -82,6 +82,8 @@ if (file_exists($page_file)) {
 
 // Footer'ı ekle
 try {
+    // Pass environment variable to footer
+    $footer_environment = $environment;
     include 'includes/footer.php';
 } catch (Exception $e) {
     error_log("Footer include error: " . $e->getMessage());

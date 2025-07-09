@@ -428,7 +428,61 @@ function fixFooterDisplay() {
     if (footer) {
         console.log('Footer bulundu, görünüm düzeltmesi uygulanıyor...');
         
-        // Footer içindeki tüm bağlantıları kontrol et
+        // cPanel'de CSS yüklenme sorunlarını çözmek için inline stil uygula
+        footer.style.display = 'flex';
+        footer.style.visibility = 'visible';
+        footer.style.opacity = '1';
+        footer.style.minHeight = '400px';
+        footer.style.flexDirection = 'column';
+        footer.style.position = 'relative';
+        footer.style.marginTop = 'auto';
+        footer.style.borderTop = '1px solid rgba(78, 166, 116, 0.1)';
+        
+        // Footer içindeki ana bölümlerin görünürlüğünü sağla
+        const footerContainer = footer.querySelector('.footer-container');
+        if (footerContainer) {
+            footerContainer.style.position = 'relative';
+            footerContainer.style.zIndex = '2';
+            footerContainer.style.maxWidth = '1400px';
+            footerContainer.style.margin = '0 auto';
+            footerContainer.style.padding = '4rem 2rem 2rem';
+            footerContainer.style.flex = '1';
+            footerContainer.style.display = 'flex';
+            footerContainer.style.flexDirection = 'column';
+            
+            // Footer Main Grid düzeltmesi
+            const footerMain = footerContainer.querySelector('.footer-main');
+            if (footerMain) {
+                footerMain.style.display = 'grid';
+                footerMain.style.gap = '4rem';
+                footerMain.style.marginBottom = '3rem';
+                footerMain.style.flex = '1';
+                
+                // Responsive görünüm düzeltmesi
+                if (window.innerWidth > 1200) {
+                    footerMain.style.gridTemplateColumns = '2.2fr 1fr 1fr 1.5fr';
+                } else if (window.innerWidth > 992) {
+                    footerMain.style.gridTemplateColumns = '2fr 1fr 1fr';
+                } else if (window.innerWidth > 768) {
+                    footerMain.style.gridTemplateColumns = '1fr 1fr';
+                } else {
+                    footerMain.style.gridTemplateColumns = '1fr';
+                }
+            }
+            
+            // Footer Copyright düzeltmesi
+            const footerCopyright = footerContainer.querySelector('.footer-copyright');
+            if (footerCopyright) {
+                footerCopyright.style.padding = '2rem 0';
+                footerCopyright.style.borderTop = '1px solid rgba(78, 166, 116, 0.1)';
+                footerCopyright.style.marginTop = '2rem';
+                footerCopyright.style.textAlign = 'center';
+                footerCopyright.style.color = 'var(--gray-600)';
+                footerCopyright.style.fontSize = '0.95rem';
+            }
+        }
+        
+        // Footer bağlantılarını kontrol et
         const footerLinks = footer.querySelectorAll('.footer-links a');
         footerLinks.forEach(link => {
             // Bağlantı çalışıyor mu kontrol et
@@ -454,11 +508,39 @@ function fixFooterDisplay() {
             });
         });
         
-        // Footer'ın görünür olduğundan emin ol
-        setTimeout(() => {
-            footer.style.display = 'flex';
-            footer.style.visibility = 'visible';
-            footer.style.opacity = '1';
-        }, 500);
+        // Tüm alt bölümlerin görünürlüğünü kontrol et ve düzelt
+        const footerSections = footer.querySelectorAll('.footer-section');
+        footerSections.forEach(section => {
+            section.style.display = 'block';
+            section.style.visibility = 'visible';
+            section.style.opacity = '1';
+        });
+        
+        // cPanel-specific fix için stil ekle
+        document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                @media (max-width: 992px) {
+                    .footer-main {
+                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+                        gap: 3rem !important;
+                    }
+                }
+                
+                @media (max-width: 768px) {
+                    .footer-main {
+                        grid-template-columns: 1fr !important;
+                        gap: 2.5rem !important;
+                    }
+                }
+                
+                .footer-brand, .footer-section, .footer-copyright {
+                    display: block !important;
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                }
+            </style>
+        `);
+    } else {
+        console.error('Footer bulunamadı.');
     }
 } 
