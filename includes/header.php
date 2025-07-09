@@ -1365,16 +1365,15 @@ try {
 
     <link rel="stylesheet" href="assets/css/style.css">
 
+    <!-- JavaScript Libraries - Temel kütüphaneleri yükle, main.js footer'da yükleniyor -->
     <script src="assets/vendor/jquery/jquery.min.js"></script>
-    <script src="assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/navbar-modern.js" defer></script>
+    <script src="assets/vendor/bootstrap/bootstrap.bundle.min.js" defer></script>
     <script src="assets/js/logo-base64.js" defer></script>
+    
+    <!-- cPanel Compatibility Script -->
     <script src="scripts/cpanel_compatibility.js" defer></script>
     
-    <!-- Additional Scripts for specific pages -->
-    <?php if (isset($_GET['page']) && $_GET['page'] == 'about'): ?>
-    <script src="assets/js/about-page.js" defer></script>
-    <?php endif; ?>
+    <!-- Sayfa bazlı script yüklemeleri footer'da yapılıyor -->
 </head>
 <body>
     <nav class="navbar-modern" id="navbar" role="navigation" aria-label="Ana Gezinti">

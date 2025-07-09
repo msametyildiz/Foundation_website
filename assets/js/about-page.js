@@ -432,92 +432,101 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Add CSS animations through JavaScript
-const aboutPageStyle = document.createElement('style');
-aboutPageStyle.textContent = `
-    @keyframes ripple {
-        from {
-            transform: scale(0);
-            opacity: 1;
-        }
-        to {
-            transform: scale(2);
-            opacity: 0;
-        }
+(function() {
+    // Stili eklemeden önce daha önce eklenip eklenmediğini kontrol et
+    if (!document.getElementById('about-page-styles')) {
+        const aboutPageStyle = document.createElement('style');
+        aboutPageStyle.id = 'about-page-styles'; // Önemli: Benzersiz ID ile sadece bir kez yüklenmesini sağla
+        aboutPageStyle.textContent = `
+            @keyframes ripple {
+                from {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+            
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes fadeInDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(40px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            @keyframes pulse {
+                0%, 100% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.05);
+                }
+            }
+            
+            .animate-in {
+                animation: fadeInUp 0.8s ease-out;
+            }
+            
+            .stat-number-animated {
+                animation: pulse 2s ease-in-out infinite;
+            }
+            
+            /* Improved transitions for better performance */
+            .activity-card-modern {
+                will-change: transform, box-shadow;
+            }
+            
+            .icon-circle-modern {
+                will-change: transform;
+            }
+            
+            .stat-number {
+                will-change: transform;
+            }
+            
+            .section-badge {
+                animation: fadeInDown 0.6s ease-out;
+            }
+            
+            /* Loading states */
+            .page-loaded .activity-card-modern {
+                animation: slideInUp 0.8s ease-out forwards;
+            }
+        `;
+        document.head.appendChild(aboutPageStyle);
+        console.log('About page styles loaded');
+    } else {
+        console.log('About page styles already loaded, skipping');
     }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    @keyframes slideInUp {
-        from {
-            opacity: 0;
-            transform: translateY(40px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    @keyframes pulse {
-        0%, 100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.05);
-        }
-    }
-    
-    .animate-in {
-        animation: fadeInUp 0.8s ease-out;
-    }
-    
-    .stat-number-animated {
-        animation: pulse 2s ease-in-out infinite;
-    }
-    
-    /* Improved transitions for better performance */
-    .activity-card-modern {
-        will-change: transform, box-shadow;
-    }
-    
-    .icon-circle-modern {
-        will-change: transform;
-    }
-    
-    .stat-number {
-        will-change: transform;
-    }
-    
-    .section-badge {
-        animation: fadeInDown 0.6s ease-out;
-    }
-    
-    /* Loading states */
-    .page-loaded .activity-card-modern {
-        animation: slideInUp 0.8s ease-out forwards;
-    }
-`;
-document.head.appendChild(aboutPageStyle);
+})();
 
 // Enhanced counter animation with better timing
 function enhancedCounterAnimation(element) {

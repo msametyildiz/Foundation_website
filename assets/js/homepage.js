@@ -15,21 +15,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Navbar scroll effect
-    const navbar = document.querySelector('.navbar');
+    // Navbar scroll effect - Yeni navbar sınıfını kullan
+    const navbar = document.querySelector('.navbar-modern');
     let lastScrollTop = 0;
     
-    window.addEventListener('scroll', function() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (scrollTop > 100) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-        
-        lastScrollTop = scrollTop;
-    });
+    // Eğer navbar bulunursa işlem yap (null kontrolü)
+    if (navbar) {
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+    }
 
     // Animated counter for stats
     const animateCounter = (element, target, duration = 2000) => {
@@ -55,9 +58,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
+            if (entry.isIntersecting && entry.target) {
                 // Add animation classes
-                if (entry.target.classList.contains('stat-number')) {
+                if (entry.target.classList && entry.target.classList.contains('stat-number')) {
                     const target = parseInt(entry.target.getAttribute('data-target'));
                     if (target) {
                         animateCounter(entry.target, target);
@@ -65,9 +68,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 // Animate cards
-                if (entry.target.classList.contains('feature-card') || 
+                if (entry.target.classList && 
+                   (entry.target.classList.contains('feature-card') || 
                     entry.target.classList.contains('project-card') ||
-                    entry.target.classList.contains('testimonial-card')) {
+                    entry.target.classList.contains('testimonial-card'))) {
                     entry.target.style.animation = 'fadeInUp 0.8s ease forwards';
                 }
                 
@@ -78,7 +82,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Observe elements for animation
     document.querySelectorAll('.stat-number, .feature-card, .project-card, .testimonial-card').forEach(el => {
-        observer.observe(el);
+        if (el) {
+            observer.observe(el);
+        }
     });
 
     // Hero scroll indicator - Enhanced responsive functionality
@@ -179,13 +185,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Button hover effects
     const buttons = document.querySelectorAll('.btn');
     buttons.forEach(btn => {
-        btn.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-2px)';
-        });
-        
-        btn.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
+        if (btn) {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        }
     });
 
     // Parallax effect for hero section
@@ -237,41 +245,47 @@ document.addEventListener('DOMContentLoaded', function() {
     // Loading animation for other images
     const images = document.querySelectorAll('img:not(.hero-main-image)');
     images.forEach(img => {
-        img.addEventListener('load', function() {
-            this.style.opacity = '1';
-            this.style.transform = 'scale(1)';
-        });
-        
-        // Set initial styles
-        img.style.opacity = '0';
-        img.style.transform = 'scale(0.95)';
-        img.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        if (img) { // Null kontrolü ekle
+            img.addEventListener('load', function() {
+                this.style.opacity = '1';
+                this.style.transform = 'scale(1)';
+            });
+            
+            // Set initial styles
+            img.style.opacity = '0';
+            img.style.transform = 'scale(0.95)';
+            img.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        }
     });
 
     // Form enhancements (if any forms exist)
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            const submitBtn = this.querySelector('button[type="submit"], input[type="submit"]');
-            if (submitBtn) {
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gönderiliyor...';
-                submitBtn.disabled = true;
-            }
-        });
+        if (form) { // Null kontrolü ekle
+            form.addEventListener('submit', function(e) {
+                const submitBtn = this.querySelector('button[type="submit"], input[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gönderiliyor...';
+                    submitBtn.disabled = true;
+                }
+            });
+        }
     });
 
     // Progress bar animations
     const progressBars = document.querySelectorAll('.progress-fill');
     const progressObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
+            if (entry.isIntersecting && entry.target) { // Null kontrolü ekle
                 const progress = entry.target;
                 const width = progress.style.width;
                 progress.style.width = '0%';
                 progress.style.transition = 'width 2s ease-in-out';
                 
                 setTimeout(() => {
-                    progress.style.width = width;
+                    if (progress) { // setTimeout içinde null kontrolü ekle
+                        progress.style.width = width;
+                    }
                 }, 100);
                 
                 progressObserver.unobserve(entry.target);
@@ -280,24 +294,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }, observerOptions);
 
     progressBars.forEach(bar => {
-        progressObserver.observe(bar);
+        if (bar) { // Null kontrolü ekle
+            progressObserver.observe(bar);
+        }
     });
 
     // Add loading class removal
     window.addEventListener('load', function() {
-        document.body.classList.add('loaded');
-        
-        // Start animations
-        const heroContent = document.querySelector('.hero-content');
-        if (heroContent) {
-            heroContent.style.animation = 'fadeInUp 1s ease forwards';
+        if (document.body) {
+            document.body.classList.add('loaded');
+            
+            // Start animations
+            const heroContent = document.querySelector('.hero-content');
+            if (heroContent) {
+                heroContent.style.animation = 'fadeInUp 1s ease forwards';
+            }
+            
+            const floatingCards = document.querySelectorAll('.floating-card');
+            floatingCards.forEach((card, index) => {
+                if (card) {
+                    card.style.animationDelay = `${index * 0.2}s`;
+                    card.style.animation = 'fadeInRight 0.8s ease forwards';
+                }
+            });
         }
-        
-        const floatingCards = document.querySelectorAll('.floating-card');
-        floatingCards.forEach((card, index) => {
-            card.style.animationDelay = `${index * 0.2}s`;
-            card.style.animation = 'fadeInRight 0.8s ease forwards';
-        });
     });
 });
 
