@@ -4,204 +4,193 @@ require_once '../includes/functions.php';
 
 http_response_code(403);
 ?>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>403 - Erişim Engellendi | Necat Derneği</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .error-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 60px;
-            text-align: center;
-        }
-        .error-number {
-            font-size: 120px;
-            font-weight: 900;
-            color: #dc3545;
-            line-height: 1;
-            margin-bottom: 20px;
-            animation: bounce 2s infinite;
-        }
-        .error-icon {
-            font-size: 80px;
-            color: #dc3545;
-            margin-bottom: 30px;
-            animation: shake 1.5s infinite;
-        }
-        .error-title {
-            font-size: 36px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .error-description {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 40px;
-            line-height: 1.6;
-        }
-        .btn-home {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border: none;
-            padding: 15px 30px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 50px;
-            color: white;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-        .btn-home:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-            color: white;
-        }
-        .quick-links {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid #eee;
-        }
-        .quick-links a {
-            color: #667eea;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-        .quick-links a:hover {
-            color: #764ba2;
-        }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-10px);
-            }
-            60% {
-                transform: translateY(-5px);
-            }
-        }
-        @keyframes shake {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            25% {
-                transform: translateX(-5px);
-            }
-            75% {
-                transform: translateX(5px);
-            }
-        }
-        .floating-shapes {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-        .shape {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-        .shape:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-        .shape:nth-child(2) {
-            width: 120px;
-            height: 120px;
-            top: 60%;
-            right: 10%;
-            animation-delay: 2s;
-        }
-        .shape:nth-child(3) {
-            width: 60px;
-            height: 60px;
-            bottom: 20%;
-            left: 20%;
-            animation-delay: 4s;
-        }
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="floating-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-    
+
+<div class="error-page">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-lg-8 col-xl-6">
-                <div class="error-container">
-                    <div class="error-icon">
-                        <i class="fas fa-shield-alt"></i>
+            <div class="col-lg-8 text-center">
+                <div class="error-content">
+                    <div class="error-code">
+                        <h1>403</h1>
+                        <div class="error-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
                     </div>
                     
-                    <div class="error-number">403</div>
+                    <div class="error-message">
+                        <h2>Erişim Engellendi</h2>
+                        <p class="lead">Bu sayfaya erişim izniniz bulunmuyor.</p>
+                        <p>Lütfen web sitemizdeki diğer sayfalara göz atın.</p>
+                    </div>
                     
-                    <h1 class="error-title">Erişim Engellendi</h1>
+                    <div class="error-actions">
+                        <a href="index.php" class="btn btn-primary btn-lg me-3">
+                            <i class="fas fa-home me-2"></i>Ana Sayfa
+                        </a>
+                        <a href="index.php?page=contact" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-envelope me-2"></i>İletişim
+                        </a>
+                    </div>
                     
-                    <p class="error-description">
-                        Üzgünüz, bu sayfaya erişim yetkiniz bulunmuyor. Bu içeriği görüntülemek için gerekli izinlere sahip değilsiniz.
-                    </p>
-                    
-                    <a href="/" class="btn-home">
-                        <i class="fas fa-home me-2"></i>Ana Sayfaya Dön
-                    </a>
-                    
-                    <div class="quick-links">
-                        <p class="mb-3"><strong>Hızlı Bağlantılar:</strong></p>
-                        <a href="/pages/about.php">
-                            <i class="fas fa-info-circle me-1"></i>Hakkımızda
-                        </a>
-                        <a href="/pages/contact.php">
-                            <i class="fas fa-envelope me-1"></i>İletişim
-                        </a>
-                        <a href="/pages/projects.php">
-                            <i class="fas fa-project-diagram me-1"></i>Projeler
-                        </a>
-                        <a href="/pages/volunteer.php">
-                            <i class="fas fa-hands-helping me-1"></i>Gönüllü Ol
-                        </a>
+                    <div class="quick-links mt-5">
+                        <h4>Popüler Sayfalar</h4>
+                        <div class="row">
+                            <div class="col-md-3 col-6 mb-3">
+                                <a href="index.php?page=about" class="quick-link">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Hakkımızda</span>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-6 mb-3">
+                                <a href="index.php?page=donate" class="quick-link">
+                                    <i class="fas fa-hand-holding-heart"></i>
+                                    <span>Bağış Yap</span>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-6 mb-3">
+                                <a href="index.php?page=volunteer" class="quick-link">
+                                    <i class="fas fa-users"></i>
+                                    <span>Gönüllü Ol</span>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-6 mb-3">
+                                <a href="index.php?page=projects" class="quick-link">
+                                    <i class="fas fa-project-diagram"></i>
+                                    <span>Projeler</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<style>
+.error-page {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    padding: 4rem 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.error-content {
+    padding: 2rem;
+}
+
+.error-code {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.error-code h1 {
+    font-size: 8rem;
+    font-weight: 900;
+    color: #e67e22;
+    margin: 0;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.error-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.1;
+}
+
+.error-icon i {
+    font-size: 6rem;
+    color: #e67e22;
+}
+
+.error-message h2 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.error-message p {
+    color: #7f8c8d;
+    margin-bottom: 1rem;
+}
+
+.quick-links {
+    margin-top: 3rem;
+}
+
+.quick-link {
+    display: block;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 15px;
+    text-decoration: none;
+    color: #2c3e50;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.quick-link:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    color: #3498db;
+    text-decoration: none;
+}
+
+.quick-link i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.quick-link span {
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .error-code h1 {
+        font-size: 6rem;
+    }
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    .error-icon i {
+        font-size: 4rem;
+    }
+    
+    .error-actions .btn {
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+// Add some animation to the 403 number
+document.addEventListener('DOMContentLoaded', function() {
+    const errorCode = document.querySelector('.error-code h1');
+    if (errorCode) {
+        errorCode.style.opacity = '0';
+        errorCode.style.transform = 'scale(0.5)';
+        
+        setTimeout(() => {
+            errorCode.style.transition = 'all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            errorCode.style.opacity = '1';
+            errorCode.style.transform = 'scale(1)';
+        }, 200);
+    }
+    
+    // Animate quick links
+    const quickLinks = document.querySelectorAll('.quick-link');
+    quickLinks.forEach((link, index) => {
+        link.style.opacity = '0';
+        link.style.transform = 'translateY(30px)';
+        
+        setTimeout(() => {
+            link.style.transition = 'all 0.6s ease';
+            link.style.opacity = '1';
+            link.style.transform = 'translateY(0)';
+        }, 600 + (index * 100));
+    });
+});
+</script>

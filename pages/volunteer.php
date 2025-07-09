@@ -1,6 +1,8 @@
 <?php
 // Veritabanından gönüllü verileri
 try {
+    global $pdo; // Global veritabanı bağlantısına erişim
+    
     // Gönüllü istatistikleri
     $stmt = $pdo->prepare("SELECT 
         COUNT(*) as total_volunteers,
@@ -11,6 +13,7 @@ try {
     $volunteer_stats = $stmt->fetch(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
+    error_log("Volunteer stats error: " . $e->getMessage());
     $volunteer_stats = ['total_volunteers' => 0, 'active_volunteers' => 0, 'pending_applications' => 0];
 }
 

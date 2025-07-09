@@ -6,10 +6,12 @@
  * Version: 2.0
  */
 
-// Security check
+// Security check - sadece uyarı ver, çıkış yapma
 if (!defined('SITE_NAME')) {
-    header('HTTP/1.0 403 Forbidden');
-    exit('Direct access not allowed');
+    // Fallback değerler tanımla
+    define('SITE_NAME', 'Necat Derneği');
+    define('SITE_URL', '');
+    define('SITE_EMAIL', 'info@necatdernegi.org');
 }
 
 // Include logo helper with error handling
@@ -1372,6 +1374,16 @@ try {
     <meta property="og:type" content="website">
     <meta property="og:url" content="<?php echo SITE_URL; ?>">
     <meta property="og:site_name" content="<?php echo SITE_NAME; ?>">
+
+    <!-- JavaScript Libraries -->
+    <script src="assets/vendor/jquery/jquery.min.js"></script>
+    <script src="assets/vendor/bootstrap/bootstrap.bundle.min.js" defer></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="assets/js/main.js" defer></script>
+    
+    <!-- cPanel Compatibility Script -->
+    <script src="scripts/cpanel_compatibility.js" defer></script>
 </head>
 <body>
     <nav class="navbar-modern" id="navbar" role="navigation" aria-label="Ana Gezinti">
@@ -1403,38 +1415,38 @@ try {
 
             <ul class="navbar-nav-modern">
                 <li class="nav-item-modern">
-                    <a href="index.php" class="nav-link-modern <?php echo is_active_page('home'); ?>">
+                    <a href="<?= site_url() ?>" class="nav-link-modern <?php echo is_active_page('home'); ?>">
                         <span>Ana Sayfa</span>
                     </a>
                 </li>
                 <li class="nav-item-modern">
-                    <a href="index.php?page=about" class="nav-link-modern <?php echo is_active_page('about'); ?>">
+                    <a href="<?= site_url('about') ?>" class="nav-link-modern <?php echo is_active_page('about'); ?>">
                         <span>Hakkımızda</span>
                     </a>
                 </li>
                 <li class="nav-item-modern">
-                    <a href="index.php?page=projects" class="nav-link-modern <?php echo is_active_page('projects'); ?>">
+                    <a href="<?= site_url('projects') ?>" class="nav-link-modern <?php echo is_active_page('projects'); ?>">
                         <span>Projelerimiz</span>
                     </a>
                 </li>
                 <li class="nav-item-modern">
-                    <a href="index.php?page=volunteer" class="nav-link-modern <?php echo is_active_page('volunteer'); ?>">
+                    <a href="<?= site_url('volunteer') ?>" class="nav-link-modern <?php echo is_active_page('volunteer'); ?>">
                         <span>Gönüllü Ol</span>
                     </a>
                 </li>
                 <li class="nav-item-modern">
-                    <a href="index.php?page=faq" class="nav-link-modern <?php echo is_active_page('faq'); ?>">
+                    <a href="<?= site_url('faq') ?>" class="nav-link-modern <?php echo is_active_page('faq'); ?>">
                         <span>SSS</span>
                     </a>
                 </li>
                 <li class="nav-item-modern">
-                    <a href="index.php?page=contact" class="nav-link-modern <?php echo is_active_page('contact'); ?>">
+                    <a href="<?= site_url('contact') ?>" class="nav-link-modern <?php echo is_active_page('contact'); ?>">
                         <span>İletişim</span>
                     </a>
                 </li>
                 </li>
                 <li class="nav-item-modern">
-                    <a href="index.php?page=donate" class="btn-cta-modern <?php echo is_active_page('donate'); ?>">
+                    <a href="<?= site_url('donate') ?>" class="btn-cta-modern <?php echo is_active_page('donate'); ?>">
                         <i class="fas fa-heart"></i>
                         <span>Bağış Yap</span>
                     </a>
@@ -1456,32 +1468,32 @@ try {
                 </div>
             </div>
             <nav class="mobile-nav">
-                <a href="index.php" class="nav-link-modern <?php echo is_active_page('home'); ?>">
+                <a href="<?= site_url() ?>" class="nav-link-modern <?php echo is_active_page('home'); ?>">
                     <i class="fas fa-home"></i>
                     <span>Ana Sayfa</span>
                 </a>
-                <a href="index.php?page=about" class="nav-link-modern <?php echo is_active_page('about'); ?>">
+                <a href="<?= site_url('about') ?>" class="nav-link-modern <?php echo is_active_page('about'); ?>">
                     <i class="fas fa-info-circle"></i>
                     <span>Hakkımızda</span>
                 </a>
-                <a href="index.php?page=projects" class="nav-link-modern <?php echo is_active_page('projects'); ?>">
+                <a href="<?= site_url('projects') ?>" class="nav-link-modern <?php echo is_active_page('projects'); ?>">
                     <i class="fas fa-project-diagram"></i>
                     <span>Projelerimiz</span>
                 </a>
-                <a href="index.php?page=volunteer" class="nav-link-modern <?php echo is_active_page('volunteer'); ?>">
+                <a href="<?= site_url('volunteer') ?>" class="nav-link-modern <?php echo is_active_page('volunteer'); ?>">
                     <i class="fas fa-hands-helping"></i>
                     <span>Gönüllü Ol</span>
                 </a>
-                <a href="index.php?page=faq" class="nav-link-modern <?php echo is_active_page('faq'); ?>">
+                <a href="<?= site_url('faq') ?>" class="nav-link-modern <?php echo is_active_page('faq'); ?>">
                     <i class="fas fa-question-circle"></i>
                     <span>Sık Sorulan Sorular</span>
                 </a>
-                <a href="index.php?page=contact" class="nav-link-modern <?php echo is_active_page('contact'); ?>">
+                <a href="<?= site_url('contact') ?>" class="nav-link-modern <?php echo is_active_page('contact'); ?>">
                     <i class="fas fa-envelope"></i>
                     <span>İletişim</span>
                 </a>
 
-                <a href="index.php?page=donate" class="btn-cta-modern <?php echo is_active_page('donate'); ?>">
+                <a href="<?= site_url('donate') ?>" class="btn-cta-modern <?php echo is_active_page('donate'); ?>">
                     <i class="fas fa-heart"></i>
                     <span>Bağış Yap</span>
                 </a>

@@ -3,6 +3,59 @@
  * Genel yardımcı fonksiyonlar
  */
 
+// Site URL'si oluştur (Eski çalışan sistem)
+function site_url($path = '', $full = false) {
+    // Base URL'i belirle
+    if ($full) {
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+        $base = $protocol . $_SERVER['HTTP_HOST'];
+    } else {
+        $base = '';
+    }
+    
+    // Ana sayfa için
+    if (empty($path) || $path === 'home') {
+        return $base . '/index.php';
+    }
+    
+    // Diğer sayfalar için eski sistem
+    return $base . '/index.php?page=' . ltrim($path, '/');
+}
+
+// Aktif sayfa kontrolü (SEO dostu URL'ler için)
+function is_active_page($page) {
+    $current_page = get_current_page();
+    return $current_page === $page ? 'active' : '';
+}
+
+// Mevcut sayfa adını al
+function get_current_page() {
+    // Önce GET parametresini kontrol et (geriye dönük uyumluluk)
+    if (isset($_GET['page']) && !empty($_GET['page'])) {
+        return htmlspecialchars(trim($_GET['page']), ENT_QUOTES, 'UTF-8');
+    }
+    
+    // URL path'ini al
+    $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+    
+    // index.php'yi kaldır
+    $path = str_replace('index.php', '', $path);
+    $path = trim($path, '/');
+    
+    // Boş ise ana sayfa
+    if (empty($path)) {
+        return 'home';
+    }
+    
+    // Alt sayfa (id) varsa ana sayfayı dön
+    if (strpos($path, '/') !== false) {
+        list($path) = explode('/', $path);
+    }
+    
+    // Path'i return et
+    return $path;
+}
+
 // Sayfa bilgilerini getir
 function getPageInfo($page) {
     $pages = [
@@ -55,6 +108,21 @@ function getPageInfo($page) {
             'title' => 'Yönetim Kurulu - Necat Derneği',
             'description' => 'Necat Derneği yönetim kurulu ve ekip üyeleri.',
             'keywords' => 'yönetim kurulu, ekip, kurucu'
+        ],
+        '404' => [
+            'title' => 'Sayfa Bulunamadı - Necat Derneği',
+            'description' => 'Aradığınız sayfa bulunamadı.',
+            'keywords' => 'hata, 404, bulunamadı'
+        ],
+        '403' => [
+            'title' => 'Erişim Engellendi - Necat Derneği',
+            'description' => 'Bu sayfaya erişim izniniz bulunmuyor.',
+            'keywords' => 'hata, 403, izin yok'
+        ],
+        '500' => [
+            'title' => 'Sunucu Hatası - Necat Derneği',
+            'description' => 'Bir sunucu hatası oluştu. Lütfen daha sonra tekrar deneyin.',
+            'keywords' => 'hata, 500, sunucu hatası'
         ]
     ];
     
@@ -64,6 +132,11 @@ function getPageInfo($page) {
 // XSS koruması için çıktı temizleme
 function clean_output($text) {
     return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+}
+
+// URL güvenli temizleme
+function clean_url($url) {
+    return htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 }
 
 // CSRF token oluştur
@@ -125,14 +198,15 @@ function generate_safe_filename($original_name) {
 
 // E-posta gönderme fonksiyonu
 function send_email($to, $subject, $message, $headers = '') {
-    $default_headers = "From: " . SITE_EMAIL . "\r\n";
-    $default_headers .= "Reply-To: " . SITE_EMAIL . "\r\n";
-    $default_headers .= "MIME-Version: 1.0\r\n";
-    $default_headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+    // Global PDO bağlantısını kullan
+    global $pdo;
     
-    $headers = $headers ? $headers : $default_headers;
+    // PHPMailer sınıfını kullanmak için EmailService'i çağır
+    require_once __DIR__ . '/EmailService.php';
+    $emailService = new EmailService($pdo);
     
-    return mail($to, $subject, $message, $headers);
+    // Test e-postası gönder
+    return $emailService->sendTestEmail($to, $subject, $message);
 }
 
 // Admin giriş kontrolü
@@ -161,21 +235,22 @@ function truncate_text($text, $length = 100) {
     return substr($text, 0, $length) . '...';
 }
 
-// Aktif menü kontrolü
-function is_active_page($page) {
-    $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
-    return $current_page === $page ? 'active' : '';
-}
-
 // Enhanced error handling and logging
 function log_error($message, $file = '', $line = '') {
+    $log_dir = __DIR__ . '/../logs/';
+    
+    // Log dizini yoksa oluştur
+    if (!is_dir($log_dir)) {
+        mkdir($log_dir, 0755, true);
+    }
+    
     $log_message = "[" . date('Y-m-d H:i:s') . "] ";
     $log_message .= "Error: " . $message;
     if ($file) $log_message .= " in " . $file;
     if ($line) $log_message .= " on line " . $line;
     $log_message .= " | IP: " . get_client_ip() . "\n";
     
-    error_log($log_message, 3, "logs/error.log");
+    error_log($log_message, 3, $log_dir . "error.log");
 }
 
 // Get client IP address
@@ -194,102 +269,22 @@ function get_client_ip() {
     return $_SERVER['REMOTE_ADDR'] ?? 'unknown';
 }
 
-// Rate limiting function
-function check_rate_limit($identifier, $max_attempts = 5, $time_window = 300) {
-    $rate_limit_file = 'logs/rate_limit.json';
-    
-    if (!file_exists('logs')) {
-        mkdir('logs', 0755, true);
-    }
-    
-    $rate_data = [];
-    if (file_exists($rate_limit_file)) {
-        $rate_data = json_decode(file_get_contents($rate_limit_file), true) ?? [];
-    }
-    
-    $current_time = time();
-    $identifier_key = md5($identifier);
-    
-    // Clean old entries
-    foreach ($rate_data as $key => $data) {
-        if ($current_time - $data['last_attempt'] > $time_window) {
-            unset($rate_data[$key]);
-        }
-    }
-    
-    // Check current identifier
-    if (!isset($rate_data[$identifier_key])) {
-        $rate_data[$identifier_key] = ['attempts' => 1, 'last_attempt' => $current_time];
-    } else {
-        $rate_data[$identifier_key]['attempts']++;
-        $rate_data[$identifier_key]['last_attempt'] = $current_time;
-    }
-    
-    // Save rate data
-    file_put_contents($rate_limit_file, json_encode($rate_data));
-    
-    return $rate_data[$identifier_key]['attempts'] <= $max_attempts;
-}
-
-// Enhanced input validation
-function validate_input($input, $type, $options = []) {
-    $input = trim($input);
-    
-    switch ($type) {
-        case 'email':
-            return filter_var($input, FILTER_VALIDATE_EMAIL) !== false;
-        
-        case 'phone':
-            return preg_match('/^[\+]?[0-9\s\-\(\)]{10,}$/', $input);
-        
-        case 'name':
-            $min_length = $options['min_length'] ?? 2;
-            $max_length = $options['max_length'] ?? 50;
-            return strlen($input) >= $min_length && strlen($input) <= $max_length && 
-                   preg_match('/^[a-zA-ZçğıöşüÇĞIİÖŞÜ\s]+$/', $input);
-        
-        case 'text':
-            $min_length = $options['min_length'] ?? 1;
-            $max_length = $options['max_length'] ?? 1000;
-            return strlen($input) >= $min_length && strlen($input) <= $max_length;
-        
-        case 'number':
-            $min = $options['min'] ?? 0;
-            $max = $options['max'] ?? PHP_INT_MAX;
-            $number = filter_var($input, FILTER_VALIDATE_INT);
-            return $number !== false && $number >= $min && $number <= $max;
-        
-        case 'url':
-            return filter_var($input, FILTER_VALIDATE_URL) !== false;
-        
-        default:
-            return false;
-    }
-}
-
 // Database connection with error handling
 function get_db_connection() {
-    static $pdo = null;
+    // Global PDO bağlantısını kullan
+    global $pdo;
     
-    if ($pdo === null) {
-        try {
-            $pdo = new PDO(
-                "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET,
-                DB_USER,
-                DB_PASS,
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES => false
-                ]
-            );
-        } catch(PDOException $e) {
-            log_error("Database connection failed: " . $e->getMessage());
-            throw new Exception("Database connection failed");
-        }
+    if ($pdo !== null) {
+        return $pdo;
     }
     
-    return $pdo;
+    try {
+        // Veritabanı yapılandırması zaten config/database.php içinde tanımlanmıştır
+        return $pdo;
+    } catch(PDOException $e) {
+        log_error("Database connection failed: " . $e->getMessage());
+        throw new Exception("Database connection failed");
+    }
 }
 
 // Safe database query execution
@@ -305,48 +300,25 @@ function execute_query($sql, $params = []) {
     }
 }
 
-// Generate secure random token
-function generate_secure_token($length = 32) {
-    return bin2hex(random_bytes($length));
-}
-
-// Password hashing and verification
-function hash_password($password) {
-    return password_hash($password, PASSWORD_DEFAULT);
-}
-
-function verify_password($password, $hash) {
-    return password_verify($password, $hash);
-}
-
-// Session security
-function secure_session_start() {
-    if (session_status() === PHP_SESSION_NONE) {
-        // Configure session security
-        ini_set('session.cookie_httponly', 1);
-        ini_set('session.cookie_secure', isset($_SERVER['HTTPS']));
-        ini_set('session.use_strict_mode', 1);
-        
-        session_start();
-        
-        // Regenerate session ID periodically
-        if (!isset($_SESSION['last_regeneration'])) {
-            session_regenerate_id(true);
-            $_SESSION['last_regeneration'] = time();
-        } elseif (time() - $_SESSION['last_regeneration'] > 300) {
-            session_regenerate_id(true);
-            $_SESSION['last_regeneration'] = time();
-        }
-    }
-}
-
 // Dosya yükleme için absolute path döndürür
 function getUploadsPath($subFolder = '') {
     $basePath = dirname(__DIR__) . '/uploads/';
     
+    // Upload dizini yoksa oluştur
+    if (!is_dir($basePath)) {
+        mkdir($basePath, 0755, true);
+    }
+    
     if ($subFolder) {
         $subFolder = trim($subFolder, '/');
-        return $basePath . $subFolder . '/';
+        $fullPath = $basePath . $subFolder . '/';
+        
+        // Alt klasör yoksa oluştur
+        if (!is_dir($fullPath)) {
+            mkdir($fullPath, 0755, true);
+        }
+        
+        return $fullPath;
     }
     
     return $basePath;
@@ -378,11 +350,6 @@ function handleFileUpload($file, $subFolder = '', $allowedTypes = []) {
     // Generate unique filename
     $filename = uniqid() . '_' . time() . '.' . $fileExtension;
     $uploadPath = getUploadsPath($subFolder);
-    
-    // Create directory if not exists
-    if (!is_dir($uploadPath)) {
-        mkdir($uploadPath, 0755, true);
-    }
     
     $fullPath = $uploadPath . $filename;
     

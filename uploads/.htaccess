@@ -1,6 +1,11 @@
-# Prevent direct access to uploaded files
-Options -Indexes
-<Files "*.php">
-    Order Deny,Allow
-    Deny from All
-</Files>
+# PHP dosyalarını engelle
+<FilesMatch "\.(?i:php|php3|php4|php5|phtml|pl|py|jsp|asp|sh|cgi)$">
+  Order Allow,Deny
+  Deny from all
+</FilesMatch>
+
+# Sadece resim dosyalarına izin ver
+<FilesMatch "\.(?i:gif|jpe?g|png|pdf|webp|ico)$">
+  Order Deny,Allow
+  Allow from all
+</FilesMatch>

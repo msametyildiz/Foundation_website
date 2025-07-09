@@ -1,117 +1,23 @@
 <?php
-// Veritabanından iletişim bilgilerini çek
-try {
-    // Site ayarlarını çek
-    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings");
-    $stmt->execute();
-    $site_settings = [];
-    while ($row = $stmt->fetch()) {
-        $site_settings[$row['setting_key']] = $row['setting_value'];
-    }
-
-    // İletişim formu işleme
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'contact') {
-        $name = trim($_POST['name'] ?? '');
-        $email = trim($_POST['email'] ?? '');
-        $phone = trim($_POST['phone'] ?? '');
-        $subject = trim($_POST['subject'] ?? '');
-        $message = trim($_POST['message'] ?? '');
-        
-        if (!empty($name) && !empty($email) && !empty($message) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            try {
-                // Veritabanına kaydet
-                $stmt = $pdo->prepare("INSERT INTO contact_messages (name, email, phone, subject, message, created_at, status, ip_address) VALUES (?, ?, ?, ?, ?, NOW(), 'new', ?)");
-                $stmt->execute([$name, $email, $phone, $subject, $message, $_SERVER['REMOTE_ADDR'] ?? '']);
-                
-                // E-posta gönder
-                require_once __DIR__ . '/../includes/EmailService.php';
-                $emailService = new EmailService($pdo);
-                
-                // Admin'e bildirim e-postası gönder
-                $emailSent = $emailService->sendContactNotification([
-                    'name' => $name,
-                    'email' => $email,
-                    'phone' => $phone,
-                    'subject' => $subject,
-                    'message' => $message,
-                    'admin_email' => 'samet.saray.06@gmail.com'
-                ]);
-                
-                if ($emailSent) {
-                    $success_message = "Mesajınız başarıyla gönderilmiştir. En kısa sürede size dönüş yapacağız.";
-                } else {
-                    $success_message = "Mesajınız kaydedildi ancak e-posta gönderiminde sorun yaşandı. Telefon ile de iletişime geçebilirsiniz.";
-                }
-                
-            } catch (PDOException $e) {
-                error_log("Contact form database error: " . $e->getMessage());
-                $error_message = "Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.";
-            } catch (Exception $e) {
-                error_log("Contact form email error: " . $e->getMessage());
-                $error_message = "Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.";
-            }
-        } else {
-            $error_message = "Lütfen tüm zorunlu alanları doldurun ve geçerli bir email adresi giriniz.";
-        }
-    }
-
-    // İletişim bilgilerini ayarlardan çek (geri uyumluluk için)
+// Veritabanı bağlantısını kontrol et
+if (!isset($pdo) || $pdo === null) {
+    // Eğer veritabanı bağlantısı yoksa, hata logla
+    error_log("Contact page: Database connection not available");
+    
+    // Varsayılan değerler tanımla
     $contact_info = [
-        'address' => $site_settings['contact_address'] ?? 'Adres bilgisi güncelleniyor...',
-        'phone' => $site_settings['contact_phone'] ?? '+90 312 311 65 25',
-        'emergency' => $site_settings['emergency_phone'] ?? '+90 312 311 65 25',
-        'fax' => $site_settings['contact_fax'] ?? '+90 312 311 65 25',
-        'email' => $site_settings['contact_email'] ?? 'info@necatdernegi.org',
+        'address' => 'Fevzipaşa Mahallesi Rüzgarlı Caddesi Plevne Sokak No:14/1 Ulus Altındağ Ankara',
+        'phone' => '+90 312 311 65 25',
+        'email' => 'info@necatdernegi.org',
+        'emergency' => '+90 312 311 65 25',
+        'fax' => '+90 312 311 65 25',
         'working_hours' => [
             'weekdays' => 'Pazartesi - Cuma: 09:00 - 18:00',
             'saturday' => 'Cumartesi: 09:00 - 14:00',
             'sunday' => 'Pazar: Kapalı'
         ]
     ];
-
-    // İletişim kartları bilgilerini veritabanından çek
-    $stmt = $pdo->prepare("SELECT * FROM contact_info_cards WHERE is_active = 1 ORDER BY sort_order ASC");
-    $stmt->execute();
-    $contact_cards = $stmt->fetchAll();
-
-    // Sosyal medya hesaplarını ayarlardan çek
-    $social_media = [];
-    $social_platforms = [
-        'Facebook' => ['key' => 'social_facebook', 'icon' => 'fab fa-facebook-f', 'color' => '#1877f2', 'base_url' => 'https://facebook.com/'],
-        'Instagram' => ['key' => 'social_instagram', 'icon' => 'fab fa-instagram', 'color' => '#e4405f', 'base_url' => ''],
-        'Twitter' => ['key' => 'social_twitter', 'icon' => 'fab fa-twitter', 'color' => '#1da1f2', 'base_url' => 'https://twitter.com/'],
-        'LinkedIn' => ['key' => 'social_linkedin', 'icon' => 'fab fa-linkedin-in', 'color' => '#0077b5', 'base_url' => 'https://linkedin.com/in/'],
-        'YouTube' => ['key' => 'social_youtube', 'icon' => 'fab fa-youtube', 'color' => '#ff0000', 'base_url' => 'https://youtube.com/@']
-    ];
     
-    foreach ($social_platforms as $platform => $data) {
-        $url = $site_settings[$data['key']] ?? '';
-        
-        // URL formatını düzenle
-        if (!empty($url) && $url !== '#') {
-            // Eğer tam URL değilse base_url ile birleştir
-            if (!str_starts_with($url, 'http') && !empty($data['base_url'])) {
-                $url = $data['base_url'] . ltrim($url, '@');
-            }
-            
-            $social_media[] = [
-                'platform' => $platform,
-                'icon' => $data['icon'],
-                'url' => $url,
-                'color' => $data['color']
-            ];
-        }
-    }
-
-} catch (PDOException $e) {
-    $contact_info = [
-        'address' => 'Fevzipaşa Mahallesi Rüzgarlı Caddesi Plevne Sokak No:14/1 Ulus Altındağ Ankara',
-        'phone' => '+90 312 311 65 25',
-        'email' => 'info@necatdernegi.org'
-    ];
-    $social_media = [];
-    
-    // Fallback iletişim kartları
     $contact_cards = [
         [
             'title' => 'Adresimiz',
@@ -138,6 +44,151 @@ try {
             'button_type' => 'email'
         ]
     ];
+    
+    $site_settings = [];
+    $social_media = [];
+} else {
+    // Veritabanından iletişim bilgilerini çek
+    try {
+        // Site ayarlarını çek
+        $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings");
+        $stmt->execute();
+        $site_settings = [];
+        while ($row = $stmt->fetch()) {
+            $site_settings[$row['setting_key']] = $row['setting_value'];
+        }
+
+        // İletişim formu işleme
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'contact') {
+            $name = trim($_POST['name'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $phone = trim($_POST['phone'] ?? '');
+            $subject = trim($_POST['subject'] ?? '');
+            $message = trim($_POST['message'] ?? '');
+            
+            if (!empty($name) && !empty($email) && !empty($message) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                try {
+                    // Veritabanına kaydet
+                    $stmt = $pdo->prepare("INSERT INTO contact_messages (name, email, phone, subject, message, created_at, status, ip_address) VALUES (?, ?, ?, ?, ?, NOW(), 'new', ?)");
+                    $stmt->execute([$name, $email, $phone, $subject, $message, $_SERVER['REMOTE_ADDR'] ?? '']);
+                    
+                    // E-posta gönder
+                    require_once __DIR__ . '/../includes/EmailService.php';
+                    $emailService = new EmailService($pdo);
+                    
+                    // Admin'e bildirim e-postası gönder
+                    $emailSent = $emailService->sendContactNotification([
+                        'name' => $name,
+                        'email' => $email,
+                        'phone' => $phone,
+                        'subject' => $subject,
+                        'message' => $message,
+                        'admin_email' => 'samet.saray.06@gmail.com'
+                    ]);
+                    
+                    if ($emailSent) {
+                        $success_message = "Mesajınız başarıyla gönderilmiştir. En kısa sürede size dönüş yapacağız.";
+                    } else {
+                        $success_message = "Mesajınız kaydedildi ancak e-posta gönderiminde sorun yaşandı. Telefon ile de iletişime geçebilirsiniz.";
+                    }
+                    
+                } catch (PDOException $e) {
+                    error_log("Contact form database error: " . $e->getMessage());
+                    $error_message = "Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.";
+                } catch (Exception $e) {
+                    error_log("Contact form email error: " . $e->getMessage());
+                    $error_message = "Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.";
+                }
+            } else {
+                $error_message = "Lütfen tüm zorunlu alanları doldurun ve geçerli bir email adresi giriniz.";
+            }
+        }
+
+        // İletişim bilgilerini ayarlardan çek (geri uyumluluk için)
+        $contact_info = [
+            'address' => $site_settings['contact_address'] ?? 'Adres bilgisi güncelleniyor...',
+            'phone' => $site_settings['contact_phone'] ?? '+90 312 311 65 25',
+            'emergency' => $site_settings['emergency_phone'] ?? '+90 312 311 65 25',
+            'fax' => $site_settings['contact_fax'] ?? '+90 312 311 65 25',
+            'email' => $site_settings['contact_email'] ?? 'info@necatdernegi.org',
+            'working_hours' => [
+                'weekdays' => 'Pazartesi - Cuma: 09:00 - 18:00',
+                'saturday' => 'Cumartesi: 09:00 - 14:00',
+                'sunday' => 'Pazar: Kapalı'
+            ]
+        ];
+
+        // İletişim kartları bilgilerini veritabanından çek
+        $stmt = $pdo->prepare("SELECT * FROM contact_info_cards WHERE is_active = 1 ORDER BY sort_order ASC");
+        $stmt->execute();
+        $contact_cards = $stmt->fetchAll();
+
+        // Sosyal medya hesaplarını ayarlardan çek
+        $social_media = [];
+        $social_platforms = [
+            'Facebook' => ['key' => 'social_facebook', 'icon' => 'fab fa-facebook-f', 'color' => '#1877f2', 'base_url' => 'https://facebook.com/'],
+            'Instagram' => ['key' => 'social_instagram', 'icon' => 'fab fa-instagram', 'color' => '#e4405f', 'base_url' => ''],
+            'Twitter' => ['key' => 'social_twitter', 'icon' => 'fab fa-twitter', 'color' => '#1da1f2', 'base_url' => 'https://twitter.com/'],
+            'LinkedIn' => ['key' => 'social_linkedin', 'icon' => 'fab fa-linkedin-in', 'color' => '#0077b5', 'base_url' => 'https://linkedin.com/in/'],
+            'YouTube' => ['key' => 'social_youtube', 'icon' => 'fab fa-youtube', 'color' => '#ff0000', 'base_url' => 'https://youtube.com/@']
+        ];
+        
+        foreach ($social_platforms as $platform => $data) {
+            $url = $site_settings[$data['key']] ?? '';
+            
+            // URL formatını düzenle
+            if (!empty($url) && $url !== '#') {
+                // Eğer tam URL değilse base_url ile birleştir
+                if (!str_starts_with($url, 'http') && !empty($data['base_url'])) {
+                    $url = $data['base_url'] . ltrim($url, '@');
+                }
+                
+                $social_media[] = [
+                    'platform' => $platform,
+                    'icon' => $data['icon'],
+                    'url' => $url,
+                    'color' => $data['color']
+                ];
+            }
+        }
+
+    } catch (PDOException $e) {
+        error_log("Contact page database error: " . $e->getMessage());
+        $contact_info = [
+            'address' => 'Fevzipaşa Mahallesi Rüzgarlı Caddesi Plevne Sokak No:14/1 Ulus Altındağ Ankara',
+            'phone' => '+90 312 311 65 25',
+            'email' => 'info@necatdernegi.org'
+        ];
+        $social_media = [];
+        
+        // Fallback iletişim kartları
+        $contact_cards = [
+            [
+                'title' => 'Adresimiz',
+                'content' => 'Fevzipaşa Mahallesi Rüzgarlı Caddesi Plevne Sokak No:14/1 Ulus Altındağ Ankara',
+                'icon' => 'fas fa-map-marker-alt',
+                'button_text' => 'Yol Tarifi',
+                'button_url' => 'https://maps.google.com/?q=Fevzipaşa+Mahallesi+Rüzgarlı+Caddesi+Plevne+Sokak+No:14/1+Ulus+Altındağ+Ankara',
+                'button_type' => 'external'
+            ],
+            [
+                'title' => 'Telefon',
+                'content' => '+90 312 311 65 25',
+                'icon' => 'fas fa-phone',
+                'button_text' => 'Ara',
+                'button_url' => 'tel:+903123116525',
+                'button_type' => 'tel'
+            ],
+            [
+                'title' => 'E-posta',
+                'content' => 'info@necatdernegi.org',
+                'icon' => 'fas fa-envelope',
+                'button_text' => 'Mail Gönder',
+                'button_url' => 'mailto:info@necatdernegi.org',
+                'button_type' => 'email'
+            ]
+        ];
+    }
 }
 ?>
 
@@ -391,10 +442,10 @@ try {
             Sorularınızı sordunuz, artık harekete geçme zamanı. Gönüllü olun veya bağış yaparak destek olun.
         </p>
         <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="index.php?page=donate" class="btn btn-light btn-lg">
+            <a href="<?= site_url('donate') ?>" class="btn btn-light btn-lg">
                 <i class="fas fa-heart me-2"></i> Bağış Yap
             </a>
-            <a href="index.php?page=volunteer" class="btn btn-outline-light btn-lg">
+            <a href="<?= site_url('volunteer') ?>" class="btn btn-outline-light btn-lg">
                 <i class="fas fa-hands-helping me-2"></i> Gönüllü Ol
             </a>
         </div>

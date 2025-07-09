@@ -1,28 +1,78 @@
-</main>
-
 <?php
-// Footer için site ayarlarını çek
+// Functions.php'yi include et (URL helper fonksiyonları için)
+if (!function_exists('site_url')) {
+    require_once __DIR__ . '/functions.php';
+}
+
+// LogoBase64Helper'ı include et
+if (!class_exists('LogoBase64Helper')) {
+    require_once __DIR__ . '/logo-base64-helper.php';
+}
+
+// Varsayılan değerler tanımla
+$default_settings = [
+    'site_title' => 'Necat Derneği',
+    'site_description' => 'Yardım eli uzatan, umut dağıtan bir toplum için birlikte çalışıyoruz.',
+    'contact_email' => 'info@necatdernegi.org',
+    'contact_phone' => '+90 312 444 56 78',
+    'contact_address' => 'Kızılay Mahallesi, Atatürk Bulvarı No: 125/7, Çankaya/ANKARA',
+    'social_instagram' => '#',
+    'social_twitter' => '#',
+    'social_linkedin' => '#',
+    'social_youtube' => '#'
+];
+
+// Site ayarlarını varsayılan değerlerle başlat
+$site_settings = $default_settings;
+
+// Veritabanı bağlantısını kontrol et
+$footer_pdo = null;
+
 try {
-    if (!isset($site_settings)) {
-        $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings");
-        $stmt->execute();
-        $site_settings = [];
-        while ($row = $stmt->fetch()) {
+    // Config dosyasını dahil et (eğer dahil edilmemişse)
+    if (!defined('DB_HOST')) {
+        $config_file = dirname(__DIR__) . '/config/database.php';
+        if (file_exists($config_file)) {
+            require_once $config_file;
+        } else {
+            throw new Exception('Config file not found');
+        }
+    }
+    
+    // Global $pdo değişkenini kullan (varsa)
+    if (isset($pdo) && $pdo instanceof PDO) {
+        $footer_pdo = $pdo;
+    } else {
+        // Yeni bağlantı oluştur
+        $footer_pdo = new PDO(
+            "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET,
+            DB_USER,
+            DB_PASS,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            ]
+        );
+    }
+    
+    // Settings tablosundan verileri çek
+    $stmt = $footer_pdo->prepare("SELECT setting_key, setting_value FROM settings");
+    $stmt->execute();
+    
+    // Veritabanındaki değerleri varsayılan değerlerle birleştir
+    while ($row = $stmt->fetch()) {
+        if (!empty($row['setting_value'])) {
             $site_settings[$row['setting_key']] = $row['setting_value'];
         }
     }
+    
 } catch (PDOException $e) {
-    $site_settings = [
-        'site_title' => 'Necat Derneği',
-        'site_description' => 'Yardım eli uzatan, umut dağıtan bir toplum için birlikte çalışıyoruz.',
-        'contact_email' => 'info@necatdernegi.org',
-        'contact_phone' => '+90 312 444 56 78',
-        'contact_address' => 'Kızılay Mahallesi, Atatürk Bulvarı No: 125/7, Çankaya/ANKARA',
-        'social_instagram' => '#',
-        'social_twitter' => '#',
-        'social_linkedin' => '#',
-        'social_youtube' => '#'
-    ];
+    // Veritabanı hatası durumunda varsayılan değerler kullanılacak
+    error_log("Footer database error: " . $e->getMessage());
+} catch (Exception $e) {
+    // Genel hata durumunda varsayılan değerler kullanılacak
+    error_log("Footer general error: " . $e->getMessage());
 }
 ?>
     <style>
@@ -1178,10 +1228,10 @@ try {
                 <div class="footer-section">
                     <h4>Hızlı Bağlantılar</h4>
                     <ul class="footer-links">
-                        <li><a href="index.php"><i class="fas fa-home"></i> Ana Sayfa</a></li>
-                        <li><a href="index.php?page=about"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
-                        <li><a href="index.php?page=projects"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
-                        <li><a href="index.php?page=volunteer"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
+                        <li><a href="<?= site_url() ?>"><i class="fas fa-home"></i> Ana Sayfa</a></li>
+                        <li><a href="<?= site_url('about') ?>"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
+                        <li><a href="<?= site_url('projects') ?>"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
+                        <li><a href="<?= site_url('volunteer') ?>"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
                     </ul>
                 </div>
 
@@ -1189,9 +1239,9 @@ try {
                 <div class="footer-section">
                     <h4>Daha Fazla</h4>
                     <ul class="footer-links">
-                        <li><a href="index.php?page=faq"><i class="fas fa-question-circle"></i> SSS</a></li>
-                        <li><a href="index.php?page=contact"><i class="fas fa-envelope"></i> İletişim</a></li>
-                        <li><a href="index.php?page=donate"><i class="fas fa-heart"></i> Bağış Yap</a></li>
+                        <li><a href="<?= site_url('faq') ?>"><i class="fas fa-question-circle"></i> SSS</a></li>
+                        <li><a href="<?= site_url('contact') ?>"><i class="fas fa-envelope"></i> İletişim</a></li>
+                        <li><a href="<?= site_url('donate') ?>"><i class="fas fa-heart"></i> Bağış Yap</a></li>
                     </ul>
                 </div>
 
