@@ -687,8 +687,8 @@ function copyToClipboard(text) {
 }
 
 // Add CSS for scroll effects
-const style = document.createElement('style');
-style.textContent = `
+const mainStyle = document.createElement('style');
+mainStyle.textContent = `
     .navbar-hidden {
         transform: translateY(-100%);
         transition: transform 0.3s ease-in-out;
@@ -714,7 +714,7 @@ style.textContent = `
         }
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(mainStyle);
 
 // AJAX Form Handling Functions
 function handleAjaxForm(form) {
@@ -823,47 +823,50 @@ function showNotification(message, type = 'info', duration = 3000) {
 }
 
 // Add notification styles
-const notificationStyle = document.createElement('style');
-notificationStyle.textContent = `
-    .notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: white;
-        border-radius: 10px;
-        padding: 1rem;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        z-index: 9999;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        max-width: 400px;
-        display: flex;
-        align-items: center;
-        border-left: 4px solid;
-    }
-    
-    .notification.show {
-        transform: translateX(0);
-    }
-    
-    .notification-success { border-left-color: #28a745; }
-    .notification-danger { border-left-color: #dc3545; }
-    .notification-warning { border-left-color: #ffc107; }
-    .notification-info { border-left-color: #17a2b8; }
-    
-    .notification .btn-close {
-        background: none;
-        border: none;
-        font-size: 1.2rem;
-        margin-left: auto;
-        opacity: 0.5;
-    }
-    
-    .notification .btn-close:hover {
-        opacity: 1;
-    }
-`;
-document.head.appendChild(notificationStyle);
+if (!document.getElementById('notification-styles')) {
+    const notificationStyle = document.createElement('style');
+    notificationStyle.id = 'notification-styles';
+    notificationStyle.textContent = `
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 9999;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-width: 400px;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification-success { border-left-color: #28a745; }
+        .notification-danger { border-left-color: #dc3545; }
+        .notification-warning { border-left-color: #ffc107; }
+        .notification-info { border-left-color: #17a2b8; }
+        
+        .notification .btn-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            margin-left: auto;
+            opacity: 0.5;
+        }
+        
+        .notification .btn-close:hover {
+            opacity: 1;
+        }
+    `;
+    document.head.appendChild(notificationStyle);
+}
 
 // Enhanced scrolling effects and parallax
 function initializeParallaxEffects() {
@@ -1027,58 +1030,7 @@ function checkElementsInView() {
     // Additional view-based animations can be added here
 }
 
-// Enhanced smooth scrolling with easing
-function enhancedSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                const targetPosition = target.offsetTop - 80;
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-}
-
-// Parallax effects for hero section
-function initializeParallaxEffects() {
-    const parallaxElements = document.querySelectorAll('.parallax-element');
-    
-    if (parallaxElements.length === 0) return;
-    
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const rate = scrolled * -0.5;
-        
-        parallaxElements.forEach(element => {
-            element.style.transform = `translateY(${rate}px)`;
-        });
-    });
-}
-
-// Enhanced floating cards with more sophisticated animations
-function initializeFloatingCards() {
-    const cards = document.querySelectorAll('.floating-card');
-    
-    cards.forEach((card, index) => {
-        // Add subtle floating animation with different delays
-        card.style.animationDelay = `${index * 0.2}s`;
-        
-        // Enhanced hover effects
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-10px) scale(1.02)';
-            this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
-    });
-}
+// These functions have been removed as they are duplicates of functions defined earlier in the file
 
 // Progress bar animations
 function initializeProgressBars() {

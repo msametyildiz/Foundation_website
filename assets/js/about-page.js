@@ -432,8 +432,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Add CSS animations through JavaScript
-const style = document.createElement('style');
-style.textContent = `
+const aboutPageStyle = document.createElement('style');
+aboutPageStyle.textContent = `
     @keyframes ripple {
         from {
             transform: scale(0);
@@ -517,7 +517,7 @@ style.textContent = `
         animation: slideInUp 0.8s ease-out forwards;
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(aboutPageStyle);
 
 // Enhanced counter animation with better timing
 function enhancedCounterAnimation(element) {

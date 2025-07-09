@@ -42,7 +42,7 @@ class LogoManager {
             }
             
             this.isLoaded = true;
-            console.log('Base64 logo loaded successfully');
+            // Debug log removed
             
         } catch (error) {
             console.error('Failed to load base64 logo:', error);

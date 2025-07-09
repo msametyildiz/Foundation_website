@@ -40,7 +40,7 @@ try {
     <!-- ===== BRANDING & THEME ===== -->
     <meta name="theme-color" content="#4EA674">
     <meta name="msapplication-TileColor" content="#4EA674">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Necat Derneği">
     
@@ -1365,25 +1365,16 @@ try {
 
     <link rel="stylesheet" href="assets/css/style.css">
 
-    <script src="assets/js/logo-base64.js"></script>
-
-    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
-
-    <meta property="og:title" content="<?php echo clean_output($page_info['title']); ?>">
-    <meta property="og:description" content="<?php echo clean_output($page_info['description']); ?>">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="<?php echo SITE_URL; ?>">
-    <meta property="og:site_name" content="<?php echo SITE_NAME; ?>">
-
-    <!-- JavaScript Libraries -->
     <script src="assets/vendor/jquery/jquery.min.js"></script>
-    <script src="assets/vendor/bootstrap/bootstrap.bundle.min.js" defer></script>
-    
-    <!-- Custom JavaScript -->
-    <script src="assets/js/main.js" defer></script>
-    
-    <!-- cPanel Compatibility Script -->
+    <script src="assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/navbar-modern.js" defer></script>
+    <script src="assets/js/logo-base64.js" defer></script>
     <script src="scripts/cpanel_compatibility.js" defer></script>
+    
+    <!-- Additional Scripts for specific pages -->
+    <?php if (isset($_GET['page']) && $_GET['page'] == 'about'): ?>
+    <script src="assets/js/about-page.js" defer></script>
+    <?php endif; ?>
 </head>
 <body>
     <nav class="navbar-modern" id="navbar" role="navigation" aria-label="Ana Gezinti">
@@ -1846,5 +1837,3 @@ try {
             performance.mark('navigation-loaded');
         }
     </script>
-
-    <main id="main-content">
