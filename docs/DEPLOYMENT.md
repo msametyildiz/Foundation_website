@@ -347,40 +347,40 @@ If the contact page appears as a blank screen on your cPanel server, we've imple
 
 3. **Contact Page Fallbacks**: Added fallback content for the contact page to ensure something is displayed even if the database connection fails.
 
-### 2. Footer Content Missing Issue
+### 2. Footer Content Partially Missing Issue
 
-To fix issues with partially visible footer content on cPanel, we've implemented multiple layers of fixes:
+If the footer displays only the logo, tagline, and copyright information but missing the links and contact details, we've implemented these fixes:
 
-1. **JavaScript Fix**: Enhanced `scripts/cpanel_compatibility.js` to apply inline styles ensuring footer elements are visible.
+1. **Aggressive Footer Fixes**: Enhanced `scripts/footer_fix.php` to forcibly inject the complete footer HTML and styles regardless of environment.
 
-2. **CSS Fix**: Created an emergency footer styling in `scripts/footer_fix.php` that's loaded only on production.
+2. **CSS and JS Fixes**: Added comprehensive CSS and JavaScript that ensures all footer elements are visible with proper styling.
 
-3. **HTML Fallback**: Added code to inject basic footer HTML if the content is missing.
+3. **Standalone Emergency Fix**: Created a standalone JavaScript file (`scripts/footer_hardfix.js`) that can completely rebuild the footer if all other methods fail.
 
-4. **Environment Passing**: Modified `index.php` and `footer.php` to properly share environment information.
+4. **Direct Script Inclusion**: Added direct script inclusion in the footer.php file as a failsafe mechanism.
 
-### How to Apply These Fixes
+5. **Environment Check Removal**: Modified footer fixes to apply in all environments, not just production.
 
-If you're experiencing these issues in production:
+### If Issues Still Persist After Deployment
 
-1. Upload the updated files:
-   - `config/database.php`
-   - `scripts/cpanel_compatibility.js`
-   - `scripts/footer_fix.php` (new file)
-   - `includes/footer.php`
-   - `index.php`
+If after uploading the site to your cPanel server you still encounter issues:
 
-2. Run the diagnostic script to check for other potential issues:
-   ```
-   php scripts/cpanel_fix.php
+#### For Footer Issues:
+1. Ensure Font Awesome is properly loaded by checking if icons are visible
+2. If the footer is still incomplete, you can manually add this line to your main HTML template:
+   ```html
+   <script src="/scripts/footer_hardfix.js"></script>
    ```
 
-3. Clear your browser cache and reload the site.
+3. Check browser console for any JavaScript errors that might prevent proper loading
 
-### Testing
+#### For Contact Page Issues:
+1. Check error logs on your cPanel server
+2. Verify database connection settings in `config/database.php`
+3. Check file permissions - ensure all PHP files have the correct execution permissions
 
-After applying these fixes, test the following:
-
-1. Visit the contact page to ensure it loads properly
-2. Check that the footer is fully visible with all sections
-3. Test the site in multiple browsers and screen sizes
+#### General Troubleshooting:
+1. Clear browser cache
+2. Clear server cache (if using any caching mechanisms)
+3. Verify PHP version compatibility (site developed for PHP 7.4+)
+4. Check file paths and base URL configuration
