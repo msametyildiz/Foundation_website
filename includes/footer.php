@@ -5,13 +5,10 @@ define('INCLUDED', true);
 // Use footer_environment variable if available
 $environment = isset($footer_environment) ? $footer_environment : (isset($environment) ? $environment : 'development');
 
-// Include emergency footer fix if on production/cPanel
-if ($environment === 'production') {
-    // Only include if file exists
-    $footer_fix = dirname(__DIR__) . '/scripts/footer_fix.php';
-    if (file_exists($footer_fix)) {
-        include_once $footer_fix;
-    }
+// Always include footer fix script (both in development and production)
+$footer_fix = dirname(__DIR__) . '/scripts/footer_fix.php';
+if (file_exists($footer_fix)) {
+    include_once $footer_fix;
 }
 
 // Functions.php'yi include et (URL helper fonksiyonları için)
