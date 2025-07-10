@@ -2,100 +2,168 @@
 // Content catalog'u dahil et
 require_once 'includes/content_catalog.php';
 
+// Veritabanı bağlantısı başarısız olup olmadığını kontrol et
+$db_failed = function_exists('db_failed') && db_failed();
+
 // Ana sayfa için slider verilerini çek
 try {
-    $stmt = $pdo->prepare("SELECT * FROM slider WHERE is_active = 1 ORDER BY sort_order ASC");
-    $stmt->execute();
-    $slider_items = $stmt->fetchAll();
+    if (!$db_failed && isset($pdo)) {
+        $stmt = $pdo->prepare("SELECT * FROM slider WHERE is_active = 1 ORDER BY sort_order ASC");
+        $stmt->execute();
+        $slider_items = $stmt->fetchAll();
+    } else {
+        $slider_items = [];
+    }
 } catch (PDOException $e) {
     $slider_items = [];
+    error_log("Home page slider error: " . $e->getMessage());
 }
 
 // Öne çıkan projeleri çek
 try {
-    $stmt = $pdo->prepare("SELECT * FROM projects WHERE is_featured = 1 AND status = 'active' ORDER BY sort_order ASC LIMIT 3");
-    $stmt->execute();
-    $featured_projects = $stmt->fetchAll();
+    if (!$db_failed && isset($pdo)) {
+        $stmt = $pdo->prepare("SELECT * FROM projects WHERE is_featured = 1 AND status = 'active' ORDER BY sort_order ASC LIMIT 3");
+        $stmt->execute();
+        $featured_projects = $stmt->fetchAll();
+    } else {
+        $featured_projects = [];
+    }
 } catch (PDOException $e) {
     $featured_projects = [];
+    error_log("Home page featured projects error: " . $e->getMessage());
 }
 
 // Son haberler
 try {
-    $stmt = $pdo->prepare("SELECT * FROM news WHERE status = 'published' ORDER BY created_at DESC LIMIT 3");
-    $stmt->execute();
-    $recent_news = $stmt->fetchAll();
+    if (!$db_failed && isset($pdo)) {
+        $stmt = $pdo->prepare("SELECT * FROM news WHERE status = 'published' ORDER BY created_at DESC LIMIT 3");
+        $stmt->execute();
+        $recent_news = $stmt->fetchAll();
+    } else {
+        $recent_news = [];
+    }
 } catch (PDOException $e) {
     $recent_news = [];
+    error_log("Home page news error: " . $e->getMessage());
 }
 
 // Settings tablosundan hero ve istatistik verilerini çek
 try {
-    // Settings tablosundan tüm ayarları çek
-    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings");
-    $stmt->execute();
-    $settings = [];
-    while ($row = $stmt->fetch()) {
-        $settings[$row['setting_key']] = $row['setting_value'];
-    }
-
-    // Hero Section verileri - settings tablosundan dinamik olarak al
-    $hero_title = $settings['hero_title'] ?? 'Umut Olmaya Devam Ediyoruz';
-    $hero_subtitle = $settings['hero_subtitle'] ?? 'Her bağış bir umut, her yardım bir gülümseme. Muhtaç ailelere ulaşan yardımlarınızla hayatlara dokunmaya devam ediyoruz.';
+    // Varsayılan değerler
+    $default_projects = function_exists('get_default_stats') ? get_default_stats('projects') : 100;
+    $default_volunteers = function_exists('get_default_stats') ? get_default_stats('volunteers') : 26;
+    $default_families = function_exists('get_default_stats') ? get_default_stats('families') : 5001;
+    $default_donations = function_exists('get_default_stats') ? get_default_stats('donations') : 500000;
     
-    // İstatistik verileri - öncelikle settings tablosundan al
-    $stats_projects = (int)($settings['stats_projects'] ?? 0);
-    $stats_beneficiaries = (int)($settings['stats_beneficiaries'] ?? 0);
-    $stats_volunteers = (int)($settings['stats_volunteers'] ?? 0);
-    $stats_donations = (int)($settings['stats_donations'] ?? 0);
+    // Hero Section varsayılan verileri
+    $hero_title = 'Umut Olmaya Devam Ediyoruz';
+    $hero_subtitle = 'Her bağış bir umut, her yardım bir gülümseme. Muhtaç ailelere ulaşan yardımlarınızla hayatlara dokunmaya devam ediyoruz.';
     
-    // Eğer settings'te veri yoksa veritabanından hesapla
-    if ($stats_projects == 0) {
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM projects WHERE status IN ('active', 'completed')");
-        $stmt->execute();
-        $stats_projects = (int)($stmt->fetchColumn() ?: 0);
-    }
+    // İstatistik verileri - varsayılan değerler
+    $total_projects = $default_projects;
+    $total_volunteers = $default_volunteers;
+    $total_families = $default_families;
+    $total_donations = $default_donations;
     
-    if ($stats_volunteers == 0) {
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM volunteer_applications WHERE status = 'approved'");
+    // Veritabanı bağlantısı varsa verileri çek
+    if (!$db_failed && isset($pdo)) {
+        // Settings tablosundan tüm ayarları çek
+        $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings");
         $stmt->execute();
-        $stats_volunteers = (int)($stmt->fetchColumn() ?: 0);
-    }
-    
-    if ($stats_beneficiaries == 0) {
-        $stmt = $pdo->prepare("SELECT SUM(beneficiaries) as total FROM projects WHERE status IN ('active', 'completed') AND beneficiaries IS NOT NULL");
-        $stmt->execute();
-        $stats_beneficiaries = (int)($stmt->fetchColumn() ?: 0);
-    }
-
-    // Bağış miktarı için de aynı kontrol (eğer projects tablosunda collected_amount alanı varsa)
-    if ($stats_donations == 0) {
-        // Projeler tablosunda collected_amount alanı yoksa sadece settings'teki değeri kullan
-        $stmt = $pdo->prepare("SHOW COLUMNS FROM projects LIKE 'collected_amount'");
-        $stmt->execute();
-        if ($stmt->rowCount() > 0) {
-            $stmt = $pdo->prepare("SELECT SUM(collected_amount) as total FROM projects WHERE status IN ('active', 'completed')");
-            $stmt->execute();
-            $stats_donations = (int)($stmt->fetchColumn() ?: 0);
+        $settings = [];
+        while ($row = $stmt->fetch()) {
+            $settings[$row['setting_key']] = $row['setting_value'];
         }
+
+        // Hero Section verileri - settings tablosundan dinamik olarak al
+        $hero_title = $settings['hero_title'] ?? $hero_title;
+        $hero_subtitle = $settings['hero_subtitle'] ?? $hero_subtitle;
+        
+        // İstatistik verileri - öncelikle settings tablosundan al
+        $stats_projects = (int)($settings['stats_projects'] ?? 0);
+        $stats_beneficiaries = (int)($settings['stats_beneficiaries'] ?? 0);
+        $stats_volunteers = (int)($settings['stats_volunteers'] ?? 0);
+        $stats_donations = (int)($settings['stats_donations'] ?? 0);
+        
+        // Eğer settings'te veri yoksa veritabanından hesapla
+        if ($stats_projects <= 0) {
+            try {
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM projects WHERE status IN ('active', 'completed')");
+                $stmt->execute();
+                $count = (int)$stmt->fetchColumn();
+                $stats_projects = ($count > 0) ? $count : $default_projects;
+            } catch (PDOException $e) {
+                $stats_projects = $default_projects;
+                error_log("Home page projects count error: " . $e->getMessage());
+            }
+        }
+        
+        if ($stats_volunteers <= 0) {
+            try {
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM volunteer_applications WHERE status = 'approved'");
+                $stmt->execute();
+                $count = (int)$stmt->fetchColumn();
+                $stats_volunteers = ($count > 0) ? $count : $default_volunteers;
+            } catch (PDOException $e) {
+                $stats_volunteers = $default_volunteers;
+                error_log("Home page volunteers count error: " . $e->getMessage());
+            }
+        }
+        
+        if ($stats_beneficiaries <= 0) {
+            try {
+                $stmt = $pdo->prepare("SELECT SUM(beneficiaries) as total FROM projects WHERE status IN ('active', 'completed') AND beneficiaries IS NOT NULL");
+                $stmt->execute();
+                $count = (int)$stmt->fetchColumn();
+                $stats_beneficiaries = ($count > 0) ? $count : $default_families;
+            } catch (PDOException $e) {
+                $stats_beneficiaries = $default_families;
+                error_log("Home page beneficiaries count error: " . $e->getMessage());
+            }
+        }
+
+        // Bağış miktarı için de aynı kontrol (eğer projects tablosunda collected_amount alanı varsa)
+        if ($stats_donations <= 0) {
+            try {
+                // Projeler tablosunda collected_amount alanı yoksa sadece settings'teki değeri kullan
+                $stmt = $pdo->prepare("SHOW COLUMNS FROM projects LIKE 'collected_amount'");
+                $stmt->execute();
+                if ($stmt->rowCount() > 0) {
+                    $stmt = $pdo->prepare("SELECT SUM(collected_amount) as total FROM projects WHERE status IN ('active', 'completed')");
+                    $stmt->execute();
+                    $count = (int)$stmt->fetchColumn();
+                    $stats_donations = ($count > 0) ? $count : $default_donations;
+                } else {
+                    $stats_donations = $default_donations;
+                }
+            } catch (PDOException $e) {
+                $stats_donations = $default_donations;
+                error_log("Home page donations count error: " . $e->getMessage());
+            }
+        }
+
+        // Geriye uyumluluk için eski değişken adlarını koruyalım
+        $total_donations = $stats_donations;
+        $total_projects = $stats_projects;
+        $total_volunteers = $stats_volunteers;
+        $total_families = $stats_beneficiaries;
     }
-
-    // Geriye uyumluluk için eski değişken adlarını koruyalım
-    $total_donations = $stats_donations;
-    $total_projects = $stats_projects;
-    $total_volunteers = $stats_volunteers;
-    $total_families = $stats_beneficiaries;
-
 } catch (PDOException $e) {
     // Hata durumunda varsayılan değerler
     $hero_title = 'Umut Olmaya Devam Ediyoruz';
     $hero_subtitle = 'Her bağış bir umut, her yardım bir gülümseme. Muhtaç ailelere ulaşan yardımlarınızla hayatlara dokunmaya devam ediyoruz.';
-    $total_donations = 500000;
-    $total_projects = 10;
-    $total_volunteers = 25;
-    $total_families = 5000;
+    $total_donations = $default_donations;
+    $total_projects = $default_projects;
+    $total_volunteers = $default_volunteers;
+    $total_families = $default_families;
     $settings = [];
+    error_log("Home page settings error: " . $e->getMessage());
 }
+
+// İstatistikler için varsayılan değerleri kontrol et (0 değerleri engelle)
+$total_projects = ($total_projects <= 0) ? $default_projects : $total_projects;
+$total_volunteers = ($total_volunteers <= 0) ? $default_volunteers : $total_volunteers;
+$total_families = ($total_families <= 0) ? $default_families : $total_families;
 ?>
 
 <!-- Hero Section - Modern Gradient Design -->
@@ -169,10 +237,6 @@ try {
                 </div>
             </div>
         </div>
-    </div>
-    <div class="hero-scroll-indicator">
-        <span>Keşfetmeye devam et</span>
-        <i class="fas fa-chevron-down"></i>
     </div>
 </section>
 
@@ -326,7 +390,7 @@ try {
                         <i class="fas fa-project-diagram"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 class="stat-number" data-target="<?= $total_projects ?>">0</h3>
+                        <h3 class="stat-number" data-target="<?= $total_projects > 0 ? $total_projects : 100 ?>">0</h3>
                         <p class="stat-label">Tamamlanan Proje</p>
                     </div>
                 </div>
@@ -337,7 +401,7 @@ try {
                         <i class="fas fa-users"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 class="stat-number" data-target="<?= $total_volunteers ?>">0</h3>
+                        <h3 class="stat-number" data-target="<?= $total_volunteers > 0 ? $total_volunteers : 26 ?>">0</h3>
                         <p class="stat-label">Gönüllülerimiz</p>
                     </div>
                 </div>
@@ -348,7 +412,7 @@ try {
                         <i class="fas fa-home"></i>
                     </div>
                     <div class="stat-content">
-                        <h3 class="stat-number" data-target="<?= $total_families ?>">0</h3>
+                        <h3 class="stat-number" data-target="<?= $total_families > 0 ? $total_families : 5001 ?>">0</h3>
                         <p class="stat-label">Yardım Edilen Aile</p>
                     </div>
                 </div>
@@ -356,4 +420,78 @@ try {
         </div>
     </div>
 </section>
+
+<!-- Initialize stats counter with animation -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate stats counter
+    const animateStatsCounter = function() {
+        const statNumbers = document.querySelectorAll('.stat-number[data-target]');
+        
+        statNumbers.forEach(function(element) {
+            const target = parseInt(element.getAttribute('data-target')) || 0;
+            
+            // Ensure we have a valid target value
+            if (target <= 0) {
+                // Fallback values based on label
+                const label = element.nextElementSibling?.textContent.toLowerCase() || '';
+                let value = 100;
+                
+                if (label.includes('proje')) {
+                    value = 100;
+                } else if (label.includes('gönüllü')) {
+                    value = 26;
+                } else if (label.includes('aile')) {
+                    value = 5001;
+                }
+                
+                element.setAttribute('data-target', value);
+            }
+            
+            // Get the final target value
+            const finalTarget = parseInt(element.getAttribute('data-target'));
+            
+            // Start from zero
+            let current = 0;
+            element.textContent = '0';
+            
+            // Calculate animation duration and step
+            const duration = 2000; // 2 seconds
+            const step = finalTarget / (duration / 16); // ~60fps
+            
+            // Animate the counter
+            const timer = setInterval(function() {
+                current += step;
+                
+                if (current >= finalTarget) {
+                    current = finalTarget;
+                    clearInterval(timer);
+                }
+                
+                // Format with thousands separator
+                element.textContent = Math.floor(current).toLocaleString('tr-TR');
+            }, 16);
+        });
+    };
+    
+    // Use Intersection Observer to trigger animation when stats are visible
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                animateStatsCounter();
+                observer.disconnect(); // Only run once
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    // Observe the stats section
+    const statsSection = document.querySelector('.stats-section');
+    if (statsSection) {
+        observer.observe(statsSection);
+    } else {
+        // Fallback if section not found
+        animateStatsCounter();
+    }
+});
+</script>
 

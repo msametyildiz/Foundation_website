@@ -9,14 +9,19 @@ if (php_sapi_name() === 'cli') {
 } else {
     // Server name değerini al ve ekstra log ekle
     $serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'undefined';
-    error_log("Server name detection: " . $serverName);
+    $httpHost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'undefined';
+    error_log("Server detection - SERVER_NAME: $serverName, HTTP_HOST: $httpHost");
     
-    // Web ortamında sunucu adına göre tespit et - cPanel uyumluluğu için sadeleştirildi
-    $environment = ($serverName == 'localhost' || $serverName == '127.0.0.1') 
-                  ? 'development' : 'production';
+    // Web ortamında sunucu adına göre tespit et - cPanel uyumluluğu için genişletildi
+    if ($serverName == 'localhost' || $serverName == '127.0.0.1' || 
+        strpos($serverName, 'local.') === 0 || strpos($httpHost, 'localhost') !== false) {
+        $environment = 'development';
+    } else {
+        $environment = 'production';
+    }
     
     // Ortam bilgisini logla
-    error_log("Detected environment: " . $environment . " (SERVER_NAME: " . $serverName . ")");
+    error_log("Detected environment: " . $environment . " (SERVER_NAME: " . $serverName . ", HTTP_HOST: " . $httpHost . ")");
 }
 
 // Ortama göre bağlantı ayarları
@@ -56,6 +61,12 @@ define('ALLOWED_EXTENSIONS', ['jpg', 'jpeg', 'png', 'gif', 'pdf']);
 // Güvenlik anahtarı - Rastgele ve güçlü bir anahtar oluşturun
 define('SECRET_KEY', 'necat_dernegi_secure_key_2025_XmNp8zQ4fT9cB3vA');
 
+// Varsayılan istatistik değerleri
+define('DEFAULT_PROJECTS_COUNT', 100);
+define('DEFAULT_VOLUNTEERS_COUNT', 26);
+define('DEFAULT_FAMILIES_COUNT', 5001);
+define('DEFAULT_DONATIONS_AMOUNT', 500000);
+
 try {
     $pdo = new PDO(
         "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET,
@@ -65,7 +76,9 @@ try {
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,
-            PDO::MYSQL_ATTR_FOUND_ROWS => true  // cPanel/MySQL uyumluluğu için
+            PDO::MYSQL_ATTR_FOUND_ROWS => true,  // cPanel/MySQL uyumluluğu için
+            PDO::ATTR_TIMEOUT => 5, // Bağlantı zaman aşımını 5 saniye olarak ayarla
+            PDO::ATTR_PERSISTENT => false // Kalıcı bağlantıları devre dışı bırak
         ]
     );
     
@@ -74,21 +87,60 @@ try {
     
     // Bağlantı başarılı olduğunu logla
     error_log("Database connection successful in " . $environment . " environment");
+    
+    // Bağlantıyı test et
+    $testStmt = $pdo->query("SELECT 1");
+    if (!$testStmt) {
+        throw new PDOException("Database connection test failed");
+    }
 } catch (PDOException $e) {
     // Hatayı logla ama kullanıcıya detay gösterme (güvenlik için)
     error_log("Veritabanı bağlantı hatası (" . $environment . " environment): " . $e->getMessage());
     
+    // Veritabanı bağlantısı başarısız olduğunda global değişkeni ayarla
+    $GLOBALS['db_connection_failed'] = true;
+    
     if ($environment == 'development') {
-        die("Veritabanı bağlantı hatası: " . $e->getMessage());
+        // Geliştirme ortamında hata detayını göster
+        echo "<div style='background-color: #f8d7da; color: #721c24; padding: 10px; margin: 10px 0; border: 1px solid #f5c6cb; border-radius: 4px;'>";
+        echo "<strong>Veritabanı bağlantı hatası:</strong> " . $e->getMessage();
+        echo "</div>";
     } else {
-        // Üretim ortamında daha güvenli hata mesajı ve hata sayfasına yönlendirme
+        // Üretim ortamında daha güvenli hata mesajı
         error_log("Veritabanı bağlantı hatası (cPanel): " . $e->getMessage());
-        if (file_exists('pages/500.php')) {
-            include 'pages/500.php';
-            exit;
-        } else {
-            die("Veritabanına bağlanırken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.");
-        }
+        
+        // Varsayılan değerlerle devam et, hata sayfasına yönlendirme
+        $pdo = null;
+        $db = null;
+        
+        // İstatistik değerlerini varsayılan olarak ayarla
+        $GLOBALS['default_stats'] = [
+            'projects' => DEFAULT_PROJECTS_COUNT,
+            'volunteers' => DEFAULT_VOLUNTEERS_COUNT,
+            'families' => DEFAULT_FAMILIES_COUNT,
+            'donations' => DEFAULT_DONATIONS_AMOUNT
+        ];
     }
+}
+
+// Veritabanı bağlantısı başarısız olduğunda kullanmak için yardımcı fonksiyon
+function db_failed() {
+    return isset($GLOBALS['db_connection_failed']) && $GLOBALS['db_connection_failed'] === true;
+}
+
+// Varsayılan istatistik değerlerini almak için yardımcı fonksiyon
+function get_default_stats($key = null) {
+    $defaults = $GLOBALS['default_stats'] ?? [
+        'projects' => DEFAULT_PROJECTS_COUNT,
+        'volunteers' => DEFAULT_VOLUNTEERS_COUNT,
+        'families' => DEFAULT_FAMILIES_COUNT,
+        'donations' => DEFAULT_DONATIONS_AMOUNT
+    ];
+    
+    if ($key !== null) {
+        return $defaults[$key] ?? 0;
+    }
+    
+    return $defaults;
 }
 ?>

@@ -326,12 +326,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero-modern {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    background: var(--gradient-hero);
+    margin-bottom: 0px !important;
+    padding-bottom: 0px !important;
+    min-height: 92vh !important;
+    position: relative !important;
+    z-index: 1;
 }
 
 .hero-background {
@@ -1388,63 +1387,63 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Proje sayfası butonları için de aynı renk */
 .btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 .btn-success:hover {
-    background-color: #218838;
-    border-color: #218838;
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
 }
 
 .btn-outline-success {
-    border-color: #28a745;
-    color: #28a745;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 .btn-outline-success:hover {
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
     color: #ffffff;
 }
 
 /* Proje kartlarındaki butonları about sayfası renkleriyle uyumlu yap */
 .btn-primary {
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 .btn-primary:hover {
-    background-color: #218838;
-    border-color: #218838;
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
 }
 
 .btn-primary:focus,
 .btn-primary.focus {
-    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5);
+    box-shadow: 0 0 0 0.2rem rgba(78, 166, 116, 0.5);
 }
 
 .btn-primary:not(:disabled):not(.disabled):active,
 .btn-primary:not(:disabled):not(.disabled).active {
-    background-color: #218838;
-    border-color: #218838;
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
 }
 
 /* Detaylar butonları için outline stil */
 .btn-outline-primary {
-    color: #28a745;
-    border-color: #28a745;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 .btn-outline-primary:hover {
     color: #fff;
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 .btn-outline-primary:focus,
 .btn-outline-primary.focus {
-    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5);
+    box-shadow: 0 0 0 0.2rem rgba(78, 166, 116, 0.5);
 }
 
 /* ========================================
@@ -1580,114 +1579,66 @@ h1, h2, h3, h4, h5, h6 {
 
 /* === Hero Section & About Preview Section Spacing Optimization === */
 .hero-modern {
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
-    min-height: 100vh !important;
-}
-
-/* Hero scroll indicator'ı responsive olarak göster */
-.hero-scroll-indicator {
-    position: absolute !important;
-    bottom: 2rem !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 4 !important;
-    color: var(--white) !important;
-    text-align: center !important;
-    animation: bounce 2s infinite !important;
-    cursor: pointer !important;
-    text-shadow: 0 2px 8px rgba(13, 13, 13, 0.7) !important;
-    backdrop-filter: blur(10px) !important;
-    background: rgba(78, 166, 116, 0.2) !important;
-    padding: var(--spacing-sm) var(--spacing-md) !important;
-    border-radius: var(--radius-lg) !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    transition: all 0.3s ease !important;
-    user-select: none !important;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-}
-
-.hero-scroll-indicator:hover {
-    background: rgba(78, 166, 116, 0.3) !important;
-    transform: translateX(-50%) translateY(-2px) !important;
-    box-shadow: 0 8px 25px rgba(13, 13, 13, 0.3) !important;
-    border-color: rgba(255, 255, 255, 0.4) !important;
+    margin-bottom: 0px !important;
+    padding-bottom: 0px !important;
+    min-height: 92vh !important;
+    position: relative !important;
+    z-index: 1;
 }
 
 .about-preview {
-    margin-top: -6rem !important; /* Çok daha agresif negatif margin */
-    padding-top: 0 !important; 
-    padding-bottom: 0 !important;
+    margin-top: -20px !important;
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
     position: relative;
-    z-index: 10; /* Hero'nun üzerine getir */
+    z-index: 5;
+    scroll-margin-top: 60px;
+    background-color: var(--white) !important;
+    border-top-left-radius: 20px !important;
+    border-top-right-radius: 20px !important;
+    box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* About preview container'ının üst padding'ini sıfırla */
+/* About preview container'ının üst padding'ini ayarla */
 .about-preview .container {
-    padding-top: 0 !important;
+    padding-top: 10px !important;
 }
 
-/* About preview row'unun üst margin'ini sıfırla */
+/* About preview row'unun üst margin'ini ayarla */
 .about-preview .row {
-    margin-top: 0 !important;
+    margin-top: 10px !important;
 }
 
-/* Responsive optimizasyonlar - Daha agresif */
-@media (max-width: 1199px) {
-  .about-preview {
-    margin-top: -5rem !important;
-  }
-  .hero-scroll-indicator {
-    bottom: 1.5rem !important;
-    padding: 0.5rem 0.8rem !important;
-    font-size: 0.9rem !important;
-  }
-}
-
+/* Responsive ayarlamalar */
 @media (max-width: 991px) {
-  .about-preview {
-    margin-top: -4rem !important;
-  }
   .hero-modern {
-    min-height: 80vh !important;
+    min-height: 90vh !important;
+    padding-bottom: 0px !important;
   }
-  .hero-scroll-indicator {
-    bottom: 1rem !important;
-    padding: 0.4rem 0.7rem !important;
-    font-size: 0.85rem !important;
+  
+  .about-preview {
+    margin-top: -15px !important;
   }
 }
 
 @media (max-width: 767px) {
-  .about-preview {
-    margin-top: -3rem !important;
-  }
   .hero-modern {
-    min-height: 70vh !important;
+    min-height: 85vh !important;
+    padding-bottom: 0px !important;
   }
-  .hero-scroll-indicator {
-    bottom: 0.8rem !important;
-    padding: 0.3rem 0.6rem !important;
-    font-size: 0.8rem !important;
-  }
-  .hero-scroll-indicator span {
-    display: none !important; /* Küçük ekranlarda sadece icon göster */
+  
+  .about-preview {
+    margin-top: -10px !important;
   }
 }
 
 @media (max-width: 480px) {
-  .about-preview {
-    margin-top: -2rem !important;
-  }
   .hero-modern {
-    min-height: 60vh !important;
+    min-height: 80vh !important;
   }
-  .hero-scroll-indicator {
-    bottom: 0.5rem !important;
-    padding: 0.25rem 0.5rem !important;
-    font-size: 0.75rem !important;
+  
+  .about-preview {
+    margin-top: -5px !important;
   }
 }
 
@@ -2286,4 +2237,56 @@ body {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+}
+
+@media (max-width: 991px) {
+  .hero-modern {
+    padding-bottom: 60px !important;
+  }
+  
+  .about-preview {
+    margin-top: 0 !important;
+  }
+  
+  .hero-scroll-indicator {
+    bottom: 100px !important; /* Mobil görünümde daha yukarıda */
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-modern {
+    padding-bottom: 50px !important;
+  }
+  
+  .about-preview {
+    margin-top: 0 !important;
+  }
+  
+  .hero-scroll-indicator {
+    bottom: 120px !important; /* Daha küçük ekranlarda daha da yukarıda */
+    padding: 6px 12px !important; /* Daha küçük buton */
+  }
+  
+  .hero-scroll-indicator span {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Görünürlük sınıfı ve hover efektini kaldır */
+.hero-scroll-indicator.visible,
+.hero-scroll-indicator:hover {
+    display: none !important;
+}
+
+.about-preview {
+    margin-top: -20px !important; /* Negatif margin ile üste doğru çıkar */
+    padding-top: 40px !important; /* Üst padding'i artır */
+    padding-bottom: 40px !important;
+    position: relative;
+    z-index: 5;
+    scroll-margin-top: 60px;
+    background-color: var(--white) !important; /* Arka plan rengini belirle */
+    border-top-left-radius: 20px !important; /* Üst köşeleri yuvarla */
+    border-top-right-radius: 20px !important;
+    box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.05) !important; /* Üstte hafif gölge */
 }

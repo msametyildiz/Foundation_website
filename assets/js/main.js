@@ -491,6 +491,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 100);
 });
 
+// Add smooth scrolling for hero scroll indicator
+document.addEventListener('DOMContentLoaded', function() {
+    // Buton kaldırıldı, ilgili kodlar da kaldırıldı
+});
+
 // Homepage initialization
 function initializeHomepage() {
     // Add fade-in animations to sections
@@ -519,7 +524,27 @@ function initializeStatsCounter() {
     const statNumbers = document.querySelectorAll('.stat-number[data-target]');
     
     const animateCounter = (element) => {
-        const target = parseInt(element.getAttribute('data-target'));
+        // Get the target value from the data attribute
+        const targetValue = parseInt(element.getAttribute('data-target'));
+        
+        // If target is 0 or invalid, use fallback values
+        let target = targetValue;
+        if (isNaN(target) || target <= 0) {
+            // Use category-based fallback values
+            const label = element.nextElementSibling?.textContent.toLowerCase() || '';
+            if (label.includes('proje')) {
+                target = 100;
+            } else if (label.includes('gönüllü')) {
+                target = 26;
+            } else if (label.includes('aile')) {
+                target = 5001;
+            } else {
+                target = 100; // Default fallback
+            }
+            // Update the data-target attribute
+            element.setAttribute('data-target', target);
+        }
+        
         const duration = 2000; // 2 seconds
         const step = target / (duration / 16); // 60fps
         let current = 0;
@@ -530,10 +555,52 @@ function initializeStatsCounter() {
                 current = target;
                 clearInterval(timer);
             }
+            // Format the number with thousands separator
             element.textContent = Math.floor(current).toLocaleString('tr-TR');
         }, 16);
     };
     
+    // Check if we need to apply stats immediately
+    const applyStatsImmediately = () => {
+        statNumbers.forEach(stat => {
+            const targetValue = parseInt(stat.getAttribute('data-target'));
+            // If the value is already set correctly, just display it
+            if (!isNaN(targetValue) && targetValue > 0) {
+                stat.textContent = targetValue.toLocaleString('tr-TR');
+            } else {
+                // Otherwise, use fallback values
+                const label = stat.nextElementSibling?.textContent.toLowerCase() || '';
+                let fallbackValue = 100;
+                
+                if (label.includes('proje')) {
+                    fallbackValue = 100;
+                } else if (label.includes('gönüllü')) {
+                    fallbackValue = 26;
+                } else if (label.includes('aile')) {
+                    fallbackValue = 5001;
+                }
+                
+                stat.setAttribute('data-target', fallbackValue);
+                stat.textContent = fallbackValue.toLocaleString('tr-TR');
+            }
+        });
+    };
+    
+    // If there are no stats or they're all zero, apply immediately
+    let allZero = true;
+    statNumbers.forEach(stat => {
+        const value = parseInt(stat.getAttribute('data-target'));
+        if (!isNaN(value) && value > 0) {
+            allZero = false;
+        }
+    });
+    
+    if (allZero && statNumbers.length > 0) {
+        applyStatsImmediately();
+        return;
+    }
+    
+    // Otherwise use the animation with intersection observer
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -902,49 +969,6 @@ function enhancedSmoothScroll() {
             }
         });
     });
-}
-
-// Hero scroll indicator
-function initializeScrollIndicator() {
-    const indicator = document.querySelector('.hero-scroll-indicator');
-    if (indicator) {
-        indicator.addEventListener('click', function(e) {
-            e.preventDefault();
-            // Try multiple possible next sections in order of preference
-            const possibleSections = [
-                '#about-preview',
-                '.about-preview',
-                '.features-section', 
-                '.projects-section',
-                '.stats-section'
-            ];
-            
-            let targetSection = null;
-            for (const selector of possibleSections) {
-                targetSection = document.querySelector(selector);
-                if (targetSection) break;
-            }
-            
-            if (targetSection) {
-                const offset = 80; // Account for navbar height
-                const targetPosition = targetSection.offsetTop - offset;
-                
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-            } else {
-                // Fallback: scroll down by viewport height
-                window.scrollTo({
-                    top: window.innerHeight,
-                    behavior: 'smooth'
-                });
-            }
-        });
-        
-        // Add cursor pointer style
-        indicator.style.cursor = 'pointer';
-    }
 }
 
 // Enhanced form handling with better UX
