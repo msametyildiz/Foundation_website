@@ -93,7 +93,7 @@ function fixNestedFooter() {
                 <div class="footer-copyright">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-6 text-center text-md-start">
+                            <div class="col-md-12 text-center">
                                 <p>&copy; ${new Date().getFullYear()} Necat Derneği - Tüm Hakları Saklıdır</p>
                             </div>
                         </div>
@@ -202,7 +202,7 @@ function fixNestedFooter() {
             .social-link {
                 width: 52px !important;
                 height: 52px !important;
-                background: rgba(78, 166, 116, 0.08) !important;
+                background: transparent !important;
                 border-radius: 1rem !important;
                 display: flex !important;
                 align-items: center !important;
@@ -221,6 +221,7 @@ function fixNestedFooter() {
                 box-shadow: 0 12px 30px rgba(78, 166, 116, 0.25), 0 6px 15px rgba(0, 0, 0, 0.1) !important;
                 color: white !important;
                 border-color: transparent !important;
+                background: linear-gradient(135deg, #4EA674 0%, #3d8560 100%) !important;
             }
             
             .footer-description {
@@ -404,7 +405,7 @@ function fixNestedFooter() {
                     <div class="footer-copyright">
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-6 text-center text-md-start">
+                                <div class="col-md-12 text-center">
                                     <p>&copy; ${new Date().getFullYear()} Necat Derneği - Tüm Hakları Saklıdır</p>
                                 </div>
                             </div>

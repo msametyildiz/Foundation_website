@@ -116,7 +116,7 @@ function output_footer_fix_css() {
     .social-link {
         width: 52px !important;
         height: 52px !important;
-        background: rgba(78, 166, 116, 0.08) !important;
+        background: transparent !important;
         border-radius: 1rem !important;
         display: flex !important;
         align-items: center !important;
@@ -135,6 +135,7 @@ function output_footer_fix_css() {
         box-shadow: 0 12px 30px rgba(78, 166, 116, 0.25), 0 6px 15px rgba(0, 0, 0, 0.1) !important;
         color: white !important;
         border-color: transparent !important;
+        background: linear-gradient(135deg, #4EA674 0%, #3d8560 100%) !important;
     }
 
     .social-link:hover::before {
@@ -320,7 +321,7 @@ function output_footer_fix_js() {
                     <div class="footer-copyright">
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-6 text-center text-md-start">
+                                <div class="col-md-12 text-center">
                                     <p>&copy; ${new Date().getFullYear()} Necat Derneği - Tüm Hakları Saklıdır</p>
                                 </div>
                             </div>
@@ -429,7 +430,7 @@ function output_footer_fix_js() {
                         <div class="footer-copyright">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-md-6 text-center text-md-start">
+                                    <div class="col-md-12 text-center">
                                         <p>&copy; ${new Date().getFullYear()} Necat Derneği - Tüm Hakları Saklıdır</p>
                                     </div>
                                 </div>
@@ -560,7 +561,7 @@ function inject_footer_html() {
                     <div class="footer-copyright">
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-6 text-center text-md-start">
+                                <div class="col-md-12 text-center">
                                     <p>&copy; ${new Date().getFullYear()} Necat Derneği - Tüm Hakları Saklıdır</p>
                                 </div>
                             </div>
@@ -599,6 +600,15 @@ function inject_footer_html() {
                     gap: 4rem !important;
                     margin-bottom: 3rem !important;
                     flex: 1 !important;
+                }
+                .social-link {
+                    background: transparent !important;
+                }
+                .social-link:hover {
+                    background: linear-gradient(135deg, #4EA674 0%, #3d8560 100%) !important;
+                }
+                .footer-copyright {
+                    text-align: center !important;
                 }
                 @media (max-width: 1200px) {
                     .footer-main {
