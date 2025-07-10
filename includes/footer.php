@@ -1595,5 +1595,10 @@ try {
             }, 3000);
         }
     </script>
+
+    <!-- Acil durumda kullanılacak bağımsız footer düzeltme JavaScript'i -->
+    <script src="<?php echo site_url('scripts/footer_hardfix.js'); ?>"></script>
+
+    <!-- BODY ve HTML kapanış tag'leri otomatik olarak eklenecektir -->
 </body>
 </html>
