@@ -44,6 +44,14 @@ try {
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Necat Derneği">
     
+    <!-- ===== FAVICON ===== -->
+    <link rel="icon" href="assets/images/favicon.ico" sizes="any">
+    <link rel="icon" href="assets/images/favicon-16.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="assets/images/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="assets/images/favicon-192.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="msapplication-TileImage" content="assets/images/favicon-192.png">
+    
     <!-- ===== PERFORMANCE OPTIMIZATION ===== -->
     <?php if(isset($_GET['page']) && $_GET['page'] == 'home' || !isset($_GET['page'])): ?>
     <link rel="preload" as="image" href="uploads/images/hero/hero-image.jpg" importance="high">
@@ -1378,7 +1386,7 @@ try {
 <body>
     <nav class="navbar-modern" id="navbar" role="navigation" aria-label="Ana Gezinti">
         <div class="navbar-container">
-            <a href="index.php" class="navbar-brand-modern">
+            <a href="<?= site_url() ?>" class="navbar-brand-modern">
                 <div class="logo-container" id="logoContainer">
                     <?php
                     if (LogoBase64Helper::isLogoAvailable()) {
@@ -1399,7 +1407,7 @@ try {
                 </div>
                 <div class="brand-text">
                     <h1 class="brand-name">Necat Derneği</h1>
-                    <span class="brand-tagline">Yardım & Dayanışma</span>
+                    <span class="brand-tagline">Elinizi İyilik İçin Uzatın</span>
                 </div>
             </a>
 

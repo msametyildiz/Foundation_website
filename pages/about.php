@@ -217,7 +217,7 @@ try {
         [
             'year' => '2020',
             'title' => 'Pandemi Desteği',
-            'description' => 'COVID-19 salgını döneminde acil yardım programları hayaya geçirildi.'
+            'description' => 'COVID-19 salgını döneminde acil yardım programları hayata geçirildi.'
         ],
         [
             'year' => '2024',
@@ -592,10 +592,10 @@ try {
                     Sen de bu anlamlı yolculuğumuzda yer al ve toplumsal değişimin bir parçası ol.
                 </p>
                 <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="index.php?page=volunteer" class="btn btn-light btn-lg px-4 py-2">
+                    <a href="<?= site_url('volunteer') ?>" class="btn btn-light btn-lg px-4 py-2">
                         <i class="fas fa-hand-holding-heart me-2"></i>Gönüllü Ol
                     </a>
-                    <a href="index.php?page=donate" class="btn btn-outline-light btn-lg px-4 py-2">
+                    <a href="<?= site_url('donate') ?>" class="btn btn-outline-light btn-lg px-4 py-2">
                         <i class="fas fa-heart me-2"></i>Bağış Yap
                     </a>
                 </div>

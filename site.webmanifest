@@ -1,0 +1,24 @@
+{
+    "name": "Necat Derneği",
+    "short_name": "Necat",
+    "description": "Yardım ve Dayanışma",
+    "icons": [
+        {
+            "src": "assets/images/favicon-192.png",
+            "sizes": "192x136",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "assets/images/favicon-512.png",
+            "sizes": "512x362",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "theme_color": "#4EA674",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "start_url": "/",
+    "orientation": "portrait"
+} 

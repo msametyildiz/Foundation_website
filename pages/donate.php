@@ -331,10 +331,10 @@ try {
             Sizin desteğinizle daha çok insana ulaşabilir, daha büyük değişimler yaratabilirız.
         </p>
         <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="index.php?page=projects" class="btn btn-light btn-lg">
+            <a href="<?= site_url('projects') ?>" class="btn btn-light btn-lg">
                 <i class="fas fa-project-diagram me-2"></i> Projelerimizi Görün
             </a>
-            <a href="index.php?page=volunteer" class="btn btn-outline-light btn-lg">
+            <a href="<?= site_url('volunteer') ?>" class="btn btn-outline-light btn-lg">
                 <i class="fas fa-hands-helping me-2"></i> Gönüllü Olun
             </a>
         </div>

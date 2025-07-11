@@ -280,10 +280,10 @@ function output_footer_fix_js() {
                         <div class="footer-section">
                             <h4>Hızlı Bağlantılar</h4>
                             <ul class="footer-links">
-                                <li><a href="/index.php"><i class="fas fa-home"></i> Ana Sayfa</a></li>
-                                <li><a href="/index.php?page=about"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
-                                <li><a href="/index.php?page=projects"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
-                                <li><a href="/index.php?page=volunteer"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
+                                <li><a href="<?= site_url() ?>"><i class="fas fa-home"></i> Ana Sayfa</a></li>
+                                <li><a href="<?= site_url('about') ?>"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
+                                <li><a href="<?= site_url('projects') ?>"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
+                                <li><a href="<?= site_url('volunteer') ?>"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
                             </ul>
                         </div>
                         
@@ -291,9 +291,9 @@ function output_footer_fix_js() {
                         <div class="footer-section">
                             <h4>Daha Fazla</h4>
                             <ul class="footer-links">
-                                <li><a href="/index.php?page=sss"><i class="fas fa-question-circle"></i> SSS</a></li>
-                                <li><a href="/index.php?page=contact"><i class="fas fa-envelope"></i> İletişim</a></li>
-                                <li><a href="/index.php?page=donate"><i class="fas fa-heart"></i> Bağış Yap</a></li>
+                                <li><a href="<?= site_url('sss') ?>"><i class="fas fa-question-circle"></i> SSS</a></li>
+                                <li><a href="<?= site_url('contact') ?>"><i class="fas fa-envelope"></i> İletişim</a></li>
+                                <li><a href="<?= site_url('donate') ?>"><i class="fas fa-heart"></i> Bağış Yap</a></li>
                             </ul>
                         </div>
                         
@@ -389,10 +389,10 @@ function output_footer_fix_js() {
                             <div class="footer-section">
                                 <h4>Hızlı Bağlantılar</h4>
                                 <ul class="footer-links">
-                                    <li><a href="/index.php"><i class="fas fa-home"></i> Ana Sayfa</a></li>
-                                    <li><a href="/index.php?page=about"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
-                                    <li><a href="/index.php?page=projects"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
-                                    <li><a href="/index.php?page=volunteer"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
+                                    <li><a href="<?= site_url() ?>"><i class="fas fa-home"></i> Ana Sayfa</a></li>
+                                    <li><a href="<?= site_url('about') ?>"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
+                                    <li><a href="<?= site_url('projects') ?>"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
+                                    <li><a href="<?= site_url('volunteer') ?>"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
                                 </ul>
                             </div>
                             
@@ -400,9 +400,9 @@ function output_footer_fix_js() {
                             <div class="footer-section">
                                 <h4>Daha Fazla</h4>
                                 <ul class="footer-links">
-                                    <li><a href="/index.php?page=sss"><i class="fas fa-question-circle"></i> SSS</a></li>
-                                    <li><a href="/index.php?page=contact"><i class="fas fa-envelope"></i> İletişim</a></li>
-                                    <li><a href="/index.php?page=donate"><i class="fas fa-heart"></i> Bağış Yap</a></li>
+                                    <li><a href="<?= site_url('sss') ?>"><i class="fas fa-question-circle"></i> SSS</a></li>
+                                    <li><a href="<?= site_url('contact') ?>"><i class="fas fa-envelope"></i> İletişim</a></li>
+                                    <li><a href="<?= site_url('donate') ?>"><i class="fas fa-heart"></i> Bağış Yap</a></li>
                                 </ul>
                             </div>
                             
@@ -520,10 +520,10 @@ function inject_footer_html() {
                         <div class="footer-section">
                             <h4>Hızlı Bağlantılar</h4>
                             <ul class="footer-links">
-                                <li><a href="/index.php"><i class="fas fa-home"></i> Ana Sayfa</a></li>
-                                <li><a href="/index.php?page=about"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
-                                <li><a href="/index.php?page=projects"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
-                                <li><a href="/index.php?page=volunteer"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
+                                <li><a href="<?= site_url() ?>"><i class="fas fa-home"></i> Ana Sayfa</a></li>
+                                <li><a href="<?= site_url('about') ?>"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
+                                <li><a href="<?= site_url('projects') ?>"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
+                                <li><a href="<?= site_url('volunteer') ?>"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
                             </ul>
                         </div>
                         
@@ -531,9 +531,9 @@ function inject_footer_html() {
                         <div class="footer-section">
                             <h4>Daha Fazla</h4>
                             <ul class="footer-links">
-                                <li><a href="/index.php?page=sss"><i class="fas fa-question-circle"></i> SSS</a></li>
-                                <li><a href="/index.php?page=contact"><i class="fas fa-envelope"></i> İletişim</a></li>
-                                <li><a href="/index.php?page=donate"><i class="fas fa-heart"></i> Bağış Yap</a></li>
+                                <li><a href="<?= site_url('sss') ?>"><i class="fas fa-question-circle"></i> SSS</a></li>
+                                <li><a href="<?= site_url('contact') ?>"><i class="fas fa-envelope"></i> İletişim</a></li>
+                                <li><a href="<?= site_url('donate') ?>"><i class="fas fa-heart"></i> Bağış Yap</a></li>
                             </ul>
                         </div>
                         

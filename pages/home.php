@@ -181,11 +181,11 @@ $total_families = ($total_families <= 0) ? $default_families : $total_families;
                         <?= htmlspecialchars($hero_subtitle) ?>
                     </p>
                     <div class="hero-actions">
-                        <a href="index.php?page=donate" class="btn btn-hero-primary">
+                        <a href="<?= site_url('donate') ?>" class="btn btn-hero-primary">
                             <i class="fas fa-heart"></i>
                             Bağış Yap
                         </a>
-                        <a href="index.php?page=volunteer" class="btn btn-hero-secondary">
+                        <a href="<?= site_url('volunteer') ?>" class="btn btn-hero-secondary">
                             <i class="fas fa-hands-helping"></i>
                             Gönüllü Ol
                         </a>
@@ -281,7 +281,7 @@ $total_families = ($total_families <= 0) ? $default_families : $total_families;
                             <span>Sürdürülebilir projeler</span>
                         </div>
                     </div>
-                    <a href="index.php?page=about" class="btn btn-outline-primary">
+                    <a href="<?= site_url('about') ?>" class="btn btn-outline-primary">
                         Daha Fazla Bilgi
                         <i class="fas fa-arrow-right ms-2"></i>
                     </a>
@@ -350,7 +350,7 @@ $total_families = ($total_families <= 0) ? $default_families : $total_families;
                             <p><?= clean_output($activity['description']) ?></p>
                             
                             <div class="project-footer">
-                                <a href="index.php?page=projects" class="btn btn-primary btn-sm">
+                                <a href="<?= site_url('projects') ?>" class="btn btn-primary btn-sm">
                                     <i class="fas fa-arrow-right me-2"></i>
                                     Detayları Gör
                                 </a>
@@ -362,7 +362,7 @@ $total_families = ($total_families <= 0) ? $default_families : $total_families;
             <?php endif; ?>
         </div>
         <div class="text-center mt-4">
-            <a href="index.php?page=projects" class="btn btn-primary btn-lg projects-view-all-btn">
+            <a href="<?= site_url('projects') ?>" class="btn btn-primary btn-lg projects-view-all-btn">
                 Tüm Projeleri Gör
                 <i class="fas fa-arrow-right ms-2"></i>
             </a>

@@ -52,10 +52,10 @@ function fixNestedFooter() {
                     <div class="footer-section">
                         <h4>Hızlı Bağlantılar</h4>
                         <ul class="footer-links">
-                            <li><a href="/index.php"><i class="fas fa-home"></i> Ana Sayfa</a></li>
-                            <li><a href="/index.php?page=about"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
-                            <li><a href="/index.php?page=projects"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
-                            <li><a href="/index.php?page=volunteer"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
+                            <li><a href="/"><i class="fas fa-home"></i> Ana Sayfa</a></li>
+                            <li><a href="/about"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
+                            <li><a href="/projects"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
+                            <li><a href="/volunteer"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
                         </ul>
                     </div>
                     
@@ -63,9 +63,9 @@ function fixNestedFooter() {
                     <div class="footer-section">
                         <h4>Daha Fazla</h4>
                         <ul class="footer-links">
-                            <li><a href="/index.php?page=sss"><i class="fas fa-question-circle"></i> SSS</a></li>
-                            <li><a href="/index.php?page=contact"><i class="fas fa-envelope"></i> İletişim</a></li>
-                            <li><a href="/index.php?page=donate"><i class="fas fa-heart"></i> Bağış Yap</a></li>
+                            <li><a href="/faq"><i class="fas fa-question-circle"></i> SSS</a></li>
+                            <li><a href="/contact"><i class="fas fa-envelope"></i> İletişim</a></li>
+                            <li><a href="/donate"><i class="fas fa-heart"></i> Bağış Yap</a></li>
                         </ul>
                     </div>
                     
@@ -364,10 +364,10 @@ function fixNestedFooter() {
                         <div class="footer-section">
                             <h4>Hızlı Bağlantılar</h4>
                             <ul class="footer-links">
-                                <li><a href="/index.php"><i class="fas fa-home"></i> Ana Sayfa</a></li>
-                                <li><a href="/index.php?page=about"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
-                                <li><a href="/index.php?page=projects"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
-                                <li><a href="/index.php?page=volunteer"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
+                                <li><a href="/"><i class="fas fa-home"></i> Ana Sayfa</a></li>
+                                <li><a href="/about"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
+                                <li><a href="/projects"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
+                                <li><a href="/volunteer"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
                             </ul>
                         </div>
                         
@@ -375,9 +375,9 @@ function fixNestedFooter() {
                         <div class="footer-section">
                             <h4>Daha Fazla</h4>
                             <ul class="footer-links">
-                                <li><a href="/index.php?page=sss"><i class="fas fa-question-circle"></i> SSS</a></li>
-                                <li><a href="/index.php?page=contact"><i class="fas fa-envelope"></i> İletişim</a></li>
-                                <li><a href="/index.php?page=donate"><i class="fas fa-heart"></i> Bağış Yap</a></li>
+                                <li><a href="/faq"><i class="fas fa-question-circle"></i> SSS</a></li>
+                                <li><a href="/contact"><i class="fas fa-envelope"></i> İletişim</a></li>
+                                <li><a href="/donate"><i class="fas fa-heart"></i> Bağış Yap</a></li>
                             </ul>
                         </div>
                         

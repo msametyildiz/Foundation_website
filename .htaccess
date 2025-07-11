@@ -1,5 +1,5 @@
-# Basit .htaccess - Router Olmadan
-# Sadece temel güvenlik ayarları
+# Basit .htaccess - SEO Dostu URL'ler için Düzenlenmiş
+# Temel güvenlik ayarları ve URL yönlendirme kuralları
 
 # Temel Güvenlik Ayarları
 Options -Indexes
@@ -34,8 +34,30 @@ ServerSignature Off
 # Uploads dizinindeki PHP dosyalarını engelle
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    
+    # Uploads dizinindeki PHP dosyalarını engelle
     RewriteCond %{REQUEST_URI} ^/uploads/.*\.(php|php3|php4|php5|phtml)$ [NC]
     RewriteRule ^(.*)$ - [F,L]
+
+    # Mevcut dosya veya dizin değilse ve dahili yönlendirme değilse
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !index\.php
+    
+    # Özel URL yönlendirmeleri
+    
+    # Ana sayfa için özel kural (gerekirse)
+    RewriteRule ^$ index.php [L]
+    
+    # Admin paneli için özel kural
+    RewriteRule ^admin/?$ admin/index.php [L]
+    RewriteRule ^admin/(.*)$ admin/$1 [L]
+    
+    # Alt sayfa ID'leri için kural (örn: /projects/5)
+    RewriteRule ^([a-zA-Z0-9_-]+)/([0-9]+)/?$ index.php?page=$1&id=$2 [QSA,L]
+    
+    # Normal sayfalar için kural
+    RewriteRule ^([a-zA-Z0-9_-]+)/?$ index.php?page=$1 [QSA,L]
 </IfModule>
 
 # Sıkıştırma
@@ -47,9 +69,9 @@ ServerSignature Off
 </IfModule>
 
 # Hata sayfaları
-ErrorDocument 404 /index.php?page=404
-ErrorDocument 403 /index.php?page=403
-ErrorDocument 500 /index.php?page=500
+ErrorDocument 404 /404
+ErrorDocument 403 /403
+ErrorDocument 500 /500
 
 # Karakter seti
 AddDefaultCharset UTF-8 
