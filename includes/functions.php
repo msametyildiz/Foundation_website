@@ -3,7 +3,7 @@
  * Genel yardımcı fonksiyonlar
  */
 
-// Site URL'si oluştur (SEO dostu URL sistemi)
+// Site URL'si oluştur (Eski çalışan sistem)
 function site_url($path = '', $full = false) {
     // Base URL'i belirle
     if ($full) {
@@ -13,21 +13,13 @@ function site_url($path = '', $full = false) {
         $base = '';
     }
     
-    // Path boşsa ana sayfa
-    if (empty($path) || $path === 'index.php') {
-        return $base . '/';
+    // Ana sayfa için
+    if (empty($path) || $path === 'home') {
+        return $base . '/index.php';
     }
     
-    // index.php?page= formatını temizle
-    if (strpos($path, 'index.php?page=') === 0) {
-        $path = substr($path, 15);
-    }
-    
-    // İlk / karakterini ekle
-    $path = '/' . ltrim($path, '/');
-    
-    // URL'i oluştur ve döndür
-    return $base . $path;
+    // Diğer sayfalar için eski sistem
+    return $base . '/index.php?page=' . ltrim($path, '/');
 }
 
 // Aktif sayfa kontrolü (SEO dostu URL'ler için)

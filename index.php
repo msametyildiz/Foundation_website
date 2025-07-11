@@ -1,5 +1,5 @@
 <?php
-// SEO Dostu URL Sistemi - Router kullanarak
+// Basit Sayfa Sistemi - Router olmadan
 ob_start();
 
 // Hata raporlama ayarları
@@ -21,7 +21,6 @@ session_start();
 // Gerekli dosyaları yükle
 require_once 'config/database.php';
 require_once 'includes/functions.php';
-require_once 'includes/Router.php';
 
 // Dosya yollarını kontrol et
 if (!is_dir(__DIR__ . '/uploads')) {
@@ -36,36 +35,18 @@ if (!is_dir(__DIR__ . '/logs')) {
     }
 }
 
-// Router oluştur ve rotaları tanımla
-$router = new Router();
+// Basit sayfa belirleme sistemi
+$page = isset($_GET['page']) ? htmlspecialchars(trim($_GET['page']), ENT_QUOTES, 'UTF-8') : 'home';
 
-// Rotaları tanımla
-$routes = [
-    'home' => 'pages/home.php',
-    'about' => 'pages/about.php',
-    'projects' => 'pages/projects.php',
-    'donate' => 'pages/donate.php',
-    'volunteer' => 'pages/volunteer.php',
-    'faq' => 'pages/faq.php',
-    'contact' => 'pages/contact.php',
-    'press' => 'pages/press.php',
-    'documents' => 'pages/documents.php',
-    'team' => 'pages/team.php'
-];
+// Güvenlik: sadece izin verilen sayfalar
+$allowed_pages = ['home', 'about', 'projects', 'donate', 'volunteer', 'faq', 'contact', 'press', 'documents', 'team', '404', '403', '500'];
 
-// Hata sayfalarını tanımla
-$router->setNotFound('pages/404.php')
-       ->setErrorHandler('403', 'pages/403.php')
-       ->setErrorHandler('500', 'pages/500.php');
+if (!in_array($page, $allowed_pages)) {
+    $page = 'home';
+}
 
-// Rotaları ekle
-$router->addRoutes($routes);
-
-// Router'ı kullanarak sayfa dosyasını belirle
-$page_file = $router->dispatch();
-
-// İstenilen sayfayı URL'den veya router'dan al
-$page = isset($_GET['page']) ? htmlspecialchars(trim($_GET['page']), ENT_QUOTES, 'UTF-8') : get_current_page();
+// Sayfa dosyasını belirle
+$page_file = "pages/{$page}.php";
 
 // Sayfa başlığı ve meta bilgileri için
 try {
@@ -77,17 +58,6 @@ try {
         'description' => 'Elinizi İyilik İçin Uzatın',
         'keywords' => 'necat derneği, yardım, bağış, sosyal sorumluluk'
     ];
-}
-
-// Define site constants
-if (!defined('SITE_NAME')) {
-    define('SITE_NAME', 'Necat Derneği');
-}
-if (!defined('SITE_URL')) {
-    define('SITE_URL', site_url('', true));
-}
-if (!defined('SITE_EMAIL')) {
-    define('SITE_EMAIL', 'info@necatdernegi.org');
 }
 
 // Header'ı ekle

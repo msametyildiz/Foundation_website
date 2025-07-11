@@ -11,11 +11,6 @@
 class Router {
     private $routes = [];
     private $notFoundHandler = 'pages/404.php';
-    private $errorHandlers = [
-        '404' => 'pages/404.php',
-        '403' => 'pages/403.php',
-        '500' => 'pages/500.php',
-    ];
     
     /**
      * Yeni bir rota ekler
@@ -30,34 +25,6 @@ class Router {
     }
     
     /**
-     * Toplu rota ekleme
-     * 
-     * @param array $routes Rotaları içeren dizi
-     * @return Router Zincirleme çağrılar için
-     */
-    public function addRoutes($routes) {
-        foreach ($routes as $path => $handler) {
-            $this->add($path, $handler);
-        }
-        return $this;
-    }
-    
-    /**
-     * Özel hata sayfası ayarlama
-     *
-     * @param string $code Hata kodu (404, 403, 500)
-     * @param string $handler Hata sayfası dosyası
-     * @return Router Zincirleme çağrılar için
-     */
-    public function setErrorHandler($code, $handler) {
-        $this->errorHandlers[$code] = $handler;
-        if ($code === '404') {
-            $this->notFoundHandler = $handler;
-        }
-        return $this;
-    }
-    
-    /**
      * 404 hata sayfasını ayarlar
      *
      * @param string $handler 404 sayfası
@@ -65,38 +32,16 @@ class Router {
      */
     public function setNotFound($handler) {
         $this->notFoundHandler = $handler;
-        $this->errorHandlers['404'] = $handler;
         return $this;
-    }
-    
-    /**
-     * İstek URI'sinden yolu çıkarır
-     * 
-     * @return string Temizlenmiş yol
-     */
-    public function getCurrentPath() {
-        // URL yolunu al
-        $path = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-        
-        // index.php'yi kaldır
-        $path = str_replace('index.php', '', $path);
-        $path = trim($path, '/');
-        
-        return $path;
     }
     
     /**
      * İstenilen yola göre doğru sayfayı belirler
      *
-     * @param string $path İstenilen URL yolu (boş bırakılırsa mevcut URI kullanılır)
+     * @param string $path İstenilen URL yolu
      * @return string İşlenecek PHP dosyası
      */
-    public function dispatch($path = null) {
-        // Path belirtilmemişse mevcut URI'den al
-        if ($path === null) {
-            $path = $this->getCurrentPath();
-        }
-        
+    public function dispatch($path) {
         // Ana sayfa kontrolü
         if ($path === '' || $path === '/' || $path === 'home') {
             return isset($this->routes['home']) ? $this->routes['home'] : 'pages/home.php';
@@ -118,15 +63,5 @@ class Router {
         
         // Bulunamadı, 404 sayfası döndür
         return $this->notFoundHandler;
-    }
-    
-    /**
-     * Hata sayfasını döndür
-     * 
-     * @param string $code Hata kodu (404, 403, 500)
-     * @return string Hata sayfası dosyası
-     */
-    public function getErrorPage($code) {
-        return isset($this->errorHandlers[$code]) ? $this->errorHandlers[$code] : $this->notFoundHandler;
     }
 } 
