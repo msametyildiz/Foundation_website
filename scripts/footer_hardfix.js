@@ -10,8 +10,10 @@ let footerFixed = false;
 
 // Footer düzeltme ana işlevi
 function fixNestedFooter() {
-    // Eğer footer zaten düzeltildiyse tekrar çalıştırma
-    if (footerFixed) {
+    // Eğer footer zaten düzeltildiyse veya contact sayfasındaysak tekrar çalıştırma
+    const isContactPage = window.location.href.includes('page=contact');
+    if (footerFixed || isContactPage) {
+        if(isContactPage) console.log('Contact sayfasında footer hardfix atlandı.');
         return;
     }
     

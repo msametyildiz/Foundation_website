@@ -423,6 +423,12 @@ function fixFormSubmissions() {
  * Footer görünüm sorunları için düzeltme
  */
 function fixFooterDisplay() {
+    // Contact sayfasındaysak bu düzeltmeyi atla
+    if (window.location.href.includes('page=contact')) {
+        console.log('Contact sayfasında footer görüntü düzeltmesi atlandı.');
+        return;
+    }
+
     const footer = document.querySelector('.footer-modern');
     
     if (footer) {

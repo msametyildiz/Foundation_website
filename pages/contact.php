@@ -90,7 +90,7 @@ try {
         // URL formatını düzenle
         if (!empty($url) && $url !== '#') {
             // Eğer tam URL değilse base_url ile birleştir
-            if (!str_starts_with($url, 'http') && !empty($data['base_url'])) {
+            if (!(substr($url, 0, 4) === 'http') && !empty($data['base_url'])) {
                 $url = $data['base_url'] . ltrim($url, '@');
             }
             

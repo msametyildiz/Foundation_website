@@ -1,6 +1,5 @@
 <?php
 // Basit Sayfa Sistemi - Router olmadan
-ob_start();
 
 // Hata raporlama ayarları
 $environment = ($_SERVER['SERVER_NAME'] == 'localhost' || strpos($_SERVER['SERVER_NAME'], '.local') !== false) ? 'development' : 'production';
@@ -105,5 +104,4 @@ try {
 }
 
 // Output buffer'ı temizle ve gönder
-ob_end_flush();
 ?>
