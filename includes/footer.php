@@ -56,10 +56,10 @@ try {
                         <?php else: ?>
                             <img src="<?php echo site_url('assets/images/logo.png'); ?>" alt="Necat Derneği Logo" class="footer-logo-img">
                         <?php endif; ?>
-                </div>
+                    </div>
                         <div class="footer-brand-text">
                             <h3>Necat Derneği</h3>
-                        <div class="footer-brand-tagline">Elinizi İyilik İçin Uzatın</div>
+                            <div class="footer-brand-tagline">Elinizi İyilik İçin Uzatın</div>
                         </div>
                     </div>
                     <p class="footer-description">
@@ -136,7 +136,7 @@ try {
     </footer>
 
 <!-- Acil durumda kullanılacak bağımsız footer düzeltme JavaScript'i -->
-<script src="<?php echo site_url('scripts/footer_hardfix.js'); ?>"></script>
+<script src="/scripts/footer_hardfix.js"></script>
 
 <!-- BODY ve HTML kapanış tag'leri otomatik olarak eklenecektir -->
 </body>

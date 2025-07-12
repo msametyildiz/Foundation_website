@@ -5,13 +5,27 @@
  * Bu durumda <script src="/scripts/footer_hardfix.js"></script> şeklinde eklenmesi yeterlidir.
  */
 
+// Footer düzeltme işlemi yapıldı mı kontrolü
+let footerFixed = false;
+
 // Footer düzeltme ana işlevi
 function fixNestedFooter() {
+    // Eğer footer zaten düzeltildiyse tekrar çalıştırma
+    if (footerFixed) {
+        return;
+    }
+    
     console.log('Footer acil düzeltme betiği çalışıyor...');
     
     // Footer'ı bul
     const footer = document.querySelector('.footer-modern');
     if (footer) {
+        // Eğer footer zaten düzeltilmişse tekrar çalıştırma
+        if (footer.getAttribute('data-fixed') === 'true') {
+            footerFixed = true;
+            return;
+        }
+        
         console.log('Footer bulundu, düzeltmeler uygulanıyor...');
         
         // Footer içeriğini tamamen değiştir
@@ -340,6 +354,12 @@ function fixNestedFooter() {
         styleElement.textContent = footerStyles;
         document.head.appendChild(styleElement);
         
+        // Footer'a düzeltildi işareti ekle
+        footer.setAttribute('data-fixed', 'true');
+        
+        // Düzeltme yapıldı bayrağını ayarla
+        footerFixed = true;
+        
         console.log('Footer düzeltmeleri tamamlandı.');
     } else {
         console.log('Footer bulunamadı, düzeltme yapılamadı.');
@@ -355,32 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Yedek olarak window.onload'a da ekle
 window.onload = function() {
     // Eğer DOMContentLoaded çalışmazsa, bu şekilde de dene
-    setTimeout(fixNestedFooter, 1000);
-};
-
-// Acil durum için doğrudan çağır
-setTimeout(fixNestedFooter, 2000);
-
-// Sayfa içeriği değişirse tekrar düzeltme yap (SPA uyumluluğu için)
-const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-            // DOM değişikliği algılandı, footer'ı kontrol et
-            const footer = document.querySelector('.footer-modern');
-            if (footer && !footer.getAttribute('data-fixed')) {
-                setTimeout(fixNestedFooter, 100);
-            }
-        }
-    });
-});
-
-// Gözlemlenecek hedef ve yapılandırma
-observer.observe(document.body, {
-    childList: true,
-    subtree: true
-});
-
-// Sayfadan ayrılırken gözlemciyi temizle
-window.addEventListener('beforeunload', function() {
-    observer.disconnect();
-}); 
+    if (!footerFixed) {
+        setTimeout(fixNestedFooter, 1000);
+    }
+}; 

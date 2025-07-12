@@ -41,6 +41,20 @@ $page = isset($_GET['page']) ? htmlspecialchars(trim($_GET['page']), ENT_QUOTES,
 // Güvenlik: sadece izin verilen sayfalar
 $allowed_pages = ['home', 'about', 'projects', 'donate', 'volunteer', 'faq', 'contact', 'press', 'documents', 'team', '404', '403', '500'];
 
+// Script dosyası talebi kontrolü
+if (strpos($page, 'script_') === 0 || pathinfo($page, PATHINFO_EXTENSION) === 'js') {
+    // JavaScript dosyası talep ediliyor, doğrudan dosyayı göster
+    $script_file = "scripts/" . basename($page);
+    if (file_exists($script_file)) {
+        header('Content-Type: application/javascript');
+        readfile($script_file);
+        exit;
+    } else {
+        // Dosya bulunamadı, 404 sayfasına yönlendir
+        $page = '404';
+    }
+}
+
 if (!in_array($page, $allowed_pages)) {
     $page = 'home';
 }
@@ -92,4 +106,4 @@ try {
 
 // Output buffer'ı temizle ve gönder
 ob_end_flush();
-?> 
+?>
