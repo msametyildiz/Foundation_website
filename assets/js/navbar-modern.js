@@ -33,6 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 navbar.classList.remove('hidden');
             }
+        } else if (mobileMenu && mobileMenu.classList.contains('active')) {
+            // Mobil menü açıkken navbar'ın her zaman görünür olmasını sağla
+            navbar.classList.remove('hidden');
         }
 
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;

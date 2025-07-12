@@ -1565,6 +1565,9 @@ try {
                     } else if (scrollTop < lastScrollTop || scrollTop <= 100) {
                         navbar.classList.remove('hidden');
                     }
+                } else if (mobileMenu && mobileMenu.classList.contains('active')) {
+                    // Mobil menü açıkken navbar'ın her zaman görünür olmasını sağla
+                    navbar.classList.remove('hidden');
                 }
 
                 lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
@@ -1596,7 +1599,8 @@ try {
                         mobileMenu.classList.remove('active');
                         document.body.style.overflow = '';
                         document.body.style.paddingRight = '';
-                        navbar.classList.remove('hidden'); // Always show navbar when menu closes
+                        // Menü kapandığında navbar'ın görünürlüğünü scroll pozisyonuna göre ayarla
+                        handleProfessionalScroll();
                         isMenuOpen = false;
 
                         // Enhanced focus management
@@ -1608,7 +1612,7 @@ try {
                         mobileMenu.classList.add('active');
                         document.body.style.overflow = 'hidden';
                         document.body.style.paddingRight = getScrollbarWidth() + 'px';
-                        navbar.classList.remove('hidden'); // Keep navbar visible with open menu
+                        navbar.classList.remove('hidden'); // Menü açıkken navbar'ı her zaman göster
                         isMenuOpen = true;
 
                         // Enhanced focus management for accessibility
@@ -1691,12 +1695,14 @@ try {
                     touchStartY = e.changedTouches[0].screenY;
                 }, { passive: true });
 
+                /* Aşağı kaydırma ile menü kapanmasını engelliyoruz
                 mobileMenu.addEventListener('touchend', function(e) {
                     const touchEndY = e.changedTouches[0].screenY;
                     if (touchStartY - touchEndY > 80) {
                         toggleProfessionalMenu(true);
                     }
                 }, { passive: true });
+                */
             }
 
             // Professional smooth scrolling for anchor links
