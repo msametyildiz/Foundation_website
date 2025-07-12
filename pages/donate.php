@@ -121,6 +121,7 @@ try {
                                                     onclick="copyToClipboard('<?php echo clean_output($account['iban']); ?>')"
                                                     title="Kopyala">
                                                 <i class="fas fa-copy"></i>
+                                            </button>
                                             </div>
                                         </p>
                                     <?php if (!empty($account['swift'])): ?>
@@ -152,8 +153,12 @@ try {
                             Bağış işleminizi tamamladıktan sonra dekontunuzu aşağıdaki form ile yükleyebilirsiniz.
                         </div>
                         
-                        <form id="donation-form" class="needs-validation" novalidate enctype="multipart/form-data">
+                        <!-- Form submission response messages will appear here -->
+                        <div id="donation-form-response"></div>
+                        
+                        <form id="donation-form" class="needs-validation ajax-form" novalidate enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>">
+                            <input type="hidden" name="action" value="donation">
                             
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -206,7 +211,32 @@ try {
                                 <label for="amount" class="form-label">
                                     <i class="fas fa-money-bill-wave text-success me-1"></i>Bağış Miktarı (TL)
                                 </label>
-                                <input type="number" class="form-control" id="amount" name="amount" min="1" step="0.01">
+                                
+                                <!-- Hızlı Bağış Miktarları -->
+                                <div class="row mb-3">
+                                    <div class="col-6 col-md-3 mb-2">
+                                        <button type="button" class="btn donation-amount-btn w-100" data-amount="100">
+                                            <i class="fas fa-donate me-1"></i>100 TL
+                                        </button>
+                                    </div>
+                                    <div class="col-6 col-md-3 mb-2">
+                                        <button type="button" class="btn donation-amount-btn w-100" data-amount="250">
+                                            <i class="fas fa-donate me-1"></i>250 TL
+                                        </button>
+                                    </div>
+                                    <div class="col-6 col-md-3 mb-2">
+                                        <button type="button" class="btn donation-amount-btn w-100" data-amount="500">
+                                            <i class="fas fa-donate me-1"></i>500 TL
+                                        </button>
+                                    </div>
+                                    <div class="col-6 col-md-3 mb-2">
+                                        <button type="button" class="btn donation-amount-btn w-100" data-amount="1000">
+                                            <i class="fas fa-donate me-1"></i>1000 TL
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <input type="number" class="form-control" id="amount" name="amount" min="1" step="0.01" placeholder="Bağış miktarını giriniz veya yukarıdan seçiniz">
                                 <div class="form-text">İsteğe bağlı - Dekonttan tespit edilebilir</div>
                             </div>
                             
@@ -332,10 +362,10 @@ try {
         </p>
         <div class="d-flex gap-3 justify-content-center flex-wrap">
             <a href="<?php echo site_url('projects'); ?>" class="btn btn-light btn-lg">
-                <i class="fas fa-project-diagram me-2"></i> Projelerimiz
+                <i class="fas fa-project-diagram me-2"></i> Projelerimizi Görün
             </a>
             <a href="<?php echo site_url('volunteer'); ?>" class="btn btn-outline-light btn-lg">
-                <i class="fas fa-hands-helping me-2"></i> Gönüllü Ol
+                <i class="fas fa-hands-helping me-2"></i> Gönüllü Olun
             </a>
         </div>
     </div>
@@ -947,53 +977,217 @@ try {
 </style>
 
 <script>
-// Donation amount button functionality
-document.querySelectorAll('.donation-amount-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        // Remove active class from all buttons
-        document.querySelectorAll('.donation-amount-btn').forEach(b => b.classList.remove('active'));
-        // Add active class to clicked button
-        this.classList.add('active');
-        // Set amount in form
-        const amount = this.getAttribute('data-amount');
-        document.getElementById('amount').value = amount;
-    });
-});
-
-// Copy to clipboard function
+// Copy to clipboard function - Used for IBAN and account numbers
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(function() {
-        // Show success toast message
-        const toast = document.createElement('div');
-        toast.className = 'toast-message';
-        toast.textContent = 'Kopyalandı!';
-        toast.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #4ea674;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        `;
-        document.body.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.style.opacity = '1';
-        }, 100);
-        
-        setTimeout(() => {
-            toast.style.opacity = '0';
+        // Use the global showNotification function if available
+        if (typeof showNotification === 'function') {
+            showNotification('Kopyalandı!', 'success', 2000);
+        } else {
+            // Fallback to simple toast
+            const toast = document.createElement('div');
+            toast.className = 'toast-message';
+            toast.textContent = 'Kopyalandı!';
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4ea674;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 5px;
+                z-index: 9999;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+            document.body.appendChild(toast);
+            
             setTimeout(() => {
-                document.body.removeChild(toast);
-            }, 300);
-        }, 2000);
+                toast.style.opacity = '1';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 2000);
+        }
     }).catch(function(err) {
         console.error('Kopyalama hatası: ', err);
     });
+}
+
+// Custom KVKK alert function
+function showKVKKAlert() {
+    // Create a simple toast notification in the top-right corner
+    const toast = document.createElement('div');
+    toast.className = 'kvkk-toast-message';
+    toast.innerHTML = `
+        <i class="fas fa-check-circle me-2"></i>
+        KVKK metni kabul edildi!
+    `;
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #4ea674;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        opacity: 0;
+        transform: translateX(20px);
+        transition: all 0.3s ease;
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Auto close after 3 seconds
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(20px)';
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 300);
+    }, 3000);
+}
+
+// Show personalized donation success message
+function showDonationSuccessAlert(donorName) {
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'donation-alert-overlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    `;
+    
+    // Create alert popup
+    const alertPopup = document.createElement('div');
+    alertPopup.className = 'donation-alert-popup';
+    alertPopup.style.cssText = `
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        transform: scale(0.8) translateY(-20px);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        border: 3px solid #4ea674;
+        position: relative;
+    `;
+    
+    alertPopup.innerHTML = `
+        <div style="
+            width: 80px;
+            height: 80px;
+            background: rgba(78, 166, 116, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+            border: 3px solid #4ea674;
+        ">
+            <i class="fas fa-check-circle" style="font-size: 40px; color: #4ea674;"></i>
+        </div>
+        <h4 style="color: #4ea674; margin-bottom: 1rem;">Bağışınız Başarıyla Kaydedildi</h4>
+        <p style="
+            font-size: 16px;
+            line-height: 1.6;
+            color: #374151;
+            margin-bottom: 1.5rem;
+        ">Sayın ${donorName}, bağışınız başarıyla kaydedilmiştir. İhtiyaç sahiplerine yapmış olduğunuz bu değerli bağış için içtenlikle teşekkür ederiz. Dekont bilgileriniz güvenle alınmış olup, değerlendirme sürecinden sonra tarafınızla iletişime geçilecektir.</p>
+        <button type="button" class="donation-alert-close-btn" style="
+            background: #4ea674;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        ">
+            Tamam
+        </button>
+    `;
+    
+    overlay.appendChild(alertPopup);
+    document.body.appendChild(overlay);
+    
+    // Animation
+    requestAnimationFrame(() => {
+        overlay.style.opacity = '1';
+        alertPopup.style.transform = 'scale(1) translateY(0)';
+    });
+    
+    // Close function
+    const closeAlert = () => {
+        overlay.style.opacity = '0';
+        alertPopup.style.transform = 'scale(0.8) translateY(-20px)';
+        setTimeout(() => {
+            if (overlay.parentNode) {
+                overlay.remove();
+            }
+        }, 300);
+    };
+    
+    // Event listeners
+    const closeBtn = alertPopup.querySelector('.donation-alert-close-btn');
+    closeBtn.addEventListener('click', closeAlert);
+    
+    // Hover effect for button
+    closeBtn.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-2px)';
+        this.style.boxShadow = '0 4px 15px rgba(78, 166, 116, 0.4)';
+    });
+    
+    closeBtn.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = 'none';
+    });
+    
+    // Close on overlay click
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            closeAlert();
+        }
+    });
+    
+    // Close on ESC key
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            closeAlert();
+            document.removeEventListener('keydown', handleEscape);
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
 }
 
 // KVKK Modal functions
@@ -1023,32 +1217,11 @@ function acceptKVKK() {
         document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
         document.body.classList.remove('modal-open');
     }, 300);
-    // Show success message
-    const toast = document.createElement('div');
-    toast.className = 'toast-message';
-    toast.textContent = 'KVKK metni kabul edildi!';
-    toast.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #4ea674;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 5px;
-        z-index: 9999;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    `;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-        toast.style.opacity = '1';
-    }, 100);
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => {
-            document.body.removeChild(toast);
-        }, 300);
-    }, 2000);
+    
+    // Show custom KVKK acceptance alert
+    setTimeout(function() {
+        showKVKKAlert();
+    }, 500);
 }
 
 // Modal kapatıldığında da karartıyı temizle
@@ -1064,4 +1237,125 @@ const privacyModalEl = document.getElementById('privacyModal');
 if (privacyModalEl) {
     privacyModalEl.addEventListener('hidden.bs.modal', removeModalBackdrop);
 }
+
+// Initialize the donation form when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize donation amount buttons
+    const donationButtons = document.querySelectorAll('.donation-amount-btn');
+    const amountInput = document.getElementById('amount');
+    
+    if (donationButtons.length > 0 && amountInput) {
+        donationButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                donationButtons.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                // Set amount in form
+                const amount = this.getAttribute('data-amount');
+                amountInput.value = amount;
+            });
+        });
+        
+        // Clear active state when manually entering an amount
+        amountInput.addEventListener('input', function() {
+            donationButtons.forEach(btn => btn.classList.remove('active'));
+        });
+    }
+    
+    // We're using the global AJAX form handling from main.js
+    const donationForm = document.getElementById('donation-form');
+    if (donationForm) {
+        // Make sure the form has the ajax-form class
+        if (!donationForm.classList.contains('ajax-form')) {
+            donationForm.classList.add('ajax-form');
+        }
+        
+        // Add custom form validation
+        donationForm.addEventListener('submit', function(e) {
+            if (!this.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            this.classList.add('was-validated');
+        });
+        
+        // Handle form submission
+        donationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Yükleniyor...';
+            submitBtn.disabled = true;
+            
+            fetch('ajax/forms.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Extract name for personalized message
+                    const donorName = formData.get('donor_name') || 'Değerli Bağışçımız';
+                    
+                    // Show personalized success alert
+                    showDonationSuccessAlert(donorName);
+                    
+                    // Reset the form
+                    donationForm.reset();
+                    donationForm.classList.remove('was-validated');
+                } else {
+                    // Show error message
+                    const errorMessage = data.message || 'Bir hata oluştu. Lütfen tekrar deneyiniz.';
+                    
+                    // Use the global showNotification function if available
+                    if (typeof showNotification === 'function') {
+                        showNotification(errorMessage, 'danger');
+                    } else {
+                        // Show error message in the form response area
+                        const responseDiv = document.getElementById('donation-form-response');
+                        if (responseDiv) {
+                            responseDiv.innerHTML = `
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    ${errorMessage}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            `;
+                        }
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                
+                // Use the global showNotification function if available
+                if (typeof showNotification === 'function') {
+                    showNotification('Bir hata oluştu. Lütfen tekrar deneyiniz.', 'danger');
+                } else {
+                    // Show error message in the form response area
+                    const responseDiv = document.getElementById('donation-form-response');
+                    if (responseDiv) {
+                        responseDiv.innerHTML = `
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Bir hata oluştu. Lütfen tekrar deneyiniz.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        `;
+                    }
+                }
+            })
+            .finally(() => {
+                // Restore button state
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+});
 </script>

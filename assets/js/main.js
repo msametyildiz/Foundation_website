@@ -491,11 +491,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 100);
 });
 
-// Add smooth scrolling for hero scroll indicator
-document.addEventListener('DOMContentLoaded', function() {
-    // Buton kaldırıldı, ilgili kodlar da kaldırıldı
-});
-
 // Homepage initialization
 function initializeHomepage() {
     // Add fade-in animations to sections
@@ -524,27 +519,7 @@ function initializeStatsCounter() {
     const statNumbers = document.querySelectorAll('.stat-number[data-target]');
     
     const animateCounter = (element) => {
-        // Get the target value from the data attribute
-        const targetValue = parseInt(element.getAttribute('data-target'));
-        
-        // If target is 0 or invalid, use fallback values
-        let target = targetValue;
-        if (isNaN(target) || target <= 0) {
-            // Use category-based fallback values
-            const label = element.nextElementSibling?.textContent.toLowerCase() || '';
-            if (label.includes('proje')) {
-                target = 100;
-            } else if (label.includes('gönüllü')) {
-                target = 26;
-            } else if (label.includes('aile')) {
-                target = 5001;
-            } else {
-                target = 100; // Default fallback
-            }
-            // Update the data-target attribute
-            element.setAttribute('data-target', target);
-        }
-        
+        const target = parseInt(element.getAttribute('data-target'));
         const duration = 2000; // 2 seconds
         const step = target / (duration / 16); // 60fps
         let current = 0;
@@ -555,52 +530,10 @@ function initializeStatsCounter() {
                 current = target;
                 clearInterval(timer);
             }
-            // Format the number with thousands separator
             element.textContent = Math.floor(current).toLocaleString('tr-TR');
         }, 16);
     };
     
-    // Check if we need to apply stats immediately
-    const applyStatsImmediately = () => {
-        statNumbers.forEach(stat => {
-            const targetValue = parseInt(stat.getAttribute('data-target'));
-            // If the value is already set correctly, just display it
-            if (!isNaN(targetValue) && targetValue > 0) {
-                stat.textContent = targetValue.toLocaleString('tr-TR');
-            } else {
-                // Otherwise, use fallback values
-                const label = stat.nextElementSibling?.textContent.toLowerCase() || '';
-                let fallbackValue = 100;
-                
-                if (label.includes('proje')) {
-                    fallbackValue = 100;
-                } else if (label.includes('gönüllü')) {
-                    fallbackValue = 26;
-                } else if (label.includes('aile')) {
-                    fallbackValue = 5001;
-                }
-                
-                stat.setAttribute('data-target', fallbackValue);
-                stat.textContent = fallbackValue.toLocaleString('tr-TR');
-            }
-        });
-    };
-    
-    // If there are no stats or they're all zero, apply immediately
-    let allZero = true;
-    statNumbers.forEach(stat => {
-        const value = parseInt(stat.getAttribute('data-target'));
-        if (!isNaN(value) && value > 0) {
-            allZero = false;
-        }
-    });
-    
-    if (allZero && statNumbers.length > 0) {
-        applyStatsImmediately();
-        return;
-    }
-    
-    // Otherwise use the animation with intersection observer
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -754,8 +687,8 @@ function copyToClipboard(text) {
 }
 
 // Add CSS for scroll effects
-const mainStyle = document.createElement('style');
-mainStyle.textContent = `
+const style = document.createElement('style');
+style.textContent = `
     .navbar-hidden {
         transform: translateY(-100%);
         transition: transform 0.3s ease-in-out;
@@ -781,7 +714,7 @@ mainStyle.textContent = `
         }
     }
 `;
-document.head.appendChild(mainStyle);
+document.head.appendChild(style);
 
 // AJAX Form Handling Functions
 function handleAjaxForm(form) {
@@ -890,50 +823,47 @@ function showNotification(message, type = 'info', duration = 3000) {
 }
 
 // Add notification styles
-if (!document.getElementById('notification-styles')) {
-    const notificationStyle = document.createElement('style');
-    notificationStyle.id = 'notification-styles';
-    notificationStyle.textContent = `
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            border-radius: 10px;
-            padding: 1rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 9999;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            max-width: 400px;
-            display: flex;
-            align-items: center;
-            border-left: 4px solid;
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        .notification-success { border-left-color: #28a745; }
-        .notification-danger { border-left-color: #dc3545; }
-        .notification-warning { border-left-color: #ffc107; }
-        .notification-info { border-left-color: #17a2b8; }
-        
-        .notification .btn-close {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            margin-left: auto;
-            opacity: 0.5;
-        }
-        
-        .notification .btn-close:hover {
-            opacity: 1;
-        }
-    `;
-    document.head.appendChild(notificationStyle);
-}
+const notificationStyle = document.createElement('style');
+notificationStyle.textContent = `
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        border-radius: 10px;
+        padding: 1rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        z-index: 9999;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        max-width: 400px;
+        display: flex;
+        align-items: center;
+        border-left: 4px solid;
+    }
+    
+    .notification.show {
+        transform: translateX(0);
+    }
+    
+    .notification-success { border-left-color: #28a745; }
+    .notification-danger { border-left-color: #dc3545; }
+    .notification-warning { border-left-color: #ffc107; }
+    .notification-info { border-left-color: #17a2b8; }
+    
+    .notification .btn-close {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        margin-left: auto;
+        opacity: 0.5;
+    }
+    
+    .notification .btn-close:hover {
+        opacity: 1;
+    }
+`;
+document.head.appendChild(notificationStyle);
 
 // Enhanced scrolling effects and parallax
 function initializeParallaxEffects() {
@@ -969,6 +899,49 @@ function enhancedSmoothScroll() {
             }
         });
     });
+}
+
+// Hero scroll indicator
+function initializeScrollIndicator() {
+    const indicator = document.querySelector('.hero-scroll-indicator');
+    if (indicator) {
+        indicator.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Try multiple possible next sections in order of preference
+            const possibleSections = [
+                '#about-preview',
+                '.about-preview',
+                '.features-section', 
+                '.projects-section',
+                '.stats-section'
+            ];
+            
+            let targetSection = null;
+            for (const selector of possibleSections) {
+                targetSection = document.querySelector(selector);
+                if (targetSection) break;
+            }
+            
+            if (targetSection) {
+                const offset = 80; // Account for navbar height
+                const targetPosition = targetSection.offsetTop - offset;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            } else {
+                // Fallback: scroll down by viewport height
+                window.scrollTo({
+                    top: window.innerHeight,
+                    behavior: 'smooth'
+                });
+            }
+        });
+        
+        // Add cursor pointer style
+        indicator.style.cursor = 'pointer';
+    }
 }
 
 // Enhanced form handling with better UX
@@ -1054,7 +1027,58 @@ function checkElementsInView() {
     // Additional view-based animations can be added here
 }
 
-// These functions have been removed as they are duplicates of functions defined earlier in the file
+// Enhanced smooth scrolling with easing
+function enhancedSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                const targetPosition = target.offsetTop - 80;
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+}
+
+// Parallax effects for hero section
+function initializeParallaxEffects() {
+    const parallaxElements = document.querySelectorAll('.parallax-element');
+    
+    if (parallaxElements.length === 0) return;
+    
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const rate = scrolled * -0.5;
+        
+        parallaxElements.forEach(element => {
+            element.style.transform = `translateY(${rate}px)`;
+        });
+    });
+}
+
+// Enhanced floating cards with more sophisticated animations
+function initializeFloatingCards() {
+    const cards = document.querySelectorAll('.floating-card');
+    
+    cards.forEach((card, index) => {
+        // Add subtle floating animation with different delays
+        card.style.animationDelay = `${index * 0.2}s`;
+        
+        // Enhanced hover effects
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px) scale(1.02)';
+            this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+}
 
 // Progress bar animations
 function initializeProgressBars() {

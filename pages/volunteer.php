@@ -1,8 +1,6 @@
 <?php
 // Veritabanından gönüllü verileri
 try {
-    global $pdo; // Global veritabanı bağlantısına erişim
-    
     // Gönüllü istatistikleri
     $stmt = $pdo->prepare("SELECT 
         COUNT(*) as total_volunteers,
@@ -13,7 +11,6 @@ try {
     $volunteer_stats = $stmt->fetch(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
-    error_log("Volunteer stats error: " . $e->getMessage());
     $volunteer_stats = ['total_volunteers' => 0, 'active_volunteers' => 0, 'pending_applications' => 0];
 }
 
@@ -423,8 +420,8 @@ $volunteer_questions = [
             <a href="#volunteer-form" class="btn btn-light btn-lg">
                 <i class="fas fa-hand-holding-heart me-2"></i> Başvuru Yap
             </a>
-            <a href="<?php echo site_url('contact'); ?>" class="btn btn-outline-light btn-lg">
-                <i class="fas fa-envelope me-2"></i> Bize Ulaşın
+            <a href="index.php?page=contact" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-phone me-2"></i> Bizi Arayın
             </a>
         </div>
     </div>
