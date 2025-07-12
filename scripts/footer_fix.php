@@ -291,7 +291,7 @@ function output_footer_fix_js() {
                         <div class="footer-section">
                             <h4>Daha Fazla</h4>
                             <ul class="footer-links">
-                                <li><a href="<?= site_url('sss') ?>"><i class="fas fa-question-circle"></i> SSS</a></li>
+                                <li><a href="<?= site_url('faq') ?>"><i class="fas fa-question-circle"></i> SSS</a></li>
                                 <li><a href="<?= site_url('contact') ?>"><i class="fas fa-envelope"></i> İletişim</a></li>
                                 <li><a href="<?= site_url('donate') ?>"><i class="fas fa-heart"></i> Bağış Yap</a></li>
                             </ul>
@@ -400,7 +400,7 @@ function output_footer_fix_js() {
                             <div class="footer-section">
                                 <h4>Daha Fazla</h4>
                                 <ul class="footer-links">
-                                    <li><a href="<?= site_url('sss') ?>"><i class="fas fa-question-circle"></i> SSS</a></li>
+                                    <li><a href="<?= site_url('faq') ?>"><i class="fas fa-question-circle"></i> SSS</a></li>
                                     <li><a href="<?= site_url('contact') ?>"><i class="fas fa-envelope"></i> İletişim</a></li>
                                     <li><a href="<?= site_url('donate') ?>"><i class="fas fa-heart"></i> Bağış Yap</a></li>
                                 </ul>
@@ -531,7 +531,7 @@ function inject_footer_html() {
                         <div class="footer-section">
                             <h4>Daha Fazla</h4>
                             <ul class="footer-links">
-                                <li><a href="<?= site_url('sss') ?>"><i class="fas fa-question-circle"></i> SSS</a></li>
+                                <li><a href="<?= site_url('faq') ?>"><i class="fas fa-question-circle"></i> SSS</a></li>
                                 <li><a href="<?= site_url('contact') ?>"><i class="fas fa-envelope"></i> İletişim</a></li>
                                 <li><a href="<?= site_url('donate') ?>"><i class="fas fa-heart"></i> Bağış Yap</a></li>
                             </ul>

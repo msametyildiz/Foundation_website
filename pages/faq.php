@@ -218,13 +218,11 @@ $faq_questions = [
                     <h4 class="text-primary mb-3">Bu sorulara "EVET" diyorsanız...</h4>
                     <p class="mb-4">Bizimle birlikte bu kutlu yolculukta yer alın. Gönüllü olun veya bağış yaparak hayırlı işlerin bir parçası olun.</p>
                     <div class="d-flex gap-3 justify-content-center flex-wrap">
-                        <a href="<?= site_url('volunteer') ?>" class="btn btn-primary">
-                            <i class="fas fa-hand-holding-heart me-2"></i>
-                            Gönüllü Ol
+                        <a href="<?php echo site_url('volunteer'); ?>" class="btn btn-primary">
+                            <i class="fas fa-hands-helping me-2"></i> Gönüllü Ol
                         </a>
-                        <a href="<?= site_url('donate') ?>" class="btn btn-outline-primary">
-                            <i class="fas fa-heart me-2"></i>
-                            Bağış Yap
+                        <a href="<?php echo site_url('donate'); ?>" class="btn btn-outline-primary">
+                            <i class="fas fa-heart me-2"></i> Bağış Yap
                         </a>
                     </div>
                 </div>
@@ -335,9 +333,8 @@ $faq_questions = [
                         Size yardımcı olmak için buradayız.
                     </p>
                     <div class="d-flex gap-3 justify-content-center flex-wrap">
-                        <a href="<?= site_url('contact') ?>" class="btn btn-primary">
-                            <i class="fas fa-envelope me-2"></i>
-                            İletişime Geç
+                        <a href="<?php echo site_url('contact'); ?>" class="btn btn-primary">
+                            <i class="fas fa-envelope me-2"></i> İletişime Geç
                         </a>
                     </div>
                 </div>

@@ -18,16 +18,16 @@ http_response_code(403);
                     </div>
                     
                     <div class="error-message">
-                        <h2>Erişim Engellendi</h2>
-                        <p class="lead">Bu sayfaya erişim izniniz bulunmuyor.</p>
-                        <p>Lütfen web sitemizdeki diğer sayfalara göz atın.</p>
+                        <h2>Erişim Reddedildi</h2>
+                        <p class="lead">Bu sayfaya erişim yetkiniz bulunmamaktadır.</p>
+                        <p>Lütfen ana sayfaya dönün veya başka bir sayfaya gidin.</p>
                     </div>
                     
                     <div class="error-actions">
                         <a href="index.php" class="btn btn-primary btn-lg me-3">
                             <i class="fas fa-home me-2"></i>Ana Sayfa
                         </a>
-                        <a href="<?= site_url('contact') ?>" class="btn btn-outline-primary btn-lg">
+                        <a href="index.php?page=contact" class="btn btn-outline-primary btn-lg">
                             <i class="fas fa-envelope me-2"></i>İletişim
                         </a>
                     </div>
@@ -36,25 +36,25 @@ http_response_code(403);
                         <h4>Popüler Sayfalar</h4>
                         <div class="row">
                             <div class="col-md-3 col-6 mb-3">
-                                <a href="<?= site_url('about') ?>" class="quick-link">
+                                <a href="index.php?page=about" class="quick-link">
                                     <i class="fas fa-info-circle"></i>
                                     <span>Hakkımızda</span>
                                 </a>
                             </div>
                             <div class="col-md-3 col-6 mb-3">
-                                <a href="<?= site_url('donate') ?>" class="quick-link">
+                                <a href="index.php?page=donate" class="quick-link">
                                     <i class="fas fa-hand-holding-heart"></i>
                                     <span>Bağış Yap</span>
                                 </a>
                             </div>
                             <div class="col-md-3 col-6 mb-3">
-                                <a href="<?= site_url('volunteer') ?>" class="quick-link">
+                                <a href="index.php?page=volunteer" class="quick-link">
                                     <i class="fas fa-users"></i>
                                     <span>Gönüllü Ol</span>
                                 </a>
                             </div>
                             <div class="col-md-3 col-6 mb-3">
-                                <a href="<?= site_url('projects') ?>" class="quick-link">
+                                <a href="index.php?page=projects" class="quick-link">
                                     <i class="fas fa-project-diagram"></i>
                                     <span>Projeler</span>
                                 </a>

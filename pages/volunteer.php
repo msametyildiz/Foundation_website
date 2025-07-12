@@ -423,8 +423,8 @@ $volunteer_questions = [
             <a href="#volunteer-form" class="btn btn-light btn-lg">
                 <i class="fas fa-hand-holding-heart me-2"></i> Başvuru Yap
             </a>
-            <a href="<?= site_url('contact') ?>" class="btn btn-outline-light btn-lg">
-                <i class="fas fa-phone me-2"></i> Bizi Arayın
+            <a href="<?php echo site_url('contact'); ?>" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-envelope me-2"></i> Bize Ulaşın
             </a>
         </div>
     </div>

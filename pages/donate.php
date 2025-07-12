@@ -331,11 +331,11 @@ try {
             Sizin desteğinizle daha çok insana ulaşabilir, daha büyük değişimler yaratabilirız.
         </p>
         <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="<?= site_url('projects') ?>" class="btn btn-light btn-lg">
-                <i class="fas fa-project-diagram me-2"></i> Projelerimizi Görün
+            <a href="<?php echo site_url('projects'); ?>" class="btn btn-light btn-lg">
+                <i class="fas fa-project-diagram me-2"></i> Projelerimiz
             </a>
-            <a href="<?= site_url('volunteer') ?>" class="btn btn-outline-light btn-lg">
-                <i class="fas fa-hands-helping me-2"></i> Gönüllü Olun
+            <a href="<?php echo site_url('volunteer'); ?>" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-hands-helping me-2"></i> Gönüllü Ol
             </a>
         </div>
     </div>
@@ -911,9 +911,7 @@ try {
     border-color: #4ea674;
 }
 
-.form-check-label {<a href="#volunteer-form" class="btn btn-light btn-lg">
-                <i class="fas fa-hand-holding-heart me-2"></i> Başvuru Yap
-            </a>
+.form-check-label {
     color: #495057;
     cursor: pointer;
 }

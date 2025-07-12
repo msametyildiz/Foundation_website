@@ -53,9 +53,9 @@ function fixNestedFooter() {
                         <h4>Hızlı Bağlantılar</h4>
                         <ul class="footer-links">
                             <li><a href="/"><i class="fas fa-home"></i> Ana Sayfa</a></li>
-                            <li><a href="/about"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
-                            <li><a href="/projects"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
-                            <li><a href="/volunteer"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
+                            <li><a href="/index.php?page=about"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
+                            <li><a href="/index.php?page=projects"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
+                            <li><a href="/index.php?page=volunteer"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
                         </ul>
                     </div>
                     
@@ -63,9 +63,9 @@ function fixNestedFooter() {
                     <div class="footer-section">
                         <h4>Daha Fazla</h4>
                         <ul class="footer-links">
-                            <li><a href="/faq"><i class="fas fa-question-circle"></i> SSS</a></li>
-                            <li><a href="/contact"><i class="fas fa-envelope"></i> İletişim</a></li>
-                            <li><a href="/donate"><i class="fas fa-heart"></i> Bağış Yap</a></li>
+                            <li><a href="/index.php?page=faq"><i class="fas fa-question-circle"></i> SSS</a></li>
+                            <li><a href="/index.php?page=contact"><i class="fas fa-envelope"></i> İletişim</a></li>
+                            <li><a href="/index.php?page=donate"><i class="fas fa-heart"></i> Bağış Yap</a></li>
                         </ul>
                     </div>
                     
@@ -299,153 +299,88 @@ function fixNestedFooter() {
                     grid-template-columns: 1fr !important;
                     gap: 2.5rem !important;
                 }
+                
+                .footer-container {
+                    padding: 3rem 1.5rem 2rem !important;
+                }
+            }
+            
+            @media (max-width: 576px) {
+                .footer-container {
+                    padding: 2.5rem 1.25rem 1.5rem !important;
+                }
+                
+                .footer-section h4 {
+                    margin-bottom: 1.5rem !important;
+                    font-size: 1.2rem !important;
+                }
+                
+                .footer-links a {
+                    padding: 0.75rem 1rem !important;
+                    font-size: 0.95rem !important;
+                }
+                
+                .footer-description {
+                    font-size: 0.95rem !important;
+                    margin-bottom: 2rem !important;
+                }
+                
+                .footer-logo {
+                    margin-bottom: 1.5rem !important;
+                }
+                
+                .footer-copyright {
+                    font-size: 0.9rem !important;
+                }
             }
         `;
         
-        // Stil ekle
+        // Stil elementini oluştur ve ekle
         const styleElement = document.createElement('style');
         styleElement.textContent = footerStyles;
         document.head.appendChild(styleElement);
         
-        // Footer'ı doğrudan stillendir
-        footer.style.display = 'flex';
-        footer.style.visibility = 'visible';
-        footer.style.opacity = '1';
-        footer.style.minHeight = '400px';
-        footer.style.flexDirection = 'column';
-        footer.style.position = 'relative';
-        footer.style.marginTop = 'auto';
-        footer.style.borderTop = '1px solid rgba(78, 166, 116, 0.1)';
-        footer.style.width = '100%';
-        
-        console.log('Footer içeriği tamamen yenilendi ve stiller uygulandı.');
+        console.log('Footer düzeltmeleri tamamlandı.');
     } else {
-        console.error('Footer bulunamadı. HTML yapısı beklenen ile uyuşmuyor olabilir.');
-        
-        // Footer bulunamazsa, sayfanın sonuna yeni bir footer ekle
-        const body = document.querySelector('body');
-        if (body) {
-            const newFooter = document.createElement('footer');
-            newFooter.className = 'footer-modern';
-            newFooter.innerHTML = `
-                <div class="footer-container">
-                    <div class="footer-main">
-                        <!-- BÖLÜM 1: MARKA -->
-                        <div class="footer-brand">
-                            <div class="footer-logo">
-                                <div class="footer-logo-icon">
-                                    <img src="/assets/images/logo.png" alt="Necat Derneği Logo" style="width: 60px; height: auto;">
-                                </div>
-                                <div class="footer-brand-text">
-                                    <h3>Necat Derneği</h3>
-                                    <div class="footer-brand-tagline">Elinizi İyilik İçin Uzatın</div>
-                                </div>
-                            </div>
-                            <p class="footer-description">
-                                Derneğimiz, yoksulluk, afet, hastalık gibi zorluklarla karşılaşan kişilere ve ailelere destek olmak için çalışmaktadır.
-                            </p>
-                            <div class="footer-social">
-                                <a href="#" class="social-link">
-                                    <i class="fab fa-instagram"></i>
-                                </a>
-                                <a href="#" class="social-link">
-                                    <i class="fab fa-twitter"></i>
-                                </a>
-                                <a href="#" class="social-link">
-                                    <i class="fab fa-linkedin-in"></i>
-                                </a>
-                                <a href="#" class="social-link">
-                                    <i class="fab fa-youtube"></i>
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <!-- BÖLÜM 2: HIZLI BAĞLANTILAR -->
-                        <div class="footer-section">
-                            <h4>Hızlı Bağlantılar</h4>
-                            <ul class="footer-links">
-                                <li><a href="/"><i class="fas fa-home"></i> Ana Sayfa</a></li>
-                                <li><a href="/about"><i class="fas fa-info-circle"></i> Hakkımızda</a></li>
-                                <li><a href="/projects"><i class="fas fa-project-diagram"></i> Projelerimiz</a></li>
-                                <li><a href="/volunteer"><i class="fas fa-hands-helping"></i> Gönüllü Ol</a></li>
-                            </ul>
-                        </div>
-                        
-                        <!-- BÖLÜM 3: DAHA FAZLA -->
-                        <div class="footer-section">
-                            <h4>Daha Fazla</h4>
-                            <ul class="footer-links">
-                                <li><a href="/faq"><i class="fas fa-question-circle"></i> SSS</a></li>
-                                <li><a href="/contact"><i class="fas fa-envelope"></i> İletişim</a></li>
-                                <li><a href="/donate"><i class="fas fa-heart"></i> Bağış Yap</a></li>
-                            </ul>
-                        </div>
-                        
-                        <!-- BÖLÜM 4: İLETİŞİM -->
-                        <div class="footer-section">
-                            <h4>Bize Ulaşın</h4>
-                            <ul class="footer-contact-info">
-                                <li>
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Fevzipaşa Mahallesi Rüzgarlı Caddesi Plevne Sokak No:14/1 Ulus Altındağ Ankara</span>
-                                </li>
-                                <li>
-                                    <i class="fas fa-phone"></i>
-                                    <span>+90 312 311 65 25</span>
-                                </li>
-                                <li>
-                                    <i class="fas fa-envelope"></i>
-                                    <span>info@necatdernegi.org</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- TELİF HAKKI -->
-                    <div class="footer-copyright">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-12 text-center">
-                                    <p>&copy; ${new Date().getFullYear()} Necat Derneği - Tüm Hakları Saklıdır</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Yeni footer'ı sayfanın sonuna ekle
-            body.appendChild(newFooter);
-            
-            // Stilleri uygula
-            const styleElement = document.createElement('style');
-            styleElement.textContent = footerStyles;
-            document.head.appendChild(styleElement);
-            
-            newFooter.style.display = 'flex';
-            newFooter.style.visibility = 'visible';
-            newFooter.style.opacity = '1';
-            newFooter.style.minHeight = '400px';
-            newFooter.style.flexDirection = 'column';
-            newFooter.style.position = 'relative';
-            newFooter.style.marginTop = 'auto';
-            newFooter.style.borderTop = '1px solid rgba(78, 166, 116, 0.1)';
-            newFooter.style.width = '100%';
-            
-            console.log('Yeni footer oluşturuldu ve sayfaya eklendi.');
-        }
+        console.log('Footer bulunamadı, düzeltme yapılamadı.');
     }
 }
 
-// Sayfa yüklendikten sonra çalıştır
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', fixNestedFooter);
-} else {
-    fixNestedFooter();
-}
-
-// Yedek mekanizma - sayfanın yüklenmesi tamamlandıktan sonra tekrar dene
-window.addEventListener('load', function() {
+// Sayfa yüklendiğinde düzeltmeyi çalıştır
+document.addEventListener('DOMContentLoaded', function() {
+    // Sayfa tamamen yüklendikten sonra düzeltmeyi çalıştır
     setTimeout(fixNestedFooter, 500);
-    setTimeout(fixNestedFooter, 2000);
+});
+
+// Yedek olarak window.onload'a da ekle
+window.onload = function() {
+    // Eğer DOMContentLoaded çalışmazsa, bu şekilde de dene
+    setTimeout(fixNestedFooter, 1000);
+};
+
+// Acil durum için doğrudan çağır
+setTimeout(fixNestedFooter, 2000);
+
+// Sayfa içeriği değişirse tekrar düzeltme yap (SPA uyumluluğu için)
+const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+            // DOM değişikliği algılandı, footer'ı kontrol et
+            const footer = document.querySelector('.footer-modern');
+            if (footer && !footer.getAttribute('data-fixed')) {
+                setTimeout(fixNestedFooter, 100);
+            }
+        }
+    });
+});
+
+// Gözlemlenecek hedef ve yapılandırma
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
+});
+
+// Sayfadan ayrılırken gözlemciyi temizle
+window.addEventListener('beforeunload', function() {
+    observer.disconnect();
 }); 
