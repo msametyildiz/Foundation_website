@@ -764,6 +764,7 @@ try {
             -webkit-backdrop-filter: blur(32px);
             border-bottom: 1px solid rgba(78, 166, 116, 0.1);
             padding: 2.5rem;
+            padding-bottom: 6rem; /* Bağış yap butonu için alt boşluğu arttırdım */
             transform: translateY(-100%);
             transition: var(--transition-smooth);
             z-index: 10001;
@@ -981,6 +982,8 @@ try {
             border: none;
             position: relative;
             overflow: hidden;
+            margin-bottom: 3rem; /* Butonun altındaki boşluğu arttırdım */
+            width: 100%;
         }
 
         .mobile-nav .btn-cta-modern::before {
@@ -1002,6 +1005,10 @@ try {
         .mobile-nav .btn-cta-modern:hover {
             transform: translateY(-6px) scale(1.03);
             box-shadow: 0 20px 45px rgba(78, 166, 116, 0.5), 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .mobile-nav .btn-cta-modern::after {
+            content: none;
         }
 
         .mobile-dropdown {
@@ -1096,6 +1103,7 @@ try {
             .mobile-menu {
                 top: 80px;
                 padding: 2rem;
+                padding-bottom: 5.5rem; /* Bağış yap butonu için alt boşluğu arttırdım */
                 max-height: calc(100vh - 80px);
                 overflow-y: auto;
             }
@@ -1113,6 +1121,7 @@ try {
                 justify-content: center;
                 border-radius: var(--radius-xl);
                 font-size: 1.05rem;
+                margin-bottom: 2.5rem; /* Orta boy ekranlar için butonun altındaki boşluk */
             }
         }
 
@@ -1152,6 +1161,7 @@ try {
             .mobile-menu {
                 top: 70px;
                 padding: 1.25rem;
+                padding-bottom: 5rem; /* Bağış yap butonu için alt boşluğu arttırdım */
                 max-height: calc(100vh - 70px);
             }
 
@@ -1173,6 +1183,7 @@ try {
             .mobile-nav .btn-cta-modern {
                 padding: 1rem 1.75rem;
                 font-size: 0.95rem;
+                margin-bottom: 2rem; /* Küçük ekranlar için butonun altındaki boşluk */
             }
         }
 
@@ -1205,11 +1216,16 @@ try {
 
             .mobile-menu {
                 padding: 1rem;
+                padding-bottom: 4.5rem; /* Bağış yap butonu için alt boşluğu arttırdım */
             }
 
             .mobile-nav .nav-link-modern {
                 padding: 0.875rem 1rem;
                 font-size: 0.9rem;
+            }
+            
+            .mobile-nav .btn-cta-modern {
+                margin-bottom: 1.5rem; /* En küçük ekranlar için butonun altındaki boşluk */
             }
         }
 
