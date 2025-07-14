@@ -60,7 +60,7 @@ function get_current_page() {
 function getPageInfo($page) {
     $pages = [
         'home' => [
-            'title' => 'Ana Sayfa - Necat Derneği',
+            'title' => 'Necat Derneği - Elinizi İyilik İçin Uzatın',
             'description' => 'Necat Derneği ile yardım eli uzatın. Bağış yapın, gönüllü olun.',
             'keywords' => 'necat derneği, bağış, yardım, sosyal sorumluluk'
         ],

@@ -9,7 +9,7 @@
 // Security check - sadece uyarı ver, çıkış yapma
 if (!defined('SITE_NAME')) {
     // Fallback değerler tanımla
-    define('SITE_NAME', 'Necat Derneği');
+    define('SITE_NAME', 'Necat Derneği - Elinizi İyilik İçin Uzatın');
     define('SITE_URL', '');
     define('SITE_EMAIL', 'info@necatdernegi.org');
 }
@@ -30,12 +30,36 @@ try {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
     <!-- ===== SEO OPTIMIZATION ===== -->
-    <title><?php echo clean_output($page_info['title'] ?? 'Necat Derneği'); ?></title>
-    <meta name="description" content="<?php echo clean_output($page_info['description'] ?? ''); ?>">
-    <meta name="keywords" content="<?php echo clean_output($page_info['keywords'] ?? ''); ?>">
+    <title>Necat Derneği - Resmi Web Sitesi</title>
+    <meta name="description" content="Necat Derneği olarak yardıma muhtaç ailelere gıda, kıyafet, eğitim desteği sunuyoruz. Detaylar için web sitemizi ziyaret edin.">
+    <meta name="keywords" content="<?php echo clean_output($page_info['keywords'] ?? 'necat derneği, yardım, bağış, sosyal sorumluluk, eğitim desteği, gıda yardımı'); ?>">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="author" content="Necat Derneği">
     <meta name="generator" content="Necat Derneği CMS v2.0">
+    <meta name="google-site-verification" content="BURAYA_GOOGLE_TARAFINDAN_VERILEN_KODU_EKLEYIN" />
+    
+    <!-- Canonical URL -->
+    <?php
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+    $domain = $_SERVER['HTTP_HOST'];
+    $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
+    $canonical_url = ($current_page === 'home') ? $protocol . $domain . '/' : $protocol . $domain . '/index.php?page=' . $current_page;
+    ?>
+    <link rel="canonical" href="<?php echo htmlspecialchars($canonical_url); ?>" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<?php echo htmlspecialchars($canonical_url); ?>">
+    <meta property="og:title" content="Necat Derneği - Resmi Web Sitesi">
+    <meta property="og:description" content="Necat Derneği olarak yardıma muhtaç ailelere gıda, kıyafet, eğitim desteği sunuyoruz. Detaylar için web sitemizi ziyaret edin.">
+    <meta property="og:image" content="<?php echo $protocol . $domain; ?>/assets/images/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<?php echo htmlspecialchars($canonical_url); ?>">
+    <meta property="twitter:title" content="Necat Derneği - Resmi Web Sitesi">
+    <meta property="twitter:description" content="Necat Derneği olarak yardıma muhtaç ailelere gıda, kıyafet, eğitim desteği sunuyoruz. Detaylar için web sitemizi ziyaret edin.">
+    <meta property="twitter:image" content="<?php echo $protocol . $domain; ?>/assets/images/logo.png">
     
     <!-- ===== BRANDING & THEME ===== -->
     <meta name="theme-color" content="#4EA674">

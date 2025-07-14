@@ -67,7 +67,7 @@ try {
 } catch (Exception $e) {
     error_log("getPageInfo error: " . $e->getMessage());
     $page_info = [
-        'title' => 'Necat Derneği',
+        'title' => 'Necat Derneği - Elinizi İyilik İçin Uzatın',
         'description' => 'Elinizi İyilik İçin Uzatın',
         'keywords' => 'necat derneği, yardım, bağış, sosyal sorumluluk'
     ];
@@ -78,7 +78,7 @@ try {
     include 'includes/header.php';
 } catch (Exception $e) {
     error_log("Header include error: " . $e->getMessage());
-    echo "<!DOCTYPE html><html lang='tr'><head><meta charset='UTF-8'><title>Necat Derneği</title></head><body>";
+    echo "<!DOCTYPE html><html lang='tr'><head><meta charset='UTF-8'><title>Necat Derneği - Elinizi İyilik İçin Uzatın</title></head><body>";
 }
 
 // Sayfa içeriğini yükle

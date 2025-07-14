@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /config/
+Disallow: /vendor/
+Disallow: /logs/
+Disallow: /backups/
+Disallow: /temp/
+
+Sitemap: https://necatdernegi.org.tr/sitemap.xml
+Sitemap: https://necatdernegi.org.tr/sitemap.php 
