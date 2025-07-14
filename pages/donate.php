@@ -1188,6 +1188,9 @@ function showDonationSuccessAlert(donorName) {
         }
     };
     document.addEventListener('keydown', handleEscape);
+    
+    // Auto close after 7 seconds
+    setTimeout(closeAlert, 7000);
 }
 
 // KVKK Modal functions
@@ -1308,6 +1311,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Reset the form
                     donationForm.reset();
                     donationForm.classList.remove('was-validated');
+                    
+                    // Reset donation amount buttons
+                    document.querySelectorAll('.donation-amount-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
                 } else {
                     // Show error message
                     const errorMessage = data.message || 'Bir hata oluştu. Lütfen tekrar deneyiniz.';

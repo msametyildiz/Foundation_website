@@ -234,18 +234,22 @@ function fixFormSubmissions() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Başarılı mesaj göster
-                    showAlert('success', 'Mesajınız başarıyla gönderildi! En kısa sürede size dönüş yapacağız.');
+                    // Extract name for personalized message
+                    const contactName = formData.get('name') || 'Değerli ziyaretçimiz';
+                    const personalizedMessage = `Sayın ${contactName}, mesajınız başarıyla iletildi! Kısa süre içinde tarafınıza dönüş yapılacaktır. Bizimle iletişime geçtiğiniz için teşekkür ederiz.`;
+                    
+                    // Başarılı mesaj göster - popup style
+                    showPopupAlert('success', personalizedMessage, 'Mesajınız Başarıyla Gönderildi');
                     this.reset();
                     this.classList.remove('was-validated');
                 } else {
-                    // Hata mesajı göster
-                    showAlert('danger', data.message || 'Mesaj gönderilirken bir hata oluştu.');
+                    // Hata mesajı göster - popup style
+                    showPopupAlert('danger', data.message || 'Mesaj gönderilirken bir hata oluştu.', 'Mesaj Gönderilemedi');
                 }
             })
             .catch(error => {
                 console.error('Form gönderim hatası:', error);
-                showAlert('danger', 'Bir hata oluştu! Lütfen daha sonra tekrar deneyin.');
+                showPopupAlert('danger', 'Bir hata oluştu! Lütfen daha sonra tekrar deneyin.', 'Bağlantı Hatası');
             })
             .finally(() => {
                 // Gönder düğmesini tekrar etkinleştir
@@ -288,18 +292,22 @@ function fixFormSubmissions() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Başarılı mesaj göster
-                    showAlert('success', 'Başvurunuz başarıyla alındı! Başvurunuz incelendikten sonra sizinle iletişime geçeceğiz.');
+                    // Extract name for personalized message
+                    const volunteerName = formData.get('name') || 'Değerli gönüllümüz';
+                    const personalizedMessage = `Sayın ${volunteerName}, gönüllü başvurunuz başarıyla alındı! Başvurunuz değerlendirilecek ve en kısa sürede size dönüş yapacağız. Bu anlamlı yolculuğa katılmak istediğiniz için teşekkür ederiz.`;
+                    
+                    // Başarılı mesaj göster - popup style
+                    showPopupAlert('success', personalizedMessage, 'Gönüllü Başvurunuz Alındı');
                     this.reset();
                     this.classList.remove('was-validated');
                 } else {
-                    // Hata mesajı göster
-                    showAlert('danger', data.message || 'Başvuru gönderilirken bir hata oluştu.');
+                    // Hata mesajı göster - popup style
+                    showPopupAlert('danger', data.message || 'Başvuru gönderilirken bir hata oluştu.', 'Başvuru Gönderilemedi');
                 }
             })
             .catch(error => {
                 console.error('Form gönderim hatası:', error);
-                showAlert('danger', 'Bir hata oluştu! Lütfen daha sonra tekrar deneyin.');
+                showPopupAlert('danger', 'Bir hata oluştu! Lütfen daha sonra tekrar deneyin.', 'Bağlantı Hatası');
             })
             .finally(() => {
                 // Gönder düğmesini tekrar etkinleştir
@@ -310,7 +318,7 @@ function fixFormSubmissions() {
     }
     
     // Bağış formu
-    const donationForm = document.getElementById('donationForm');
+    const donationForm = document.getElementById('donationForm') || document.getElementById('donation-form');
     if (donationForm) {
         console.log('Bağış formu bulundu, düzeltme uygulanıyor...');
         
@@ -342,18 +350,29 @@ function fixFormSubmissions() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Başarılı mesaj göster
-                    showAlert('success', 'Bağış bilgileriniz başarıyla kaydedildi! Teşekkür ederiz.');
+                    // Extract name for personalized message
+                    const donorName = formData.get('name') || 'Değerli Bağışçımız';
+                    const personalizedMessage = `Sayın ${donorName}, bağışınız başarıyla kaydedilmiştir. İhtiyaç sahiplerine yapmış olduğunuz bu değerli bağış için içtenlikle teşekkür ederiz. Dekont bilgileriniz güvenle alınmış olup, değerlendirme sürecinden sonra tarafınızla iletişime geçilecektir.`;
+                    
+                    // Başarılı mesaj göster - popup style
+                    showPopupAlert('success', personalizedMessage, 'Bağışınız Başarıyla Kaydedildi');
+                    
+                    // Reset form
                     this.reset();
                     this.classList.remove('was-validated');
+                    
+                    // Reset donation amount buttons
+                    document.querySelectorAll('.donation-amount-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
                 } else {
-                    // Hata mesajı göster
-                    showAlert('danger', data.message || 'Bağış bilgileri gönderilirken bir hata oluştu.');
+                    // Hata mesajı göster - popup style
+                    showPopupAlert('danger', data.message || 'Bağış bilgileri gönderilirken bir hata oluştu.', 'Bağış Kaydedilemedi');
                 }
             })
             .catch(error => {
                 console.error('Form gönderim hatası:', error);
-                showAlert('danger', 'Bir hata oluştu! Lütfen daha sonra tekrar deneyin.');
+                showPopupAlert('danger', 'Bir hata oluştu! Lütfen daha sonra tekrar deneyin.', 'Bağlantı Hatası');
             })
             .finally(() => {
                 // Gönder düğmesini tekrar etkinleştir
@@ -416,6 +435,147 @@ function fixFormSubmissions() {
                 }, 300);
             });
         }
+    }
+    
+    // Popup tarzı alert mesajı gösterme fonksiyonu
+    function showPopupAlert(type, message, customTitle = null) {
+        // Overlay oluştur
+        const overlay = document.createElement('div');
+        overlay.className = 'alert-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        `;
+        
+        // Alert popup oluştur
+        const alertPopup = document.createElement('div');
+        alertPopup.className = `alert-popup alert-popup-${type}`;
+        
+        // Type'a göre icon ve renk belirleme
+        const alertConfig = {
+            'success': { icon: 'fas fa-check-circle', color: '#4ea674', bgColor: '#f0fdf4', title: 'İşlem Başarıyla Tamamlandı' },
+            'danger': { icon: 'fas fa-exclamation-triangle', color: '#dc3545', bgColor: '#fef2f2', title: 'Hata Oluştu' },
+            'warning': { icon: 'fas fa-exclamation-circle', color: '#f59e0b', bgColor: '#fffbeb', title: 'Uyarı' },
+            'info': { icon: 'fas fa-info-circle', color: '#3b82f6', bgColor: '#eff6ff', title: 'Bilgi' }
+        };
+        
+        const config = alertConfig[type] || alertConfig.info;
+        
+        alertPopup.style.cssText = `
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transform: scale(0.8) translateY(-20px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 3px solid ${config.color};
+            position: relative;
+        `;
+        
+        alertPopup.innerHTML = `
+            <div style="
+                width: 80px;
+                height: 80px;
+                background: rgba(78, 166, 116, 0.1);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1.5rem auto;
+                border: 3px solid ${config.color};
+            ">
+                <i class="${config.icon}" style="font-size: 40px; color: ${config.color};"></i>
+            </div>
+            <h4 style="color: ${config.color}; margin-bottom: 1rem;">${customTitle || config.title}</h4>
+            <p style="
+                font-size: 16px;
+                line-height: 1.6;
+                color: #374151;
+                margin-bottom: 1.5rem;
+                max-height: 200px;
+                overflow-y: auto;
+            ">${message}</p>
+            <button type="button" class="alert-close-btn" style="
+                background: ${config.color};
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 14px;
+            ">
+                Tamam
+            </button>
+        `;
+        
+        overlay.appendChild(alertPopup);
+        document.body.appendChild(overlay);
+        
+        // Animasyon başlat
+        requestAnimationFrame(() => {
+            overlay.style.opacity = '1';
+            alertPopup.style.transform = 'scale(1) translateY(0)';
+        });
+        
+        // Kapatma fonksiyonu
+        const closeAlert = () => {
+            overlay.style.opacity = '0';
+            alertPopup.style.transform = 'scale(0.8) translateY(-20px)';
+            setTimeout(() => {
+                if (overlay.parentNode) {
+                    overlay.remove();
+                }
+            }, 300);
+        };
+        
+        // Event listeners
+        const closeBtn = alertPopup.querySelector('.alert-close-btn');
+        closeBtn.addEventListener('click', closeAlert);
+        
+        // Hover effect for button
+        closeBtn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = `0 4px 15px ${config.color}66`;
+        });
+        
+        closeBtn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+        
+        // Overlay'e tıklayınca kapat
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeAlert();
+            }
+        });
+        
+        // ESC tuşu ile kapat
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                closeAlert();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+        
+        // 7 saniye sonra otomatik kapat
+        setTimeout(closeAlert, 7000);
     }
 }
 
