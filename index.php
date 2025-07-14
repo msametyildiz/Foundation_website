@@ -81,6 +81,13 @@ try {
     echo "<!DOCTYPE html><html lang='tr'><head><meta charset='UTF-8'><title>Necat Derneği - Elinizi İyilik İçin Uzatın</title></head><body>";
 }
 
+// Breadcrumb navigasyonunu ekle (ana sayfa hariç)
+if ($page !== 'home' && $page !== '404' && $page !== '403' && $page !== '500') {
+    echo '<div class="container">';
+    include 'includes/breadcrumb.php';
+    echo '</div>';
+}
+
 // Sayfa içeriğini yükle
 if (file_exists($page_file)) {
     try {

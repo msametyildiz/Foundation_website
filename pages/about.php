@@ -167,6 +167,7 @@ try {
 
 } catch (PDOException $e) {
     // Fallback veriler
+    $current_page = 'about'; // Sayfa içi navigasyon için
     $about_hero = [
         'title' => 'Necat Derneği',
         'subtitle' => 'İhtiyaç sahiplerine maddi ve manevi destek sağlamak amacıyla kurulmuş bir yardım kuruluşudur.',
@@ -252,8 +253,14 @@ try {
 
 
 
+<?php 
+// Sayfa içi navigasyon menüsünü ekle
+$current_page = 'about';
+include 'includes/page_navigation.php'; 
+?>
+
 <!-- Simple Hero Section -->
-<section class="hero-section bg-white">
+<section class="hero-section bg-white" id="misyon">
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8">
@@ -293,7 +300,7 @@ try {
 </section>
 
 <!-- Simple Mission & Vision -->
-<section class="py-5 bg-light">
+<section class="py-5 bg-light" id="vizyon">
     <div class="container">
         <div class="row g-4">
             <div class="col-lg-6">
@@ -332,7 +339,7 @@ try {
 </section>
 
 <!-- Kuruluş İlkelerimiz -->
-<section class="py-5" style="background-color: #fafafa;">
+<section class="py-5" style="background-color: #fafafa;" id="degerlerimiz">
     <div class="container">
         <div class="row mb-5">
             <div class="col-lg-8 mx-auto text-center">

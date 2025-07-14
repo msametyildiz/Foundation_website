@@ -61,6 +61,65 @@ try {
     <meta property="twitter:description" content="Necat Derneği olarak yardıma muhtaç ailelere gıda, kıyafet, eğitim desteği sunuyoruz. Detaylar için web sitemizi ziyaret edin.">
     <meta property="twitter:image" content="<?php echo $protocol . $domain; ?>/assets/images/logo.png">
     
+    <!-- Structured Data for Organization and SiteNavigationElement -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Necat Derneği",
+      "url": "<?php echo $protocol . $domain; ?>/",
+      "logo": "<?php echo $protocol . $domain; ?>/assets/images/logo.png",
+      "sameAs": [
+        "https://www.facebook.com/necatdernegi",
+        "https://www.instagram.com/necatdernegi",
+        "https://twitter.com/necatdernegi"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+902123456789",
+        "contactType": "customer service",
+        "areaServed": "TR",
+        "availableLanguage": "Turkish"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "<?php echo $protocol . $domain; ?>/",
+      "name": "Necat Derneği - Resmi Web Sitesi",
+      "description": "Necat Derneği olarak yardıma muhtaç ailelere gıda, kıyafet, eğitim desteği sunuyoruz.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "<?php echo $protocol . $domain; ?>/?s={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SiteNavigationElement",
+      "name": [
+        "Bağış Yap",
+        "Hakkımızda",
+        "Projelerimiz",
+        "Gönüllü Ol",
+        "İletişim"
+      ],
+      "url": [
+        "<?php echo $protocol . $domain; ?>/index.php?page=donate",
+        "<?php echo $protocol . $domain; ?>/index.php?page=about",
+        "<?php echo $protocol . $domain; ?>/index.php?page=projects",
+        "<?php echo $protocol . $domain; ?>/index.php?page=volunteer",
+        "<?php echo $protocol . $domain; ?>/index.php?page=contact"
+      ]
+    }
+    </script>
+    
     <!-- ===== BRANDING & THEME ===== -->
     <meta name="theme-color" content="#4EA674">
     <meta name="msapplication-TileColor" content="#4EA674">
@@ -120,6 +179,12 @@ try {
             background: var(--gray-50);
             opacity: 0;
             transition: opacity 0.3s ease;
+        }
+        
+        /* Breadcrumb Styles */
+        .breadcrumb-container {
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
         
         body.loaded { opacity: 1; }
