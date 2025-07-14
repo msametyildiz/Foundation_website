@@ -32,7 +32,7 @@ $domain = $_SERVER['HTTP_HOST'];
 $position = 1;
 ?>
 
-<nav aria-label="breadcrumb" class="breadcrumb-container">
+<nav aria-label="breadcrumb" class="breadcrumb-container" style="display: none;">
     <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
         <!-- Ana Sayfa -->
         <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
@@ -77,6 +77,7 @@ $position = 1;
 
 <style>
 .breadcrumb-container {
+    /* Görünmez yapmak için display: none; ekledik */
     background: rgba(255,255,255,0.8);
     border-radius: 4px;
     padding: 8px 15px;

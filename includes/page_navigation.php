@@ -64,7 +64,7 @@ switch ($current_page) {
 if (!empty($navigation_items)):
 ?>
 
-<div class="page-navigation">
+<div class="page-navigation" style="display: none;">
     <h4 class="page-navigation-title">Hızlı Erişim</h4>
     <ul class="page-navigation-list">
         <?php foreach ($navigation_items as $anchor => $title): ?>
@@ -79,6 +79,7 @@ if (!empty($navigation_items)):
 
 <style>
 .page-navigation {
+    /* Görünmez yapmak için display: none; ekledik */
     background: #fff;
     border-radius: 8px;
     padding: 20px;
