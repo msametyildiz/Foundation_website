@@ -268,9 +268,9 @@ $volunteer_questions = [
                                 <div class="col-md-6">
                                     <label for="phone" class="form-label">Telefon *</label>
                                     <input type="tel" class="form-control" id="phone" name="phone" required 
-                                           placeholder="">
+                                           placeholder="(5XX) XXX-XX-XX" maxlength="14">
                                     <div class="invalid-feedback">
-                                        Lütfen telefon numaranızı girin.
+                                        Lütfen geçerli bir telefon numarası giriniz.
                                     </div>
                                 </div>
                                 <div class="col-md-6">

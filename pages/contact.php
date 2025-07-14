@@ -262,7 +262,8 @@ try {
                             <div class="row g-3 mt-1">
                                 <div class="col-md-6">
                                     <label for="phone" class="form-label">Telefon</label>
-                                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="0555 123 45 67">
+                                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="(5XX) XXX-XX-XX" maxlength="14">
+                                    <div class="invalid-feedback">Lütfen geçerli bir telefon numarası giriniz.</div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="subject" class="form-label">Konu *</label>
@@ -417,7 +418,7 @@ try {
                     </div>
                     <div class="mb-3">
                         <label for="appointment_phone" class="form-label">Telefon</label>
-                        <input type="tel" class="form-control" id="appointment_phone" required>
+                        <input type="tel" class="form-control" id="appointment_phone" required placeholder="(5XX) XXX-XX-XX" maxlength="14">
                     </div>
                     <div class="mb-3">
                         <label for="appointment_date" class="form-label">Tercih Edilen Tarih</label>

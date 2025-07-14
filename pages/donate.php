@@ -185,7 +185,7 @@ try {
                                     <label for="donor_phone" class="form-label">
                                         <i class="fas fa-phone text-success me-1"></i>Telefon
                                     </label>
-                                    <input type="tel" class="form-control" id="donor_phone" name="donor_phone">
+                                    <input type="tel" class="form-control" id="donor_phone" name="donor_phone" placeholder="(5XX) XXX-XX-XX" maxlength="14">
                                     <div class="form-text">İsteğe bağlı</div>
                                 </div>
                                 

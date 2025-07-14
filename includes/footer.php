@@ -138,6 +138,19 @@ try {
 <!-- Acil durumda kullanılacak bağımsız footer düzeltme JavaScript'i -->
 <script src="/scripts/footer_hardfix.js"></script>
 
+<!-- jQuery Mask Plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+<!-- Telefon Maskesi -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Telefon numarası alanlarına maske uygula
+        if (typeof $ !== 'undefined') {
+            $('input[type="tel"]').mask('(000) 000-00-00');
+        }
+    });
+</script>
+
 <!-- BODY ve HTML kapanış tag'leri otomatik olarak eklenecektir -->
 </body>
 </html>
