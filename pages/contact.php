@@ -249,12 +249,12 @@ try {
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Ad Soyad *</label>
-                                    <input type="text" class="form-control" id="name" name="name" required>
+                                    <input type="text" class="form-control" id="name" name="name" required placeholder="Adınız ve soyadınız">
                                     <div class="invalid-feedback">Lütfen adınızı ve soyadınızı giriniz.</div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">E-posta *</label>
-                                    <input type="email" class="form-control" id="email" name="email" required>
+                                    <input type="email" class="form-control" id="email" name="email" required placeholder="ornek@email.com">
                                     <div class="invalid-feedback">Lütfen geçerli bir e-posta adresi giriniz.</div>
                                 </div>
                             </div>
@@ -402,53 +402,7 @@ try {
     </div>
 </section>
 
-<!-- Randevu Modal -->
-<div class="modal fade" id="appointmentModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Randevu Talebi</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="appointmentForm">
-                    <div class="mb-3">
-                        <label for="appointment_name" class="form-label">Ad Soyad</label>
-                        <input type="text" class="form-control" id="appointment_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="appointment_phone" class="form-label">Telefon</label>
-                        <input type="tel" class="form-control" id="appointment_phone" required placeholder="(5XX) XXX-XX-XX" maxlength="14">
-                    </div>
-                    <div class="mb-3">
-                        <label for="appointment_date" class="form-label">Tercih Edilen Tarih</label>
-                        <input type="date" class="form-control" id="appointment_date" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="appointment_time" class="form-label">Tercih Edilen Saat</label>
-                        <select class="form-select" id="appointment_time" required>
-                            <option value="">Saat seçiniz</option>
-                            <option value="09:00">09:00</option>
-                            <option value="10:00">10:00</option>
-                            <option value="11:00">11:00</option>
-                            <option value="14:00">14:00</option>
-                            <option value="15:00">15:00</option>
-                            <option value="16:00">16:00</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="appointment_purpose" class="form-label">Ziyaret Amacı</label>
-                        <textarea class="form-control" id="appointment_purpose" rows="3"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                <button type="button" class="btn btn-primary" onclick="submitAppointment()">Randevu Talebi Gönder</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <!-- KVKK Modal -->
 <div class="modal fade" id="kvkkModal" tabindex="-1">

@@ -298,8 +298,17 @@ function fixFormSubmissions() {
                     
                     // Başarılı mesaj göster - popup style
                     showPopupAlert('success', personalizedMessage, 'Gönüllü Başvurunuz Alındı');
+                    
+                    // Reset form
                     this.reset();
                     this.classList.remove('was-validated');
+                    
+                    // Reset character counter
+                    const charCount = document.getElementById('charCount');
+                    if (charCount) {
+                        charCount.textContent = '0/50';
+                        charCount.className = 'badge bg-secondary';
+                    }
                 } else {
                     // Hata mesajı göster - popup style
                     showPopupAlert('danger', data.message || 'Başvuru gönderilirken bir hata oluştu.', 'Başvuru Gönderilemedi');

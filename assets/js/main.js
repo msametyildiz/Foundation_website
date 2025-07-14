@@ -170,6 +170,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     showAlert('success', personalizedMessage);
                     volunteerForm.reset();
                     volunteerForm.classList.remove('was-validated');
+                    
+                    // Reset character counter
+                    const charCount = document.getElementById('charCount');
+                    if (charCount) {
+                        charCount.textContent = '0/50';
+                        charCount.className = 'badge bg-secondary';
+                    }
                 } else {
                     showAlert('danger', data.message || 'Bir hata oluştu!');
                 }

@@ -250,14 +250,14 @@ $volunteer_questions = [
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Ad Soyad *</label>
-                                    <input type="text" class="form-control" id="name" name="name" required>
+                                    <input type="text" class="form-control" id="name" name="name" required placeholder="Adınız ve soyadınız">
                                     <div class="invalid-feedback">
                                         Lütfen adınızı ve soyadınızı girin.
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">E-posta *</label>
-                                    <input type="email" class="form-control" id="email" name="email" required>
+                                    <input type="email" class="form-control" id="email" name="email" required placeholder="ornek@email.com">
                                     <div class="invalid-feedback">
                                         Lütfen geçerli bir e-posta adresi girin.
                                     </div>
@@ -276,7 +276,7 @@ $volunteer_questions = [
                                 <div class="col-md-6">
                                     <label for="age" class="form-label">Yaş</label>
                                     <input type="number" class="form-control" id="age" name="age" min="16" max="80" 
-                                           placeholder="">
+                                           placeholder="16-80 arası">
                                     <div class="invalid-feedback">
                                         Yaş 16-80 arasında olmalıdır.
                                     </div>

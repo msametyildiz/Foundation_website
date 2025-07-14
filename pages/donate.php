@@ -165,7 +165,7 @@ try {
                                     <label for="donor_name" class="form-label">
                                         <i class="fas fa-user text-success me-1"></i>Ad Soyad *
                                     </label>
-                                    <input type="text" class="form-control" id="donor_name" name="donor_name" required>
+                                    <input type="text" class="form-control" id="donor_name" name="donor_name" required placeholder="Adınız ve soyadınız">
                                     <div class="invalid-feedback">
                                         Lütfen adınızı ve soyadınızı giriniz.
                                     </div>
@@ -175,7 +175,7 @@ try {
                                     <label for="donor_email" class="form-label">
                                         <i class="fas fa-envelope text-success me-1"></i>E-posta
                                     </label>
-                                    <input type="email" class="form-control" id="donor_email" name="donor_email">
+                                    <input type="email" class="form-control" id="donor_email" name="donor_email" placeholder="ornek@email.com">
                                     <div class="form-text">İsteğe bağlı - Bilgilendirme için</div>
                                 </div>
                             </div>
