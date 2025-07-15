@@ -164,6 +164,16 @@ class EmailService {
     
     public function sendDonationNotification($donationData) {
         try {
+            // Daha önce gönderilmiş email kontrolü
+            static $sent_notifications = [];
+            $donation_id = $donationData['donation_id'] ?? null;
+            
+            // Eğer bu bağış için daha önce email gönderilmişse, tekrar gönderme
+            if ($donation_id && isset($sent_notifications[$donation_id])) {
+                error_log("Donation notification already sent for ID: {$donation_id}. Skipping duplicate.");
+                return true;
+            }
+            
             $mail = $this->createMailer();
             
             // To admin
@@ -185,6 +195,11 @@ class EmailService {
             $mail->AltBody = strip_tags($body);
             
             $mail->send();
+            
+            // Gönderilen email'i kaydet
+            if ($donation_id) {
+                $sent_notifications[$donation_id] = true;
+            }
             
             // Send thank you email to donor
             if (!empty($donationData['email'])) {
@@ -1369,8 +1384,8 @@ class EmailService {
                                                     <tr>
                                                         <td style="text-align: center; padding: 10px;">
                                                             <p style="margin: 0; font-size: 15px; color: #4a5568;">
-                                                                <strong style="color: #2d5a27;">Gönüllü Koordinasyon:</strong><br>
-                                                                <a href="mailto:gonullu@necatdernegi.org" style="color: #3182ce; text-decoration: none; font-weight: 600;">gonullu@necatdernegi.org</a>
+                                                                <strong style="color: #2d5a27;">İletişim Koordinasyon:</strong><br>
+                                                                <a href="mailto:info@necatdernegi.org.tr" style="color: #3182ce; text-decoration: none; font-weight: 600;">gonullu@necatdernegi.org</a>
                                                             </p>
                                                         </td>
                                                         <td style="text-align: center; padding: 10px;">

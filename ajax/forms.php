@@ -236,11 +236,23 @@ function handleDonationForm() {
             $response['message'] = 'Lütfen dekont dosyasını yükleyin.';
             return;
         }
+        
+        // Çift işlem kontrolü - son 30 saniye içinde aynı bağışçıdan başka bir kayıt var mı?
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM donations WHERE donor_name = ? AND donor_email = ? AND created_at > DATE_SUB(NOW(), INTERVAL 30 SECOND)");
+        $stmt->execute([$donor_name, $donor_email]);
+        if ($stmt->fetchColumn() > 0) {
+            $response['message'] = 'Bağışınız zaten işleniyor. Lütfen tekrar denemeyin.';
+            return;
+        }
+        
         // Kayıt
         $stmt = $pdo->prepare("INSERT INTO donations (donor_name, donor_email, donor_phone, donation_type_id, amount, receipt_file, message, status, admin_notes, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
         $stmt->execute([
             $donor_name, $donor_email, $donor_phone, $donation_type_id, $amount, $receipt_file, $message, $status, $admin_notes
         ]);
+        
+        $donation_id = $pdo->lastInsertId();
+        
         // E-posta bildirimi (isteğe bağlı)
         if ($donor_email) {
             // Bağış türü adını çek
@@ -261,7 +273,8 @@ function handleDonationForm() {
                 'phone' => $donor_phone,
                 'donation_type' => $donation_type_name,
                 'message' => $message,
-                'receipt_file' => $receipt_file
+                'receipt_file' => $receipt_file,
+                'donation_id' => $donation_id // Email için benzersiz ID ekle
             ];
             $emailService->sendDonationNotification($donationData);
         }

@@ -197,11 +197,18 @@ document.addEventListener('DOMContentLoaded', function() {
         donationForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Prevent multiple submissions
+            if (this.dataset.submitting === 'true') {
+                return;
+            }
+            
             const formData = new FormData(this);
-            formData.append('action', 'donation'); // <-- action parametresi eklendi
+            formData.append('action', 'donation');
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             
+            // Mark form as submitting
+            this.dataset.submitting = 'true';
             submitBtn.innerHTML = '<span class="loading"></span> Yükleniyor...';
             submitBtn.disabled = true;
             
@@ -231,6 +238,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 showAlert('danger', 'Bir hata oluştu!');
             })
             .finally(() => {
+                // Reset form submission state
+                this.dataset.submitting = 'false';
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
             });
@@ -1034,58 +1043,7 @@ function checkElementsInView() {
     // Additional view-based animations can be added here
 }
 
-// Enhanced smooth scrolling with easing
-function enhancedSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                const targetPosition = target.offsetTop - 80;
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-}
-
-// Parallax effects for hero section
-function initializeParallaxEffects() {
-    const parallaxElements = document.querySelectorAll('.parallax-element');
-    
-    if (parallaxElements.length === 0) return;
-    
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const rate = scrolled * -0.5;
-        
-        parallaxElements.forEach(element => {
-            element.style.transform = `translateY(${rate}px)`;
-        });
-    });
-}
-
-// Enhanced floating cards with more sophisticated animations
-function initializeFloatingCards() {
-    const cards = document.querySelectorAll('.floating-card');
-    
-    cards.forEach((card, index) => {
-        // Add subtle floating animation with different delays
-        card.style.animationDelay = `${index * 0.2}s`;
-        
-        // Enhanced hover effects
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-10px) scale(1.02)';
-            this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
-    });
-}
+// Duplicate functions removed - these are already defined earlier in the file
 
 // Progress bar animations
 function initializeProgressBars() {
