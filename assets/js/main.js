@@ -751,6 +751,12 @@ function handleAjaxForm(form) {
             if (data.reference) {
                 showDonationSuccess(data.reference);
             }
+            
+            // Special handling for donation form - show personalized success alert
+            if (formData.get('action') === 'donation') {
+                const donorName = formData.get('donor_name') || 'Değerli Bağışçımız';
+                showDonationSuccessAlert(donorName);
+            }
         } else {
             showAlert(data.message, 'danger', form);
         }

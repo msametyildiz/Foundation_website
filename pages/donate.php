@@ -1283,86 +1283,13 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('was-validated');
         });
         
-        // Handle form submission
+        // Form validation only - we're using the global AJAX form handling from main.js
         donationForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            
-            // Show loading state
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Yükleniyor...';
-            submitBtn.disabled = true;
-            
-            fetch('ajax/forms.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Extract name for personalized message
-                    const donorName = formData.get('donor_name') || 'Değerli Bağışçımız';
-                    
-                    // Show personalized success alert
-                    showDonationSuccessAlert(donorName);
-                    
-                    // Reset the form
-                    donationForm.reset();
-                    donationForm.classList.remove('was-validated');
-                    
-                    // Reset donation amount buttons
-                    document.querySelectorAll('.donation-amount-btn').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                } else {
-                    // Show error message
-                    const errorMessage = data.message || 'Bir hata oluştu. Lütfen tekrar deneyiniz.';
-                    
-                    // Use the global showNotification function if available
-                    if (typeof showNotification === 'function') {
-                        showNotification(errorMessage, 'danger');
-                    } else {
-                        // Show error message in the form response area
-                        const responseDiv = document.getElementById('donation-form-response');
-                        if (responseDiv) {
-                            responseDiv.innerHTML = `
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <i class="fas fa-exclamation-triangle me-2"></i>
-                                    ${errorMessage}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            `;
-                        }
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                
-                // Use the global showNotification function if available
-                if (typeof showNotification === 'function') {
-                    showNotification('Bir hata oluştu. Lütfen tekrar deneyiniz.', 'danger');
-                } else {
-                    // Show error message in the form response area
-                    const responseDiv = document.getElementById('donation-form-response');
-                    if (responseDiv) {
-                        responseDiv.innerHTML = `
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                Bir hata oluştu. Lütfen tekrar deneyiniz.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        `;
-                    }
-                }
-            })
-            .finally(() => {
-                // Restore button state
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            });
+            if (!this.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.add('was-validated');
+            }
         });
     }
 });
