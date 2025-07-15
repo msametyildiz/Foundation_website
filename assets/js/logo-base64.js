@@ -42,8 +42,6 @@ class LogoManager {
             }
             
             this.isLoaded = true;
-            // Debug log removed
-            
         } catch (error) {
             console.error('Failed to load base64 logo:', error);
             // Fallback to regular logo file

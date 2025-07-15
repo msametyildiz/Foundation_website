@@ -197,18 +197,11 @@ document.addEventListener('DOMContentLoaded', function() {
         donationForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Prevent multiple submissions
-            if (this.dataset.submitting === 'true') {
-                return;
-            }
-            
             const formData = new FormData(this);
-            formData.append('action', 'donation');
+            formData.append('action', 'donation'); // <-- action parametresi eklendi
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             
-            // Mark form as submitting
-            this.dataset.submitting = 'true';
             submitBtn.innerHTML = '<span class="loading"></span> Yükleniyor...';
             submitBtn.disabled = true;
             
@@ -238,8 +231,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 showAlert('danger', 'Bir hata oluştu!');
             })
             .finally(() => {
-                // Reset form submission state
-                this.dataset.submitting = 'false';
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
             });

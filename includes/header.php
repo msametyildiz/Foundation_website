@@ -30,7 +30,7 @@ try {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
     <!-- ===== SEO OPTIMIZATION ===== -->
-    <title>Necat Derneği - Resmi Web Sitesi</title>
+    <title>Necat Derneği</title>
     <meta name="description" content="Necat Derneği olarak yardıma muhtaç ailelere gıda, kıyafet, eğitim desteği sunuyoruz. Detaylar için web sitemizi ziyaret edin.">
     <meta name="keywords" content="<?php echo clean_output($page_info['keywords'] ?? 'necat derneği, yardım, bağış, sosyal sorumluluk, eğitim desteği, gıda yardımı'); ?>">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">

@@ -164,16 +164,6 @@ class EmailService {
     
     public function sendDonationNotification($donationData) {
         try {
-            // Daha önce gönderilmiş email kontrolü
-            static $sent_notifications = [];
-            $donation_id = $donationData['donation_id'] ?? null;
-            
-            // Eğer bu bağış için daha önce email gönderilmişse, tekrar gönderme
-            if ($donation_id && isset($sent_notifications[$donation_id])) {
-                error_log("Donation notification already sent for ID: {$donation_id}. Skipping duplicate.");
-                return true;
-            }
-            
             $mail = $this->createMailer();
             
             // To admin
@@ -195,11 +185,6 @@ class EmailService {
             $mail->AltBody = strip_tags($body);
             
             $mail->send();
-            
-            // Gönderilen email'i kaydet
-            if ($donation_id) {
-                $sent_notifications[$donation_id] = true;
-            }
             
             // Send thank you email to donor
             if (!empty($donationData['email'])) {
