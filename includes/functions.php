@@ -332,7 +332,7 @@ function handleFileUpload($file, $subFolder = '', $allowedTypes = []) {
     
     // Default allowed types
     if (empty($allowedTypes)) {
-        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx'];
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx', 'heic'];
     }
     
     // File validation

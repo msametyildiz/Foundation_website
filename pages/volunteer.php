@@ -682,23 +682,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Phone number formatting
-    const phoneInput = document.getElementById('phone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
-            if (value.length > 0) {
-                if (value.startsWith('0')) {
-                    // Format: 0555 123 4567
-                    value = value.replace(/(\d{4})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4');
-                } else if (value.startsWith('90')) {
-                    // Format: 90 555 123 4567
-                    value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4 $5');
-                }
-            }
-            e.target.value = value;
-        });
-    }
+    // Phone number formatting code removed - using jQuery Mask Plugin from footer.php instead
 
     // Age validation
     const ageInput = document.getElementById('age');

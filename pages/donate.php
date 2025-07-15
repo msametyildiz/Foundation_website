@@ -245,9 +245,9 @@ try {
                                     <i class="fas fa-file-upload text-success me-1"></i>Dekont Dosyası *
                                 </label>
                                 <input type="file" class="form-control" id="receipt_file" name="receipt_file" 
-                                       accept=".jpg,.jpeg,.png,.gif,.pdf" required>
+                                       accept=".jpg,.jpeg,.png,.gif,.pdf,.heic" required>
                                 <div class="form-text">
-                                    Kabul edilen formatlar: JPG, PNG, GIF, PDF - Maksimum dosya boyutu: 5MB
+                                    Kabul edilen formatlar: JPG, JPEG, PNG, GIF, PDF, HEIC - Maksimum dosya boyutu: 5MB
                                 </div>
                                 <div class="invalid-feedback">
                                     Lütfen dekont dosyasını seçiniz.
